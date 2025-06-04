@@ -32,9 +32,13 @@
 
     img {
       animation: swing 12s infinite ease-in-out;
-      transform-origin: 50% -800px; // 核心！将旋转中心设在图片上方
+      transform-origin: 50% -40vw; // 用相对单位避免超出屏幕！
       display: block;
-      filter: brightness(0%); // ✨降低亮度，比如 60% 就暗了
+      filter: brightness(0%);
+      max-height: 60vh; // 限制最大高度
+      max-width: 80vw; // 限制最大宽度
+      width: auto;
+      height: auto;
     }
   }
 
