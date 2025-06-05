@@ -2,7 +2,9 @@
 <template>
   <div class="frame__wrapper" :style="Root.wrapperStyle" :class="Root.class" >
     <div class="frame" >
-      {{ msg }}
+      <slot>
+        {{ msg }}
+      </slot>
     </div>
   </div>
 </template>
@@ -11,8 +13,10 @@ import { computed, type CSSProperties } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    msg: string;
+    msg?: string;
     className?: string;
+    left?: number;
+    top?: number;
   }>(),
   {
     msg: "",
@@ -41,8 +45,8 @@ const Root = (() => {
       }
       const maxTop = window.innerHeight - maxHeight -500;
 
-      const left = Math.random() * maxLeft;
-      const top = Math.random() * maxTop;
+      const left = props.left ?? Math.random() * maxLeft;
+      const top = props.top ?? Math.random() * maxTop;
 
       return {
         position: "absolute",
@@ -66,6 +70,7 @@ const Root = (() => {
 
   .frame {
     border: 10px solid #837e7a;
+    background: white;
     width: 100%;
     height: 100%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -74,7 +79,6 @@ const Root = (() => {
   }
   .frame:hover {
     transform: scale(1.1); // 放大到 105%
-    filter: brightness(1.3); // 稍微提亮
     box-shadow:
       0 12px 24px rgba(0, 0, 0, 0.3),
       0 0 12px rgba(255, 200, 255, 0.4); // 柔光边框
