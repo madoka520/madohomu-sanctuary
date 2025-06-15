@@ -1,7 +1,16 @@
 <!--画册组件-->
 <template>
   <div class="frame__wrapper" :style="Root.wrapperStyle" :class="Root.class" >
-    <div class="frame" >
+    <div class="frame" :style="Root.frameStyle">
+      <!-- 背景视频 -->
+      <video
+        v-if="props.backgroundVideo"
+        class="bg-video"
+        autoplay
+        playsinline
+      >
+        <source :src="props.backgroundVideo" type="video/mp4">
+      </video>
       <slot>
         {{ msg }}
       </slot>
@@ -17,6 +26,8 @@ const props = withDefaults(
     className?: string;
     left?: number;
     top?: number;
+    backgroundImage?: string;
+    backgroundVideo?: string
   }>(),
   {
     msg: "",
@@ -56,6 +67,13 @@ const Root = (() => {
         height: `${maxHeight}px`,
       };
     }),
+    //背景图片
+    frameStyle: computed<CSSProperties>(() => ({
+      backgroundImage: props.backgroundImage ? `url(${props.backgroundImage})` : "",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      imageRendering: "crisp-edges",
+    })),
   });
   return s;
 })();
@@ -76,6 +94,19 @@ const Root = (() => {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     overflow: auto;
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+
+    .bg-video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
   }
   .frame:hover {
     transform: scale(1.1); // 放大到 105%

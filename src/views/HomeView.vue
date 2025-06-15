@@ -17,6 +17,10 @@
         <picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
           <self-msg-slot/>
         </picture-album-card>
+        <picture-album-card :background-image="madoka1"/>
+        <picture-album-card :background-image="madoka2"/>
+        <picture-album-card :background-image="madoka3"/>
+        <picture-album-card :background-image="madoka4"/>
       </div>
     </div>
   </sence-view>
@@ -29,7 +33,10 @@ import SenceView from "./SenceView.vue";
 import PictureAlbumCard from "@/components/PictureAlbumCard.vue";
 import PlayerView from "@/views/PlayerView.vue";
 import SelfMsgSlot from "@/views/SelfMsgSlot.vue";
-
+import madoka1 from "@/assets/images/madoka_pic/1.jpg"
+import madoka2 from "@/assets/images/madoka_pic/2.jpg"
+import madoka3 from "@/assets/images/madoka_pic/3.png"
+import madoka4 from "@/assets/images/madoka_pic/4.jpg"
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
   "比希望更炽热 比绝望更深邃的 是爱",

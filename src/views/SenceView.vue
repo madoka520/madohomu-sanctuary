@@ -32,7 +32,7 @@
 
     img {
       animation: swing 12s infinite ease-in-out;
-      transform-origin: 50% -40vw; // 用相对单位避免超出屏幕！
+      transform-origin: 50% -35vw; // 用相对单位避免超出屏幕！
       display: block;
       filter: brightness(0%);
       max-height: 60vh; // 限制最大高度
