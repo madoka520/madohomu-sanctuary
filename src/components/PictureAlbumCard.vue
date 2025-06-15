@@ -8,11 +8,14 @@
         class="bg-video"
         autoplay
         playsinline
-      >
-        <source :src="props.backgroundVideo" type="video/mp4">
-      </video>
+        :src="props.backgroundVideo"
+        muted
+        loop
+      />
       <slot>
-        {{ msg }}
+        <div class="msg">
+          {{ msg }}
+        </div>
       </slot>
     </div>
   </div>
@@ -92,11 +95,11 @@ const Root = (() => {
     width: 100%;
     height: 100%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    overflow: auto;
+    overflow: hidden;
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
 
+    //背景视频
     .bg-video {
-      position: absolute;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -107,13 +110,19 @@ const Root = (() => {
       border-radius: inherit;
     }
 
+    .msg {
+      overflow: auto;
+      height: 100%;
+      width: 100%;
+    }
+    &:hover {
+      transform: scale(1.1); // 放大到 105%
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.3),
+        0 0 12px rgba(255, 200, 255, 0.4); // 柔光边框
+    }
   }
-  .frame:hover {
-    transform: scale(1.1); // 放大到 105%
-    box-shadow:
-      0 12px 24px rgba(0, 0, 0, 0.3),
-      0 0 12px rgba(255, 200, 255, 0.4); // 柔光边框
-  }
+
 }
 
 

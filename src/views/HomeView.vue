@@ -21,6 +21,8 @@
         <picture-album-card :background-image="madoka2"/>
         <picture-album-card :background-image="madoka3"/>
         <picture-album-card :background-image="madoka4"/>
+        <picture-album-card background-video="/5.mp4"/>
+        <madoka-dialog/>
       </div>
     </div>
   </sence-view>
@@ -37,6 +39,7 @@ import madoka1 from "@/assets/images/madoka_pic/1.jpg"
 import madoka2 from "@/assets/images/madoka_pic/2.jpg"
 import madoka3 from "@/assets/images/madoka_pic/3.png"
 import madoka4 from "@/assets/images/madoka_pic/4.jpg"
+import MadokaDialog from "@/components/MadokaDialog.vue";
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
   "比希望更炽热 比绝望更深邃的 是爱",
