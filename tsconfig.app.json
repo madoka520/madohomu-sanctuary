@@ -2,18 +2,18 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "composite": true,
+    "noImplicitAny": false,
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
+    "lib": ["esnext", "dom"],
+    "types": ["vite/client", "vue/ref-macros"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "jsx": "preserve",
+    "jsxImportSource": "vue"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "./auto-imports.d.ts", "./components.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "./auto-imports.d.ts"]
 }

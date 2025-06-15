@@ -6,9 +6,13 @@ import AutoImport from "unplugin-auto-import/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      script: {
+        propsDestructure: true,
+      },
+    }),
     AutoImport({
-      imports: ["vue", "vue-router", "@vueuse/core"],
+      imports: ["vue", "vue-router", "@vueuse/core", "vue/macros"],
       dts: "auto-imports.d.ts",
       dirs: ["src/utils/global"],
       resolvers: [],
