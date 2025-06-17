@@ -8,13 +8,7 @@
         友链:
         <a target="_blank" href="https://madohomu.love/">madohomu.love(圆焰圆)</a></div>
       <div>
-        后续会开放留言功能
-      </div>
-      <div>
-        想说什么都可以哦~
-      </div>
-      <div>
-        禁止拆cp、对角色发电等不雅言论 不然会被圆环之理制裁的哦
+        禁止拆cp、对角色发电 不然会被圆环之理制裁的哦
       </div>
     </div>
   </div>
