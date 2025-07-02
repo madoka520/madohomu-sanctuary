@@ -1,6 +1,7 @@
 <template>
   <teleport to="body">
-    <div class="mask" v-show="modelValue" @click="Root.close">
+    <div class="mask" v-show="modelValue" @click="Root.cancel">
+      <slot/>
     </div>
   </teleport>
 
@@ -11,15 +12,15 @@ const modelValue = defineModel({
   default: false
 })
 const emits = defineEmits<{
-  (e: "close", event: Event): void
+  (e: "cancel", event: Event): void
 }>()
 const Root = (() => {
-  const close = (e:Event) => {
+  const cancel = (e:Event) => {
     modelValue.value = false
-    emits('close', e)
+    emits('cancel', e)
   };
   const s = reactive({
-    close
+    cancel
   })
   return s
 })()
@@ -28,8 +29,6 @@ const Root = (() => {
 .mask {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999999;
 }
