@@ -1,44 +1,85 @@
 <template>
-  <madoka-mask v-model="modelValue" @close="Root.cancel">
-    <div class="dialog__container">
-
+  <madoka-mask v-model="modelValue" @cancel="Root.cancel">
+    <div class="dialog__overlay flex-center" :style="{ width, height }" @click.stop>
+      <header>
+        {{ title }}
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer>
+        <div class="footer flex-center">
+          <slot name="footer">
+            <madoka-button @click="Root.ok" text="确 定" variant="outlined" color="pink" />
+            <madoka-button @click="Root.cancel" text="取 消" variant="outlined" color="#666" />
+          </slot>
+        </div>
+      </footer>
     </div>
-    <slot/>
-    <slot name="footer">
-      <button>确定</button>
-      <button>取消</button>
-    </slot>
   </madoka-mask>
-
 </template>
 <script setup lang="ts">
 import MadokaMask from "@/components/MadokaMask.vue";
+import MadokaButton from "@/components/button/Index.vue";
+
 const props = withDefaults(
   defineProps<{
-    width?: string
-    height?: string
-    footer?: boolean
+    width?: string;
+    height?: string;
+    footer?: boolean;
+    title?: string;
   }>(),
   {
-    footer: true
-  }
-)
+    footer: true,
+  },
+);
 const modelValue = defineModel({
-  default: false
-})
+  default: false,
+});
+const emits = defineEmits<{
+  (e: "cancel", event: Event): void
+  (e: "ok", event: Event): void
+}>()
 const Root = (() => {
   const cancel = (e: Event) => {
-
+    modelValue.value = false;
+    emits("cancel", e)
+  };
+  const ok = (e:Event) => {
+    modelValue.value = false;
+    emits("ok", e)
   };
   const s = reactive({
-    cancel
-  })
-  return s
-})()
+    ok,
+    cancel,
+  });
+  return s;
+})();
 </script>
-<style scoped>
-.dialog__container {
-  width: v-bind(width);
-  height: v-bind(height);
+<style lang="less" scoped>
+.dialog__overlay {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  background: white;
+
+  main {
+
+  }
+
+  footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+
+    .footer {
+      margin-left: auto;
+      padding: 20px;
+      gap: 10px;
+    }
+  }
 }
 </style>

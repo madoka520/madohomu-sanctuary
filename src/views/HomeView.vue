@@ -21,12 +21,10 @@
         <picture-album-card :background-image="madoka3"/>
         <picture-album-card :background-image="madoka4"/>
         <picture-album-card background-video="/5.mp4"/>
-        <madoka-dialog/>
-      </div>
-      <div style="position:absolute; bottom: 0;text-align: center; width: 100%" >
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo" style="text-decoration: none; color: rgba(237,159,235,0.73)" target="_blank">
-          浙ICP备2024129291号-2
-        </a>
+        <picture-album-card>
+          <div @click="click">测试</div>
+        </picture-album-card>
+        <madoka-dialog v-model="opened" width="1200px" height="800px"/>
       </div>
     </div>
   </sence-view>
@@ -57,6 +55,10 @@ const SelfMsg = (() => {
   })
   return s
 })()
+const opened = ref(false)
+const click = () => {
+  opened.value = true
+};
 </script>
 
 <style scoped>
