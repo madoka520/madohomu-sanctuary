@@ -1,16 +1,19 @@
 <template>
-  <div class="madoka-button flex-center" :class="{ [`variant-${variant}`]: true }" tabindex="0">
+  <madoka-ripple :color>
+    <div class="madoka-button flex-center" :class="{ [`variant-${variant}`]: true }" tabindex="0">
     <span>
       <slot>
         {{ text }}
       </slot>
     </span>
-  </div>
+    </div>
+  </madoka-ripple>
 </template>
 
 <script setup lang="ts">
 import type { Variant } from "@/components/button/button.ts";
 import ColorUtils from "@/utils/ColorUtils.ts";
+import MadokaRipple from "@/components/MadokaRipple.vue";
 
 defineOptions({
   name: "MadokaButton",
@@ -67,7 +70,7 @@ const textColor = computed(() => {
   color: var(--primary-color);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    opacity: 0.9;
   }
 }
 

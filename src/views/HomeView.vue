@@ -16,15 +16,13 @@
         <picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
           <self-msg-slot/>
         </picture-album-card>
-        <picture-album-card :background-image="madoka1"/>
         <picture-album-card :background-image="madoka2"/>
         <picture-album-card :background-image="madoka3"/>
         <picture-album-card :background-image="madoka4"/>
         <picture-album-card background-video="/5.mp4"/>
         <picture-album-card>
-          <div @click="click">测试</div>
+          <soul-ripple-slot/>
         </picture-album-card>
-        <madoka-dialog v-model="opened" width="1200px" height="800px"/>
       </div>
     </div>
   </sence-view>
@@ -37,11 +35,10 @@ import SenceView from "./SenceView.vue";
 import PictureAlbumCard from "@/components/PictureAlbumCard.vue";
 import PlayerView from "@/views/PlayerView.vue";
 import SelfMsgSlot from "@/views/SelfMsgSlot.vue";
-import madoka1 from "@/assets/images/madoka_pic/1.jpg"
 import madoka2 from "@/assets/images/madoka_pic/2.jpg"
 import madoka3 from "@/assets/images/madoka_pic/3.png"
 import madoka4 from "@/assets/images/madoka_pic/4.jpg"
-import MadokaDialog from "@/components/MadokaDialog.vue";
+import SoulRippleSlot from "@/views/SoulRippleSlot.vue";
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
   "比希望更炽热 比绝望更深邃的 是爱",
@@ -55,10 +52,6 @@ const SelfMsg = (() => {
   })
   return s
 })()
-const opened = ref(false)
-const click = () => {
-  opened.value = true
-};
 </script>
 
 <style scoped>

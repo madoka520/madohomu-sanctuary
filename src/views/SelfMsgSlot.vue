@@ -1,6 +1,6 @@
 <template>
-  <div class="bg">
-    <div class="overlay">
+  <div class="bg w-full h-full flex">
+    <div class="overlay flex w-full h-full justify-center flex-col">
       <div>
         米娜桑麻 欢迎来到<span class="madoka">圆</span><span class="homura">焰</span>之庭！
       </div>
@@ -23,17 +23,9 @@
   background-size: cover;
   font-size: 12px;
   color: white;
-  width: 100%;
-  height: 100%;
-  display: flex;
   /* ✨ 半透明遮罩容器 */
   .overlay {
     background-color: rgba(0, 0, 0, 0.5); /* 半透明黑底 */
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     &:hover {
       backdrop-filter: blur(4px); /* 🌸加点梦幻感 */
     }
