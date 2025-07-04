@@ -10,8 +10,8 @@
       <footer>
         <div class="footer flex-center">
           <slot name="footer">
-            <madoka-button @click="Root.ok" text="确 定" variant="outlined" color="pink" />
-            <madoka-button @click="Root.cancel" text="取 消" variant="outlined" color="#666" />
+            <madoka-btn @click="Root.ok" text="确 定" variant="outlined" color="pink" />
+            <madoka-btn @click="Root.cancel" text="取 消" variant="outlined" color="#666" />
           </slot>
         </div>
       </footer>
@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import MadokaMask from "@/components/MadokaMask.vue";
-import MadokaButton from "@/components/button/Index.vue";
+import MadokaBtn from "@/components/button/Index.vue";
 
 const props = withDefaults(
   defineProps<{

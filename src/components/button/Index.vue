@@ -1,6 +1,6 @@
 <template>
   <madoka-ripple :color>
-    <div class="madoka-button flex-center" :class="{ [`variant-${variant}`]: true }" tabindex="0">
+    <div class="madoka-btn flex-center" :class="{ [`variant-${variant}`]: true }" tabindex="0">
     <span>
       <slot>
         {{ text }}
@@ -16,7 +16,7 @@ import ColorUtils from "@/utils/ColorUtils.ts";
 import MadokaRipple from "@/components/MadokaRipple.vue";
 
 defineOptions({
-  name: "MadokaButton",
+  name: "MadokaBtn",
 });
 const props = withDefaults(
   defineProps<{
@@ -45,7 +45,7 @@ const textColor = computed(() => {
 </script>
 
 <style scoped lang="less">
-.madoka-button {
+.madoka-btn {
   --primary-color: v-bind(color);
   --text-color: v-bind(textColor);
   padding: 5px 16px;

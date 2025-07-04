@@ -1,15 +1,14 @@
 <template>
   <div class="bg w-full h-full">
     <div class="overlay flex w-full h-full justify-center flex-col">
-      <div class="text-center">
-        心灵涟漪
-      </div>
+      <underline-btn text="心灵涟漪"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 
+import UnderlineBtn from "@/components/UnderlineBtn.vue";
 </script>
 
 <style scoped>
