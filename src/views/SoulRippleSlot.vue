@@ -1,7 +1,9 @@
 <template>
   <div class="bg w-full h-full">
     <div class="overlay flex w-full h-full justify-center flex-col">
-      <underline-btn text="心灵涟漪"/>
+      <div class="text-center">
+        <underline-btn text="心灵涟漪"/>
+      </div>
     </div>
   </div>
 </template>
