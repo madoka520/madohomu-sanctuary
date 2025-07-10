@@ -1,5 +1,5 @@
 <template>
-  <sence-view>
+  <view-scene>
     <div class="page">
       <!-- 顶部导航 -->
       <nav class="nav">
@@ -14,31 +14,31 @@
       <div style="position: relative">
         <picture-album-card v-for="item in msgList" :msg="item" />
         <picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
-          <self-msg-slot/>
+          <pre-self-msg-slot/>
         </picture-album-card>
         <picture-album-card :background-image="madoka2"/>
         <picture-album-card :background-image="madoka3"/>
         <picture-album-card :background-image="madoka4"/>
         <picture-album-card background-video="/5.mp4"/>
         <picture-album-card>
-          <soul-ripple-slot/>
+          <pre-soul-ripple-slot/>
         </picture-album-card>
       </div>
     </div>
-  </sence-view>
-  <player-view/>
+  </view-scene>
+  <view-player/>
 </template>
 
 <script setup lang="ts">
 // 焰酱什么都准备好了～
-import SenceView from "./SenceView.vue";
+import ViewScene from "./ViewScene.vue";
 import PictureAlbumCard from "@/components/PictureAlbumCard.vue";
-import PlayerView from "@/views/PlayerView.vue";
-import SelfMsgSlot from "@/views/SelfMsgSlot.vue";
+import ViewPlayer from "@/views/ViewPlayer.vue";
+import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
 import madoka2 from "@/assets/images/madoka_pic/2.jpg"
 import madoka3 from "@/assets/images/madoka_pic/3.png"
 import madoka4 from "@/assets/images/madoka_pic/4.jpg"
-import SoulRippleSlot from "@/views/SoulRippleSlot.vue";
+import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
   "比希望更炽热 比绝望更深邃的 是爱",

@@ -1,9 +1,9 @@
 <template>
-  <view-home/>
+  
 </template>
+
 <script setup lang="ts">
 
-import ViewHome from "@/views/ViewHome.vue";
 </script>
 
 <style scoped>
