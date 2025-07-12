@@ -2,15 +2,20 @@
   <div class="bg w-full h-full">
     <div class="overlay flex w-full h-full justify-center flex-col">
       <div class="text-center">
-        <underline-btn text="心灵涟漪"/>
+        <madoka-underline-btn @click="dialogRef?.open()" text="心灵涟漪"/>
       </div>
     </div>
   </div>
+  <pre-dialog ref="dialogRef"/>
 </template>
 
 <script setup lang="ts">
 
-import UnderlineBtn from "@/components/UnderlineBtn.vue";
+import MadokaUnderlineBtn from "@/components/MadokaUnderlineBtn.vue";
+import PreDialog from "@/views/SoulRippleSlot/PreDialog.vue";
+const dialogRef = useTemplateRef("dialogRef")
+
+
 </script>
 
 <style scoped>
