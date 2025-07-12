@@ -1,5 +1,5 @@
 <template>
-  <madoka-mask v-model="modelValue" :before-close="Root.beforeClose">
+  <madoka-mask v-model="modelValue" >
     <div class="dialog__overlay" :style="{ width, height }" @click.stop ref="overlayRef">
       <header>
         <slot name="header">
@@ -73,48 +73,39 @@ const Root = (() => {
         });
       } else {
         /* —— 关闭 —— */
-        el.classList.remove("enter-active"); // 去掉过渡类
-        Object.assign(el.style, {
-          // 还原初始内联样式
-          left: "",
-          top: "",
-          transform: "",
-          opacity: "",
-        });
+
+        nextTick(() => {
+          // 移除打开状态类
+          el.classList.remove("enter-active");
+          // 添加关闭状态类，触发淡出动画
+          el.classList.add("leave-active");
+
+          // 监听动画结束事件
+          const onEnd = (e: TransitionEvent) => {
+            if (e.target === el) {
+              el.removeEventListener("transitionend", onEnd);
+              el.classList.remove("leave-active");
+              Object.assign(el.style, {
+                // 还原初始内联样式
+                left: "",
+                top: "",
+                transform: "",
+                opacity: "",
+              });
+            }
+          };
+          el.addEventListener("transitionend", onEnd);
+        })
+
       }
     });
   };
 
-  const beforeClose = () => {
-    const el = overlayRef.value;
-    if (!el) return Promise.resolve();
-
-    return new Promise<void>((resolve) => {
-      // 移除打开状态类
-      el.classList.remove("enter-active");
-      // 添加关闭状态类，触发淡出动画
-      el.classList.add("leave-active");
-
-      // 监听动画结束事件
-      const onEnd = (e: TransitionEvent) => {
-        if (e.target === el) {
-          el.removeEventListener("transitionend", onEnd);
-          el.classList.remove("leave-active");
-          resolve();
-        }
-      };
-      el.addEventListener("transitionend", onEnd);
-    });
-  };
-
-
   const cancel = async (e: Event) => {
-    await beforeClose()
     modelValue.value = false
     emits("cancel", e);
   };
   const ok = async (e: Event) => {
-    await beforeClose()
     modelValue.value = false;
     emits("ok", e);
   };
@@ -123,7 +114,6 @@ const Root = (() => {
     lastY: 0,
     ok,
     cancel,
-    beforeClose
   });
   setWatcher();
   return s;
