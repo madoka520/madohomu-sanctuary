@@ -11,8 +11,8 @@
       </main>
       <footer>
         <slot name="footer">
-          <madoka-btn @click="Root.ok" text="确 定" variant="outlined" color="pink" />
-          <madoka-btn @click="Root.cancel" text="取 消" variant="outlined" color="#666" />
+          <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
+          <madoka-btn @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
         </slot>
       </footer>
     </div>
@@ -28,12 +28,16 @@ const props = withDefaults(
     height?: string;
     footer?: boolean;
     title?: string;
+    okText?: string
+    cancelText?: string
   }>(),
   {
     title: "弹窗",
     footer: true,
     width: "400px",
     height: "300px",
+    okText: "确 定",
+    cancelText: "取 消"
   },
 );
 

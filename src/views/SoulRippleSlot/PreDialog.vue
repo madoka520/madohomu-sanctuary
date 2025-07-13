@@ -1,6 +1,6 @@
 <template>
-  <madoka-dialog v-model="Root.opened" title="心灵涟漪">
-
+  <madoka-dialog v-model="Root.opened" title="心灵涟漪" ok-text="发送">
+    <textarea class="madoka-input" v-model="Root.text"/>
   </madoka-dialog>
 </template>
 
@@ -14,6 +14,7 @@ const Root = (() => {
   };
   const s = reactive({
     opened: false,
+    text: '',
     open
   });
   return s;
@@ -24,5 +25,11 @@ defineExpose({
 </script>
 
 <style scoped>
-
+.madoka-input {
+  border-radius: 5px;
+  &:focus {
+    outline: none;
+    border: 1px solid pink;
+  }
+}
 </style>
