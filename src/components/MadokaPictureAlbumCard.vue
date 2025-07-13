@@ -49,7 +49,7 @@ const Root = (() => {
       //随机移动方式
       [moveClassList[`${Math.floor(Math.random() * 3)}`]]: true
     })),
-    wrapperStyle: computed<CSSProperties>(() => {
+    wrapperStyle: (() => {
       const maxWidth = buildLength();
       const maxHeight = buildLength();
 
@@ -69,7 +69,7 @@ const Root = (() => {
         width: `${maxWidth}px`,
         height: `${maxHeight}px`,
       };
-    }),
+    })(),
     //背景图片
     frameStyle: computed<CSSProperties>(() => ({
       backgroundImage: props.backgroundImage ? `url(${props.backgroundImage})` : "",
@@ -85,6 +85,7 @@ const Root = (() => {
 .frame__wrapper {
   max-width: 200px;
   max-height: 200px;
+  transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
   &:hover {
     z-index: 10;
   }
