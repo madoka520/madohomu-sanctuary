@@ -27,9 +27,10 @@ export default defineConfig(({ mode }) => {
     base: "",
     server: {
       proxy: {
-        "/api": {
+        "/madoka-api": {
           target: env.VITE_API_URL,
           changeOrigin: true,
+          rewrite: p => p.replace(/^\/madoka-api/, "")
         },
       },
     },

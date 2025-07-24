@@ -11,8 +11,8 @@
       </main>
       <footer>
         <slot name="footer">
-          <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
           <madoka-btn @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
+          <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
         </slot>
       </footer>
     </div>

@@ -3,7 +3,7 @@ import { useToken } from "@/hooks/useToken.ts";
 
 const authenticated = computed(() => !!useToken().getToken());
 const service = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: '/madoka-api',
   timeout: 10000,
 });
 
