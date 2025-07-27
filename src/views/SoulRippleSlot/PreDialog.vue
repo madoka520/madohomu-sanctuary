@@ -1,5 +1,5 @@
 <template>
-  <madoka-dialog v-model="Root.opened" title="心灵涟漪" ok-text="发送">
+  <madoka-dialog v-model="Root.opened" title="心灵涟漪" ok-text="发送" @ok="Root.ok">
     <textarea class="madoka-input" v-model="Root.text"/>
   </madoka-dialog>
 </template>
@@ -7,15 +7,22 @@
 <script setup lang="ts">
 
 import MadokaDialog from "@/components/MadokaDialog.vue";
+import SoulRippleApi from "@/api/SoulRippleApi.ts";
 
 const Root = (() => {
   const open = () => {
     s.opened = true
   };
+  const ok = () => {
+    SoulRippleApi.send({
+      text: s.text,
+    })
+  };
   const s = reactive({
     opened: false,
     text: '',
-    open
+    open,
+    ok
   });
   return s;
 })();
