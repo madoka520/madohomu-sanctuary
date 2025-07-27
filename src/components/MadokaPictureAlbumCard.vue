@@ -1,17 +1,9 @@
 <!--画册组件-->
 <template>
-  <div class="frame__wrapper" :style="Root.wrapperStyle" :class="Root.class" >
+  <div class="frame__wrapper" :style="Root.wrapperStyle" :class="Root.class" ref="wrapperRef">
     <div class="frame" :style="Root.frameStyle">
       <!-- 背景视频 -->
-      <video
-        v-if="props.backgroundVideo"
-        class="bg-video"
-        autoplay
-        playsinline
-        :src="props.backgroundVideo"
-        muted
-        loop
-      />
+      <video v-if="props.backgroundVideo" class="bg-video" autoplay playsinline :src="props.backgroundVideo" muted loop />
       <slot>
         <div class="msg">
           {{ msg }}
@@ -22,6 +14,7 @@
 </template>
 <script setup lang="ts">
 import { type CSSProperties } from "vue";
+import { animate, type AnimationParams, stagger, text } from "animejs";
 
 const props = withDefaults(
   defineProps<{
@@ -30,12 +23,13 @@ const props = withDefaults(
     left?: number;
     top?: number;
     backgroundImage?: string;
-    backgroundVideo?: string
+    backgroundVideo?: string;
   }>(),
   {
     msg: "",
   },
 );
+const wrapperRef = useTemplateRef("wrapperRef");
 const Root = (() => {
   const moveClassList = ["move__horizontally", "move__vertically", "move__diagonal"];
   /**
@@ -47,7 +41,7 @@ const Root = (() => {
       //随机取一个frame类
       [props.className ?? `frame${Math.floor(Math.random() * 2)}`]: true,
       //随机移动方式
-      [moveClassList[`${Math.floor(Math.random() * 3)}`]]: true
+      // [moveClassList[`${Math.floor(Math.random() * 3)}`]]: true
     })),
     wrapperStyle: (() => {
       const maxWidth = buildLength();
@@ -57,7 +51,7 @@ const Root = (() => {
       if (maxLeft < 0) {
         maxLeft = 0;
       }
-      const maxTop = window.innerHeight - maxHeight -500;
+      const maxTop = window.innerHeight - maxHeight - 500;
 
       const left = props.left ?? Math.random() * maxLeft;
       const top = props.top ?? Math.random() * maxTop;
@@ -68,7 +62,7 @@ const Root = (() => {
         top: `${top}px`,
         width: `${maxWidth}px`,
         height: `${maxHeight}px`,
-      };
+      } as CSSProperties;
     })(),
     //背景图片
     frameStyle: computed<CSSProperties>(() => ({
@@ -78,6 +72,28 @@ const Root = (() => {
       imageRendering: "crisp-edges",
     })),
   });
+  onMounted(() => {
+    // 随机选择方向和偏移量
+    const moveType = Math.floor(Math.random() * 3) as 0 | 1 | 2;
+    const delta = 10;
+
+    const moveMap: Partial<AnimationParams>[] = [
+      { translateX: [0, -delta, 0] },
+      { translateY: [0, -delta, 0] },
+      {
+        translateX: [0, delta, 0],
+        translateY: [0, -delta, 0],
+      },
+    ];
+
+    animate(wrapperRef.value!, {
+      ...moveMap[moveType],
+      duration: 5000,
+      direction: "alternate",
+      easing: "easeInOutSine",
+      loop: true,
+    });
+  });
   return s;
 })();
 </script>
@@ -85,7 +101,10 @@ const Root = (() => {
 .frame__wrapper {
   max-width: 200px;
   max-height: 200px;
-  transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
+  transition:
+    left 0.3s ease-in-out,
+    top 0.3s ease-in-out;
+
   &:hover {
     z-index: 10;
   }
@@ -97,7 +116,10 @@ const Root = (() => {
     height: 100%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease,
+      box-shadow 0.3s ease;
 
     //背景视频
     .bg-video {
@@ -116,6 +138,7 @@ const Root = (() => {
       height: 100%;
       width: 100%;
     }
+
     &:hover {
       transform: scale(1.1); // 放大到 105%
       box-shadow:
@@ -123,11 +146,7 @@ const Root = (() => {
         0 0 12px rgba(255, 200, 255, 0.4); // 柔光边框
     }
   }
-
 }
-
-
-
 
 .frame0 {
   border-radius: 10px;
