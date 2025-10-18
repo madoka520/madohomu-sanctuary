@@ -3,7 +3,7 @@
   <div class="frame__wrapper" :style="Root.wrapperStyle" :class="Root.class" ref="wrapperRef">
     <div class="frame" :style="Root.frameStyle">
       <!-- 背景视频 -->
-      <video v-if="props.backgroundVideo" class="bg-video" autoplay playsinline :src="props.backgroundVideo" muted loop />
+      <video v-if="props.backgroundVideo && !hiddenVideo" class="bg-video" autoplay playsinline :src="props.backgroundVideo" muted loop />
       <slot>
         <div class="msg">
           {{ msg }}
@@ -13,39 +13,48 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type CSSProperties } from "vue";
-import { animate, type AnimationParams, stagger, text } from "animejs";
+import { computed, type CSSProperties } from "vue";
+import { animate, type AnimationParams } from "animejs";
 
 const props = withDefaults(
   defineProps<{
+    hiddenVideo?: boolean;
     msg?: string;
     className?: string;
-    left?: number;
-    top?: number;
+    left?: string | number;
+    top?: string | number;
+    width?: number;
+    height?: number;
     backgroundImage?: string;
     backgroundVideo?: string;
+    zIndex?: number;
   }>(),
   {
     msg: "",
+    hiddenVideo: false,
   },
 );
 const wrapperRef = useTemplateRef("wrapperRef");
 const Root = (() => {
-  const moveClassList = ["move__horizontally", "move__vertically", "move__diagonal"];
   /**
-   * 生成180到200之内的随机长度
+   * 把传入的数字自动加上百分号
+   * @param pos
    */
-  const buildLength = () => Math.floor(Math.random() * (200 - 180 + 1)) + 180;
+  const toLength = (pos: unknown) => {
+    if (typeof pos === "number") {
+      return `${pos}%`;
+    }
+    return pos;
+  };
+
   const s = reactive({
     class: computed(() => ({
       //随机取一个frame类
       [props.className ?? `frame${Math.floor(Math.random() * 2)}`]: true,
-      //随机移动方式
-      // [moveClassList[`${Math.floor(Math.random() * 3)}`]]: true
     })),
     wrapperStyle: (() => {
-      const maxWidth = buildLength();
-      const maxHeight = buildLength();
+      const maxWidth = props.width ?? 12;
+      const maxHeight = props.height ?? 20;
 
       let maxLeft = window.innerWidth - maxWidth - 100;
       if (maxLeft < 0) {
@@ -58,10 +67,10 @@ const Root = (() => {
 
       return {
         position: "absolute",
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${maxWidth}px`,
-        height: `${maxHeight}px`,
+        left: toLength(left),
+        top: toLength(top),
+        width: toLength(maxWidth),
+        height: toLength(maxHeight),
       } as CSSProperties;
     })(),
     //背景图片
@@ -72,6 +81,9 @@ const Root = (() => {
       imageRendering: "crisp-edges",
     })),
   });
+  /**
+   * 初始化动画 决定摆动方向
+   */
   onMounted(() => {
     // 随机选择方向和偏移量
     const moveType = Math.floor(Math.random() * 3) as 0 | 1 | 2;
@@ -99,11 +111,10 @@ const Root = (() => {
 </script>
 <style scoped lang="less">
 .frame__wrapper {
-  max-width: 200px;
-  max-height: 200px;
   transition:
     left 0.3s ease-in-out,
     top 0.3s ease-in-out;
+  z-index: v-bind("props.zIndex");
 
   &:hover {
     z-index: 10;
@@ -150,57 +161,5 @@ const Root = (() => {
 
 .frame0 {
   border-radius: 10px;
-}
-
-.frame1 {
-}
-
-.move__horizontally {
-  animation: horizontallyMove 5s ease-in-out infinite;
-}
-
-.move__vertically {
-  animation: verticalMove 5s ease-in-out infinite;
-}
-
-.move__diagonal {
-  animation: diagonalMove 5s ease-in-out infinite;
-}
-
-/* 动画定义 */
-@keyframes horizontallyMove {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-10px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes verticalMove {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes diagonalMove {
-  0% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(10px, -10px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
 }
 </style>

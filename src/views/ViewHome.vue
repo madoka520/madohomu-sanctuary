@@ -11,22 +11,33 @@
           <li><a href="#">焰之回廊</a></li>
         </ul>
       </nav>
-      <div style="position: relative">
+      <div style="position: relative; height: 100%">
         <madoka-picture-album-card v-for="item in msgList" :msg="item" />
         <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
-          <pre-self-msg-slot/>
+          <pre-self-msg-slot />
         </madoka-picture-album-card>
-        <madoka-picture-album-card :background-image="madoka2"/>
-        <madoka-picture-album-card :background-image="madoka3"/>
-        <madoka-picture-album-card :background-image="madoka4"/>
-        <madoka-picture-album-card background-video="/5.mp4"/>
+        <madoka-picture-album-card :background-image="madoka2" />
+        <madoka-picture-album-card :background-image="madoka3" />
+        <madoka-picture-album-card :background-image="madoka4" />
+        <madoka-picture-album-card background-video="/5.mp4" />
+        <template v-for="(item, index) in PictureAlbumVideo.items">
+          <madoka-picture-album-card
+            :left="item.x ?? null"
+            :top="item.y ?? null"
+            :background-video="getVideoUrl(`picture_album_${index + 1}.webm`)"
+            :id="index"
+            :width="item.width"
+            :height="item.height"
+            :z-index="item.zIndex"
+          />
+        </template>
         <madoka-picture-album-card>
-          <pre-soul-ripple-slot/>
+          <pre-soul-ripple-slot />
         </madoka-picture-album-card>
       </div>
     </div>
   </view-scene>
-  <view-player/>
+  <view-player />
 </template>
 
 <script setup lang="ts">
@@ -34,11 +45,13 @@
 import ViewScene from "./ViewScene.vue";
 import ViewPlayer from "@/views/ViewPlayer.vue";
 import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
-import madoka2 from "@/assets/images/madoka_pic/2.jpg"
-import madoka3 from "@/assets/images/madoka_pic/3.png"
-import madoka4 from "@/assets/images/madoka_pic/4.jpg"
+import madoka2 from "@/assets/images/madoka_pic/2.jpg";
+import madoka3 from "@/assets/images/madoka_pic/3.png";
+import madoka4 from "@/assets/images/madoka_pic/4.jpg";
 import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
+import { getVideoUrl } from "@/utils/resource.ts";
+
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
   "比希望更炽热 比绝望更深邃的 是爱",
@@ -47,11 +60,36 @@ const msgList = [
 ];
 const SelfMsg = (() => {
   const s = reactive({
-    left: computed(() => window.innerWidth / 2 - 100),
-    top: computed(() => window.innerHeight / 2),
-  })
-  return s
-})()
+    left: computed(() => `${window.innerWidth / 2 - 100}px`),
+    top: computed(() => `${window.innerHeight / 2}px`),
+  });
+  return s;
+})();
+
+const PictureAlbumVideo = (() => {
+  const s = reactive({
+    hiddenVideo: false,
+    items: [
+      { x: 0, y: 0, width: 17, zIndex: 1 },
+      { x: 18, y: -12, width: 19 },
+      { x: 48, y: -12, zIndex: 2 },
+      { x: 62.3, y: 0 },
+      { x: 74, y: -5 },
+      { x: 15, y: 15, width: 10, height: 20, zIndex: 0 },
+      { x: 26, y: 10, width: 17, height: 22, zIndex: 1 }, //6
+      { x: 38, y: 0, width: 15 },
+      { x: 49, y: 10, height: 22 },
+      { x: 67, y: 7, width: 15, zIndex: 1 },
+      { x: 88, y: 5, zIndex: 1, height: 25 },
+      { x: 30, y: 33, width: 13 }, //11
+      { x: 46, y: 33, width: 14, height: 25 },
+      { x: 57, y: 25, height: 25, zIndex: 2 },
+      { x: 69, y: 40, height: 17 },
+      { x: 80, y: 19 },
+    ],
+  });
+  return s;
+})();
 </script>
 
 <style scoped>
