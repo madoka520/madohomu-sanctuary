@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
-import { useToken } from "@/hooks/useToken.ts";
+// import { useToken } from "@/hooks/useToken.ts";
 
-const authenticated = computed(() => !!useToken().getToken());
+// const authenticated = computed(() => !!useToken().getToken());
 const service = axios.create({
   baseURL: '/madoka-api',
   timeout: 10000,
