@@ -47,6 +47,107 @@ const Root = (() => {
     return pos;
   };
 
+  const changePos = () => {
+    if (!wrapperRef.value) return;
+
+    const el = wrapperRef.value as HTMLElement;
+
+    /**
+     * 检测两个元素是否重叠
+     */
+    const isOverlap = (a: DOMRect, b: DOMRect) => {
+      return !(
+        a.right < b.left ||
+        a.left > b.right ||
+        a.bottom < b.top ||
+        a.top > b.bottom
+      );
+    };
+
+    /**
+     * 随机生成一个不会重叠的位置
+     */
+    const getRandomPosition = () => {
+      const maxWidth = props.width ?? 12;
+      const maxHeight = props.height ?? 20;
+      let maxLeft = window.innerWidth - maxWidth - 100;
+      if (maxLeft < 0) maxLeft = 0;
+      const maxTop = window.innerHeight - maxHeight - 500;
+
+      let left = Math.random() * maxLeft;
+      let top = Math.random() * maxTop;
+
+      const wrappers = document.querySelectorAll(".frame__wrapper") ?? [];
+
+      // 尝试最多 20 次避免重叠
+      for (let i = 0; i < 20; i++) {
+        const thisRect = new DOMRect(left, top, maxWidth, maxHeight);
+        let overlap = false;
+
+        for (const w of Array.from(wrappers)) {
+          if (w === el) continue;
+          const rect = w.getBoundingClientRect();
+          if (isOverlap(thisRect, rect)) {
+            overlap = true;
+            break;
+          }
+        }
+
+        if (!overlap) {
+          return { left, top };
+        }
+
+        // 如果重叠，则重新随机位置
+        left = Math.random() * maxLeft;
+        top = Math.random() * maxTop;
+      }
+
+      return { left, top };
+    };
+
+    /**
+     * 执行移动动画
+     */
+    const move = () => {
+      const { left, top } = getRandomPosition();
+      el.style.left = `${left}px`;
+      el.style.top = `${top}px`;
+
+    };
+
+    // 初始延迟启动
+    setTimeout(move, 2000 + Math.random() * 2000);
+  };
+
+
+  const init = () => {
+    /**
+     * 初始化动画 决定摆动方向
+     */
+    onMounted(() => {
+      // 随机选择方向和偏移量
+      const moveType = Math.floor(Math.random() * 3) as 0 | 1 | 2;
+      const delta = 10;
+
+      const moveMap: Partial<AnimationParams>[] = [
+        { translateX: [0, -delta, 0] },
+        { translateY: [0, -delta, 0] },
+        {
+          translateX: [0, delta, 0],
+          translateY: [0, -delta, 0],
+        },
+      ];
+
+      animate(wrapperRef.value!, {
+        ...moveMap[moveType],
+        duration: 5000,
+        direction: "alternate",
+        easing: "easeInOutSine",
+        loop: true,
+      });
+
+    });
+  };
   const s = reactive({
     class: computed(() => ({
       //随机取一个frame类
@@ -80,34 +181,14 @@ const Root = (() => {
       backgroundPosition: "center",
       imageRendering: "crisp-edges",
     })),
+    changePos
   });
-  /**
-   * 初始化动画 决定摆动方向
-   */
-  onMounted(() => {
-    // 随机选择方向和偏移量
-    const moveType = Math.floor(Math.random() * 3) as 0 | 1 | 2;
-    const delta = 10;
-
-    const moveMap: Partial<AnimationParams>[] = [
-      { translateX: [0, -delta, 0] },
-      { translateY: [0, -delta, 0] },
-      {
-        translateX: [0, delta, 0],
-        translateY: [0, -delta, 0],
-      },
-    ];
-
-    animate(wrapperRef.value!, {
-      ...moveMap[moveType],
-      duration: 5000,
-      direction: "alternate",
-      easing: "easeInOutSine",
-      loop: true,
-    });
-  });
+  init()
   return s;
 })();
+defineExpose({
+  changePos: Root.changePos
+})
 </script>
 <style scoped lang="less">
 .frame__wrapper {
@@ -115,7 +196,6 @@ const Root = (() => {
     left 0.3s ease-in-out,
     top 0.3s ease-in-out;
   z-index: v-bind("props.zIndex");
-
   &:hover {
     z-index: 10;
   }
