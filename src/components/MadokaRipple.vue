@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper">
+  <div ref="wrapper" style="display: flex; align-items: center;">
     <slot />
   </div>
 </template>

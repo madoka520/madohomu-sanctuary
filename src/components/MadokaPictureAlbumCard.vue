@@ -47,14 +47,13 @@ const Root = (() => {
     return pos;
   };
 
-  const changePos = () => {
+  const changePos = async () => {
     if (!wrapperRef.value) return;
-
     const el = wrapperRef.value as HTMLElement;
 
-    /**
-     * 检测两个元素是否重叠
-     */
+    // 确保是定位元素
+    el.style.position = el.style.position || 'absolute';
+
     const isOverlap = (a: DOMRect, b: DOMRect) => {
       return !(
         a.right < b.left ||
@@ -64,24 +63,21 @@ const Root = (() => {
       );
     };
 
-    /**
-     * 随机生成一个不会重叠的位置
-     */
-    const getRandomPosition = () => {
+    const getRandomPositionPx = () => {
       const maxWidth = props.width ?? 12;
       const maxHeight = props.height ?? 20;
-      let maxLeft = window.innerWidth - maxWidth - 100;
-      if (maxLeft < 0) maxLeft = 0;
-      const maxTop = window.innerHeight - maxHeight - 500;
 
-      let left = Math.random() * maxLeft;
-      let top = Math.random() * maxTop;
+      // 计算可用像素范围（保证非负）
+      let maxLeftPx = Math.max(0, window.innerWidth - maxWidth - 100);
+      let maxTopPx = Math.max(0, window.innerHeight - maxHeight - 500);
 
-      const wrappers = document.querySelectorAll(".frame__wrapper") ?? [];
+      let leftPx = Math.random() * maxLeftPx;
+      let topPx = Math.random() * maxTopPx;
 
-      // 尝试最多 20 次避免重叠
+      const wrappers = document.querySelectorAll('.frame__wrapper') ?? [];
+
       for (let i = 0; i < 20; i++) {
-        const thisRect = new DOMRect(left, top, maxWidth, maxHeight);
+        const thisRect = new DOMRect(leftPx, topPx, maxWidth, maxHeight);
         let overlap = false;
 
         for (const w of Array.from(wrappers)) {
@@ -94,30 +90,36 @@ const Root = (() => {
         }
 
         if (!overlap) {
-          return { left, top };
+          return { leftPx, topPx, maxLeftPx, maxTopPx };
         }
 
-        // 如果重叠，则重新随机位置
-        left = Math.random() * maxLeft;
-        top = Math.random() * maxTop;
+        leftPx = Math.random() * maxLeftPx;
+        topPx = Math.random() * maxTopPx;
       }
 
-      return { left, top };
+      return { leftPx, topPx, maxLeftPx, maxTopPx };
     };
 
-    /**
-     * 执行移动动画
-     */
     const move = () => {
-      const { left, top } = getRandomPosition();
-      el.style.left = `${left}px`;
-      el.style.top = `${top}px`;
+      const { leftPx, topPx, maxLeftPx, maxTopPx } = getRandomPositionPx();
 
+      // 把像素位置转换为百分比（相对于窗口）
+      // 如果你想相对于父元素，请用 parent.clientWidth/clientHeight 替代 window.innerWidth/innerHeight
+      const leftPct = maxLeftPx > 0 ? (leftPx / (window.innerWidth - (props.width ?? 12))) * 100 : 0;
+      const topPct = maxTopPx > 0 ? (topPx / (window.innerHeight - (props.height ?? 20))) * 100 : 0;
+
+      el.style.left = `${leftPct}%`;
+      el.style.top = `${topPct}%`;
     };
 
-    // 初始延迟启动
-    setTimeout(move, 2000 + Math.random() * 2000);
+    // 可选：立刻执行或延迟执行
+    // 立刻：
+    // move();
+
+    // 或保持原来的延迟启动（如果你需要等别的样式/布局先处理完）
+    setTimeout(move);
   };
+
 
 
   const init = () => {
@@ -193,8 +195,8 @@ defineExpose({
 <style scoped lang="less">
 .frame__wrapper {
   transition:
-    left 0.3s ease-in-out,
-    top 0.3s ease-in-out;
+    left 0.6s ease-in-out,
+    top 0.6s ease-in-out;
   z-index: v-bind("props.zIndex");
   &:hover {
     z-index: 10;

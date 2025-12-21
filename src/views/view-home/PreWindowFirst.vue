@@ -1,56 +1,52 @@
 <template>
-  <view-scene>
-    <div class="page">
-      <!-- 顶部导航 -->
-      <nav class="nav">
-        <div class="logo">
-          <span class="mado">Mado</span><span class="homu">Homu</span>
-          <span class="sanctuary"> Sanctuary </span>
-        </div>
-        <ul class="nav-links">
-          <li><a href="#">焰之回廊</a></li>
-        </ul>
-      </nav>
-      <div style="position: relative; height: 100%">
-        <madoka-picture-album-card v-for="item in msgList" :msg="item" />
-        <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
-          <pre-self-msg-slot />
-        </madoka-picture-album-card>
-        <madoka-picture-album-card :background-image="madoka2" />
-        <madoka-picture-album-card :background-image="madoka3" />
-        <madoka-picture-album-card :background-image="madoka4" />
-        <madoka-picture-album-card background-video="/5.mp4" />
-        <template v-for="(item, index) in PictureAlbumVideo.items">
-          <madoka-picture-album-card
-            :left="item.x ?? null"
-            :top="item.y ?? null"
-            :background-video="getVideoUrl(`picture_album_${index + 1}.webm`)"
-            :id="index"
-            :width="item.width"
-            :height="item.height"
-            :z-index="item.zIndex"
-          />
-        </template>
-        <madoka-picture-album-card>
-          <pre-soul-ripple-slot />
-        </madoka-picture-album-card>
+  <div class="page">
+    <!-- 顶部导航 -->
+    <nav class="nav">
+      <div class="logo">
+        <span class="mado">Mado</span><span class="homu">Homu</span>
+        <span class="sanctuary"> Sanctuary </span>
       </div>
+      <ul class="nav-links">
+        <li><a href="#">焰之回廊</a></li>
+      </ul>
+    </nav>
+    <div style="position: relative; height: 100%">
+      <!--        <madoka-picture-album-card v-for="item in msgList" :msg="item" />-->
+      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
+        <pre-self-msg-slot />
+      </madoka-picture-album-card>
+      <!--        <madoka-picture-album-card :background-image="madoka2" />
+      <madoka-picture-album-card :background-image="madoka3" />
+      <madoka-picture-album-card :background-image="madoka4" />-->
+      <!--        <madoka-picture-album-card background-video="/5.mp4" />-->
+      <template v-for="(item, index) in PictureAlbumVideo.items">
+        <madoka-picture-album-card
+          :ref="(v) => PictureAlbumVideo.ref.set(v, index)"
+          :hidden-video="PictureAlbumVideo.hiddenVideo"
+          :left="item.x ?? null"
+          :top="item.y ?? null"
+          :background-video="getVideoUrl(`picture_album_${index + 1}.webm`)"
+          :id="index"
+          :width="item.width"
+          :height="item.height"
+          :z-index="item.zIndex"
+          :msg="item.msg"
+        >
+          <component v-if="item.component" :is="item.component" />
+        </madoka-picture-album-card>
+      </template>
+      <madoka-picture-album-card>
+        <pre-soul-ripple-slot />
+      </madoka-picture-album-card>
     </div>
-  </view-scene>
-  <view-player />
+  </div>
 </template>
 
 <script setup lang="ts">
-// 焰酱什么都准备好了～
-import ViewScene from "./ViewScene.vue";
-import ViewPlayer from "@/views/ViewPlayer.vue";
-import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
-import madoka2 from "@/assets/images/madoka_pic/2.jpg";
-import madoka3 from "@/assets/images/madoka_pic/3.png";
-import madoka4 from "@/assets/images/madoka_pic/4.jpg";
-import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
-import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
 import { getVideoUrl } from "@/utils/resource.ts";
+import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
+import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
+import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 
 const msgList = [
   "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
@@ -67,8 +63,18 @@ const SelfMsg = (() => {
 })();
 
 const PictureAlbumVideo = (() => {
+  const init = () => {
+    setTimeout(async () => {
+      await Promise.all(Object.values(s.ref.value).map((v) => v.changePos()));
+      s.hiddenVideo = true;
+    }, 3000);
+  };
   const s = reactive({
     hiddenVideo: false,
+    ref: {
+      value: {} as Record<number, InstanceType<typeof MadokaPictureAlbumCard>>,
+      set: (v, index) => (s.ref.value[index] = v),
+    },
     items: [
       { x: 0, y: 0, width: 17, zIndex: 1 },
       { x: 18, y: -12, width: 19 },
@@ -84,10 +90,9 @@ const PictureAlbumVideo = (() => {
       { x: 30, y: 33, width: 13 }, //11
       { x: 46, y: 33, width: 14, height: 25 },
       { x: 57, y: 25, height: 25, zIndex: 2 },
-      { x: 69, y: 40, height: 17 },
-      { x: 80, y: 19 },
     ],
   });
+  init();
   return s;
 })();
 </script>

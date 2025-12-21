@@ -32,6 +32,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: p => p.replace(/^\/madoka-api/, "")
         },
+        "/haojiezhe-api": {
+          target: 'https://haojiezhe12345.top:82',
+          changeOrigin: true,
+          rewrite: p => p.replace(/^\/haojiezhe-api/, "")
+        }
       },
     },
     resolve: {
@@ -41,3 +46,4 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
