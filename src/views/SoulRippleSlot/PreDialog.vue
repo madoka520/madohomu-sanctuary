@@ -1,5 +1,5 @@
 <template>
-  <madoka-dialog v-model="Root.opened" title="心灵涟漪" ok-text="发送" @ok="Root.ok">
+  <madoka-dialog v-model="Root.opened" title="发送留言" ok-text="发送" @ok="Root.ok">
     <textarea class="madoka-input" v-model="Root.text"/>
   </madoka-dialog>
 </template>

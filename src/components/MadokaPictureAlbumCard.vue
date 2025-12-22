@@ -51,6 +51,11 @@ const Root = (() => {
     const el = wrapperRef.value;
     if (!el) return;
 
+    //先保存位置属性
+    s.oldPos.transition = el.style.transition;
+    s.oldPos.top = el.style.top
+    s.oldPos.left = el.style.left
+
     el.style.transition = "none";
 
     const startY = el.offsetTop;
@@ -76,13 +81,13 @@ const Root = (() => {
       if (elapsed < upDuration) {
         // 向上跳
         const t = elapsed / upDuration;
-        el.style.top = `${startY - jumpHeight * easeOut(t)}px`;
+        el!.style.top = `${startY - jumpHeight * easeOut(t)}px`;
       } else if (elapsed < upDuration + fallDuration) {
         // 掉下去
         const t = (elapsed - upDuration) / fallDuration;
-        el.style.top = `${startY - jumpHeight + (screenHeight + 200) * easeIn(t)}px`;
+        el!.style.top = `${startY - jumpHeight + (screenHeight + 200) * easeIn(t)}px`;
       } else {
-        el.style.display = "none";
+        el!.style.display = "none";
         return;
       }
 
@@ -152,6 +157,11 @@ const Root = (() => {
       backgroundPosition: "center",
       imageRendering: "crisp-edges",
     })),
+    oldPos: {
+      left: '0',
+      top: '0',
+      transition: 'none',
+    },
     jump,
   });
   init();

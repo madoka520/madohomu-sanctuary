@@ -2,7 +2,7 @@
   <div class="bg w-full h-full">
     <div class="overlay flex w-full h-full justify-center flex-col">
       <div class="text-center">
-        <madoka-underline-btn @click="dialogRef?.open()" text="心灵涟漪"/>
+        <madoka-underline-btn @click="dialogRef?.open()" text="发送留言"/>
       </div>
     </div>
   </div>
