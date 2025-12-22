@@ -1,17 +1,17 @@
 <template>
-  <div class="page" @click="emits('changeCurrent')">
+  <div class="page" @click="PictureAlbumVideo.nextPage">
     <!-- 顶部导航 -->
     <nav class="nav">
       <div class="logo">
         <span class="mado">Mado</span><span class="homu">Homu</span>
         <span class="sanctuary"> Sanctuary </span>
       </div>
-      <ul class="nav-links">
+<!--      <ul class="nav-links">
         <li><a href="#">焰之回廊</a></li>
-      </ul>
+      </ul>-->
     </nav>
     <div style="position: relative; height: 100%">
-<!--      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
+      <!--      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
         <pre-self-msg-slot />
       </madoka-picture-album-card>-->
       <template v-for="(item, index) in PictureAlbumVideo.items">
@@ -43,12 +43,15 @@ import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
 import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
 import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 
-const emits = defineEmits(['changeCurrent'])
+const emits = defineEmits(["changeCurrent"]);
 
 const PictureAlbumVideo = (() => {
+  const nextPage = () => {
+    emits("changeCurrent");
+  };
   const init = () => {
     setTimeout(async () => {
-      await Promise.all(Object.values(s.ref.value).map((v) => v.changePos()));
+      await Promise.all(Object.values(s.ref.value).map((v) => v.jump()));
       s.hiddenVideo = true;
     }, 3000);
   };
@@ -74,6 +77,7 @@ const PictureAlbumVideo = (() => {
       { x: 46, y: 33, width: 14, height: 25 },
       { x: 57, y: 25, height: 25, zIndex: 2 },
     ],
+    nextPage,
   });
   init();
   return s;

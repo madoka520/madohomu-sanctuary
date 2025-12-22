@@ -47,80 +47,50 @@ const Root = (() => {
     return pos;
   };
 
-  const changePos = async () => {
-    if (!wrapperRef.value) return;
-    const el = wrapperRef.value as HTMLElement;
+  const jump = () => {
+    const el = wrapperRef.value;
+    if (!el) return;
 
-    // 确保是定位元素
-    el.style.position = el.style.position || 'absolute';
+    el.style.transition = "none";
 
-    const isOverlap = (a: DOMRect, b: DOMRect) => {
-      return !(
-        a.right < b.left ||
-        a.left > b.right ||
-        a.bottom < b.top ||
-        a.top > b.bottom
-      );
-    };
+    const startY = el.offsetTop;
+    const screenHeight = window.innerHeight;
 
-    const getRandomPositionPx = () => {
-      const maxWidth = props.width ?? 12;
-      const maxHeight = props.height ?? 20;
+    // 🎲 随机跳跃高度（像轻轻弹一下）
+    const minJump = 20;
+    const maxJump = 60;
+    const jumpHeight = minJump + Math.random() * (maxJump - minJump);
 
-      // 计算可用像素范围（保证非负）
-      let maxLeftPx = Math.max(0, window.innerWidth - maxWidth - 100);
-      let maxTopPx = Math.max(0, window.innerHeight - maxHeight - 500);
+    const upDuration = 200 + Math.random() * 100; // 上升时间也稍微随机
+    const fallDuration = 600 + Math.random() * 200; // 下落时间
 
-      let leftPx = Math.random() * maxLeftPx;
-      let topPx = Math.random() * maxTopPx;
+    let startTime = 0;
 
-      const wrappers = document.querySelectorAll('.frame__wrapper') ?? [];
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 2);
+    const easeIn = (t: number) => t * t;
 
-      for (let i = 0; i < 20; i++) {
-        const thisRect = new DOMRect(leftPx, topPx, maxWidth, maxHeight);
-        let overlap = false;
+    function frame(now: number) {
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
 
-        for (const w of Array.from(wrappers)) {
-          if (w === el) continue;
-          const rect = w.getBoundingClientRect();
-          if (isOverlap(thisRect, rect)) {
-            overlap = true;
-            break;
-          }
-        }
-
-        if (!overlap) {
-          return { leftPx, topPx, maxLeftPx, maxTopPx };
-        }
-
-        leftPx = Math.random() * maxLeftPx;
-        topPx = Math.random() * maxTopPx;
+      if (elapsed < upDuration) {
+        // 向上跳
+        const t = elapsed / upDuration;
+        el.style.top = `${startY - jumpHeight * easeOut(t)}px`;
+      } else if (elapsed < upDuration + fallDuration) {
+        // 掉下去
+        const t = (elapsed - upDuration) / fallDuration;
+        el.style.top = `${startY - jumpHeight + (screenHeight + 200) * easeIn(t)}px`;
+      } else {
+        el.style.display = "none";
+        return;
       }
 
-      return { leftPx, topPx, maxLeftPx, maxTopPx };
-    };
+      requestAnimationFrame(frame);
+    }
 
-    const move = () => {
-      const { leftPx, topPx, maxLeftPx, maxTopPx } = getRandomPositionPx();
-
-      // 把像素位置转换为百分比（相对于窗口）
-      // 如果你想相对于父元素，请用 parent.clientWidth/clientHeight 替代 window.innerWidth/innerHeight
-      const leftPct = maxLeftPx > 0 ? (leftPx / (window.innerWidth - (props.width ?? 12))) * 100 : 0;
-      const topPct = maxTopPx > 0 ? (topPx / (window.innerHeight - (props.height ?? 20))) * 100 : 0;
-
-      el.style.left = `${leftPct}%`;
-      el.style.top = `${topPct}%`;
-    };
-
-    // 可选：立刻执行或延迟执行
-    // 立刻：
-    // move();
-
-    // 或保持原来的延迟启动（如果你需要等别的样式/布局先处理完）
-    setTimeout(move);
+    requestAnimationFrame(frame);
   };
-
-
 
   const init = () => {
     /**
@@ -147,7 +117,6 @@ const Root = (() => {
         easing: "easeInOutSine",
         loop: true,
       });
-
     });
   };
   const s = reactive({
@@ -183,14 +152,14 @@ const Root = (() => {
       backgroundPosition: "center",
       imageRendering: "crisp-edges",
     })),
-    changePos
+    jump,
   });
-  init()
+  init();
   return s;
 })();
 defineExpose({
-  changePos: Root.changePos
-})
+  jump: Root.jump,
+});
 </script>
 <style scoped lang="less">
 .frame__wrapper {
