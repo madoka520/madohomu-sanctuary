@@ -22,16 +22,6 @@ const dialogRef = useTemplateRef("dialogRef")
   padding: 14px 22px;
   border-radius: 16px 16px 0 0;
 
-  /* 初始毛玻璃很弱（几乎没有） */
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-
-  /* 光圈初始弱一点 */
-  box-shadow:
-    0 0 12px rgba(255, 255, 255, 0.3),
-    0 0 24px rgba(255, 255, 255, 0.15);
-
   /* 动画关键点：blur + 透明度 + 阴影都可以 transition */
   transition:
     transform 0.25s,

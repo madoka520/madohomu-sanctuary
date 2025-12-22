@@ -20,6 +20,7 @@
   /* 关键：不让卡片被压缩 */
   flex-shrink: 0;
 
+  overflow: auto;
   border-radius: 12px;
   padding: 10px;
 }

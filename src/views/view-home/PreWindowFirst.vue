@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page" @click="emits('changeCurrent')">
     <!-- 顶部导航 -->
     <nav class="nav">
       <div class="logo">
@@ -11,14 +11,9 @@
       </ul>
     </nav>
     <div style="position: relative; height: 100%">
-      <!--        <madoka-picture-album-card v-for="item in msgList" :msg="item" />-->
-      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
+<!--      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
         <pre-self-msg-slot />
-      </madoka-picture-album-card>
-      <!--        <madoka-picture-album-card :background-image="madoka2" />
-      <madoka-picture-album-card :background-image="madoka3" />
-      <madoka-picture-album-card :background-image="madoka4" />-->
-      <!--        <madoka-picture-album-card background-video="/5.mp4" />-->
+      </madoka-picture-album-card>-->
       <template v-for="(item, index) in PictureAlbumVideo.items">
         <madoka-picture-album-card
           :ref="(v) => PictureAlbumVideo.ref.set(v, index)"
@@ -48,19 +43,7 @@ import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
 import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
 import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 
-const msgList = [
-  "要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话，不管到什么时候。",
-  "比希望更炽热 比绝望更深邃的 是爱",
-  "轮回……无论几次，我依然选择轮回，无数次的探寻，寻找唯一的出口。寻找能将你从绝望命运中拯救出来的道路……鹿目圆，我唯一的朋友。为了你……即使陷入永恒的迷宫，我也会毫不介意！",
-  "真正的心情怎么可以告诉你……因为我……我跟小圆处在不同的时间啊！我啊……是来自未来的喔……很多次很多次跟小圆相遇，然后无数次的目睹你的死……要怎样才能救你，要怎样怎能改变你的命运，只为了找到那个答案，无数次重新轮回。",
-];
-const SelfMsg = (() => {
-  const s = reactive({
-    left: computed(() => `${window.innerWidth / 2 - 100}px`),
-    top: computed(() => `${window.innerHeight / 2}px`),
-  });
-  return s;
-})();
+const emits = defineEmits(['changeCurrent'])
 
 const PictureAlbumVideo = (() => {
   const init = () => {

@@ -127,7 +127,6 @@ const Root = (() => {
      * 初始化动画 决定摆动方向
      */
     onMounted(() => {
-      changePos()
       // 随机选择方向和偏移量
       const moveType = Math.floor(Math.random() * 3) as 0 | 1 | 2;
       const delta = 10;

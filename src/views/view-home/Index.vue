@@ -1,8 +1,10 @@
 <template>
-<!--  <view-scene>
-    <pre-window-first/>
-  </view-scene>-->
-  <pre-window-second/>
+  <div v-show="Tab.current === 0">
+    <view-scene>
+      <pre-window-first @change-current="Tab.current++" />
+    </view-scene>
+  </div>
+  <pre-window-second v-show="Tab.current === 1" />
   <view-player />
 </template>
 
@@ -14,9 +16,14 @@ import PreWindowFirst from "@/views/view-home/PreWindowFirst.vue";
 import PreWindowSecond from "@/views/view-home/PreWindowSecond.vue";
 defineOptions({
   name: "ViewHome",
-})
+});
+
+const Tab = (() => {
+  const s = reactive({
+    current: 0,
+  });
+  return s;
+})();
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

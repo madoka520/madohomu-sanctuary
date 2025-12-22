@@ -14,37 +14,49 @@
 import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue";
 import axios from "axios";
 import MadokaMsgCard from "@/components/MadokaMsgCard.vue";
-const scrollRef = useTemplateRef("scrollRef")
-
+const scrollRef = useTemplateRef("scrollRef");
 
 const Msg = (() => {
   const getList = async () => {
-    const res = await axios.get("/haojiezhe-api/madohomu/api/comments")
-    s.list = res.data
+    const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
+    s.list = res.data;
   };
   const s = reactive({
-    list: [] as { comment: string }[]
+    list: [] as { comment: string }[],
   });
-  getList()
+  getList();
   return s;
 })();
 
 const Scroll = (() => {
-
   const wheel = (e: WheelEvent) => {
-    e.preventDefault()
+    const el = scrollRef.value;
+    if (!el) return;
 
-    const el = scrollRef.value
-    if (!el) return
+    const target = e.target as HTMLElement;
 
-    // ⭐⭐ 关键：直接改 scrollLeft —— 最跟手、最不卡
-    el.scrollLeft += e.deltaY * 20   // 越大越快
-  }
+    // 找最近的可纵向滚动父元素
+    const scrollable = target.closest(".card") as HTMLElement | null;
 
-  return reactive({ wheel })
+    if (scrollable) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollable;
+
+      const isAtTop = scrollTop === 0 && e.deltaY < 0;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0;
+
+      // 👉 内部还能滚，就放行
+      if (!isAtTop && !isAtBottom) {
+        return;
+      }
+    }
+
+    // 👉 内部滚不动了，交给横向
+    e.preventDefault();
+    el.scrollLeft += e.deltaY * 20;
+  };
+
+  return reactive({ wheel });
 })();
-
-
 </script>
 
 <style scoped>
@@ -55,7 +67,6 @@ const Scroll = (() => {
   background-position: center;
   width: 100%;
   height: 100vh;
-
 }
 
 .scroll-row {
@@ -66,19 +77,16 @@ const Scroll = (() => {
   padding-left: 20px;
   width: 100vw;
   /* 横向滚动关键点 */
-  flex-wrap: nowrap;   /* 不换行 */
+  flex-wrap: nowrap; /* 不换行 */
   white-space: nowrap;
 
   /* 平滑滚动（在移动端很好用） */
   scroll-behavior: smooth;
 
   /* 隐藏难看的滚动条（保留滚动功能） */
-  scrollbar-width: none;     /* Firefox */
+  scrollbar-width: none; /* Firefox */
 }
 .scroll-row::-webkit-scrollbar {
-  display: none;             /* Chrome/Safari */
+  display: none; /* Chrome/Safari */
 }
-
-
-
 </style>
