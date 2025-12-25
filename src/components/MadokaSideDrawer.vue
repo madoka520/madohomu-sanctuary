@@ -1,7 +1,9 @@
 <template>
-  <div class="peek-panel">
+  <div class="peek-panel" id="peek-panel">
     <div class="header"><madoka-ripple style="padding: 10px" @click="dialogRef?.open()">发送留言</madoka-ripple></div>
-    <slot />
+    <div class="content">
+      <slot />
+    </div>
     <pre-dialog ref="dialogRef"/>
   </div>
 </template>
@@ -15,12 +17,11 @@ const dialogRef = useTemplateRef("dialogRef")
 
 <style scoped>
 .peek-panel {
-  position: fixed;
+  position: absolute;
+  width: 100%;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%) translateY(50%);
-  padding: 14px 22px;
-  border-radius: 16px 16px 0 0;
 
   /* 动画关键点：blur + 透明度 + 阴影都可以 transition */
   transition:
@@ -31,23 +32,27 @@ const dialogRef = useTemplateRef("dialogRef")
   &:hover {
     transform: translateX(-50%) translateY(0);
 
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    .content {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
 
-    box-shadow:
-      0 0 25px rgba(255, 255, 255, 0.9),
-      0 0 45px rgba(255, 255, 255, 0.7),
-      0 0 70px rgba(255, 255, 255, 0.5),
-      0 0 100px rgba(255, 255, 255, 0.3);
+      box-shadow:
+        0 0 30px rgba(255, 255, 255, .2),
+        0 0 60px rgba(255, 255, 255, .2),
+        0 0 110px rgba(255, 255, 255, .2),
+        0 0 160px rgba(255, 255, 255, .2);
+    }
   }
+
+  .header {
+    width: 100vw;
+    height: 30px;
+    display: flex;
+    z-index: 1;
+    padding-left: 15px;
+    position: relative;
+  }
+
 }
-.header {
-  width: 100vw;
-  height: 30px;
-  display: flex;
-  z-index: 1;
-  cursor: pointer;
-  padding-left: 15px;
-}
+
 </style>

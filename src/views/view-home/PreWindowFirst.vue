@@ -38,7 +38,7 @@ const emits = defineEmits(["changeCurrent"]);
 const PictureAlbumVideo = (() => {
   const nextPage = async () => {
     await Promise.all(Object.values(s.ref.value).map((v) => v.jump()));
-    await sleep(3000)
+    await sleep(1500)
     emits("changeCurrent");
   };
   const init = () => {

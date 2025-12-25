@@ -2,10 +2,11 @@
   <div class="app-container">
     <madoka-side-drawer>
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
-        <madoka-msg-card v-for="item in Msg.list" class="card">
+        <madoka-msg-card v-for="item in Msg.list" >
           {{ item.comment }}
         </madoka-msg-card>
       </div>
+      <madoka-timeline />
     </madoka-side-drawer>
   </div>
 </template>
@@ -14,6 +15,7 @@
 import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue";
 import axios from "axios";
 import MadokaMsgCard from "@/components/MadokaMsgCard.vue";
+import MadokaTimeline from "@/components/MadokaTimeline.vue";
 const scrollRef = useTemplateRef("scrollRef");
 
 const Msg = (() => {
@@ -61,21 +63,18 @@ const Scroll = (() => {
 
 <style scoped>
 .app-container {
-  background: url("/dev-cdn/images/madoka.jpg");
+  background: url("/dev-cdn/images/madoka.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
 }
 
 .scroll-row {
   display: flex;
-  gap: 10px;
   overflow-x: auto;
-  padding: 10px 4px;
-  padding-left: 20px;
-  width: 100vw;
+  width: 100%;
   /* 横向滚动关键点 */
   flex-wrap: nowrap; /* 不换行 */
   white-space: nowrap;
