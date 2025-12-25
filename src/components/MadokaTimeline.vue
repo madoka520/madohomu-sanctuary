@@ -1,9 +1,9 @@
 <template>
   <div class="timeline-wrapper" ref="wrapperRef">
     <div class="timeline" ref="scrollRef" @wheel="Scroll.wheel">
-      <div v-for="year in TimeLine.currentYear - 2018" :key="year" class="year">
+      <div v-for="year in TimeLine.getYears()" :key="year" class="year">
         <div class="number">
-          {{ TimeLine.currentYear - year + 1 }}
+          {{ year }}
         </div>
         <div v-for="month in 12" class="month-wrapper">
           <div class="month number" @mouseenter="DateCard.showDateCard(year, month, $event)" @mouseleave="DateCard.hideDateCard">
@@ -12,14 +12,8 @@
         </div>
       </div>
     </div>
-    <div
-      v-show="DateCard.visible"
-      :style="DateCard.style"
-      class="date-card"
-      @mouseenter="DateCard.keepDateCard"
-      @mouseleave="DateCard.hideDateCard"
-    >
-      <div v-for="day in DateCard.days" class="day">
+    <div v-show="DateCard.visible" :style="DateCard.style" class="date-card" @mouseenter="DateCard.keepDateCard" @mouseleave="DateCard.hideDateCard">
+      <div v-for="day in DateCard.days" class="day" @click="TimeLine.dayClick(day)">
         {{ day }}
       </div>
     </div>
@@ -30,16 +24,33 @@
 import dayjs from "dayjs";
 const scrollRef = useTemplateRef("scrollRef");
 const wrapperRef = useTemplateRef("wrapperRef");
+const emits = defineEmits(["change"]);
+
 const TimeLine = (() => {
+  // 返回从 startYear 到 endYear 的年份数组
+  const getYears = () => Array.from({ length: s.currentYear - 2018 + 1 }, (_, i) => 2018 + i).reverse();
+  const dayClick = (day: number) => {
+    emits("change", `${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`);
+    DateCard.hideDateCard()
+  };
   const s = reactive({
     currentYear: dayjs().year(),
+    dayClick,
+    getYears,
   });
   return s;
 })();
 const DateCard = (() => {
   const showDateCard = (year: number, month: number, e: MouseEvent) => {
-    s.days = Array.from({ length: dayjs(`${year}-${month}-01`).daysInMonth() }, (_, i) => i + 1);
+    const daysInMonth = dayjs()
+      .year(year)
+      .month(month - 1)
+      .date(1)
+      .daysInMonth();
+    s.days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
+    s.hoverYear = year;
+    s.hoverMonth = month;
     const monthEl = e.target as HTMLElement;
     const wrapperEl = wrapperRef.value!;
 
@@ -83,6 +94,8 @@ const DateCard = (() => {
       top: "-10000px",
     },
     days: [] as number[],
+    hoverYear: -1,
+    hoverMonth: -1,
     timer: null as number | null,
     visible: false,
     showDateCard,

@@ -6,7 +6,7 @@
           {{ item.comment }}
         </madoka-msg-card>
       </div>
-      <madoka-timeline />
+      <madoka-timeline @change="Msg.changeDate"/>
     </madoka-side-drawer>
   </div>
 </template>
@@ -19,12 +19,16 @@ import MadokaTimeline from "@/components/MadokaTimeline.vue";
 const scrollRef = useTemplateRef("scrollRef");
 
 const Msg = (() => {
+  const changeDate = (time: string) => {
+    console.log(time);
+  };
   const getList = async () => {
     const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
     s.list = res.data;
   };
   const s = reactive({
     list: [] as { comment: string }[],
+    changeDate
   });
   getList();
   return s;
