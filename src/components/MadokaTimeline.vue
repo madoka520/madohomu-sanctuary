@@ -1,38 +1,35 @@
 <template>
-  <div class="timeline" ref="scrollRef" @wheel="Scroll.wheel">
-    <div v-for="year in TimeLine.currentYear - 2018" :key="year" class="year">
-      <div class="number">
-        {{ TimeLine.currentYear - year + 1 }}
-      </div>
-      <div v-for="month in 12" class="month-wrapper" >
-        <div class="month number" @mouseenter="DateCard.showDateCard(year, month, $event)"
-             @mouseleave="DateCard.hideDateCard('month')">
-          {{ month }}
+  <div class="timeline-wrapper" ref="wrapperRef">
+    <div class="timeline" ref="scrollRef" @wheel="Scroll.wheel">
+      <div v-for="year in TimeLine.currentYear - 2018" :key="year" class="year">
+        <div class="number">
+          {{ TimeLine.currentYear - year + 1 }}
+        </div>
+        <div v-for="month in 12" class="month-wrapper">
+          <div class="month number" @mouseenter="DateCard.showDateCard(year, month, $event)" @mouseleave="DateCard.hideDateCard">
+            {{ month }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div
-    v-show="DateCard.hovered.month || DateCard.hovered.day"
-    :style="DateCard.style"
-    class="date-card"
-    @mouseenter="DateCard.keepDateCard"
-    @mouseleave="DateCard.hideDateCard('day')"
-  >
     <div
-      v-for="day in DateCard.days"
-      class="day"
+      v-show="DateCard.visible"
+      :style="DateCard.style"
+      class="date-card"
+      @mouseenter="DateCard.keepDateCard"
+      @mouseleave="DateCard.hideDateCard"
     >
-      {{ day }}
+      <div v-for="day in DateCard.days" class="day">
+        {{ day }}
+      </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
 const scrollRef = useTemplateRef("scrollRef");
+const wrapperRef = useTemplateRef("wrapperRef");
 const TimeLine = (() => {
   const s = reactive({
     currentYear: dayjs().year(),
@@ -41,43 +38,60 @@ const TimeLine = (() => {
 })();
 const DateCard = (() => {
   const showDateCard = (year: number, month: number, e: MouseEvent) => {
-    s.days = Array.from(
-      { length: dayjs(`${year}-${month}-01`).daysInMonth() },
-      (_, i) => i + 1
-    )
+    s.days = Array.from({ length: dayjs(`${year}-${month}-01`).daysInMonth() }, (_, i) => i + 1);
 
-    const rect = (e.target as HTMLElement).getBoundingClientRect()
+    const monthEl = e.target as HTMLElement;
+    const wrapperEl = wrapperRef.value!;
 
-    s.style.left = `${rect.left + rect.width / 2}px`
-    s.style.top = `${rect.top - 12}px`
+    const monthRect = monthEl.getBoundingClientRect();
+    const wrapperRect = wrapperEl.getBoundingClientRect();
 
-    s.hovered.month = true
-  }
+    s.style.left = `${monthRect.left - wrapperRect.left + monthRect.width / 2}px`;
+    s.style.top = `${monthRect.top - wrapperRect.top - 12}px`;
+
+    s.visible = true;
+
+    // 进入显示时清理隐藏定时器
+    if (s.timer) {
+      clearTimeout(s.timer);
+      s.timer = null;
+    }
+  };
+
+  const hideDateCard = () => {
+    // 先清理之前的定时器
+    if (s.timer) clearTimeout(s.timer);
+
+    s.timer = window.setTimeout(() => {
+      s.visible = false;
+      s.timer = null;
+    }, 100);
+  };
 
   const keepDateCard = () => {
-    s.hovered.day = true
+    s.visible = true;
+    // 鼠标进入时也清理隐藏定时器
+    if (s.timer) {
+      clearTimeout(s.timer);
+      s.timer = null;
+    }
   };
-  const hideDateCard =  (type: "day" | "month") => {
-    setTimeout(() => {
-      s.hovered[type] = false
-    }, 100)
-  }
+
   const s = reactive({
     style: {
-      left: '-10000px',
-      top: '-10000px',
+      left: "-10000px",
+      top: "-10000px",
     },
     days: [] as number[],
-    hovered: {
-      day: false,
-      month: false,
-    },
+    timer: null as number | null,
+    visible: false,
     showDateCard,
     hideDateCard,
-    keepDateCard
+    keepDateCard,
   });
   return s;
 })();
+
 const Scroll = (() => {
   const wheel = (e: WheelEvent) => {
     const el = scrollRef.value;
@@ -110,6 +124,9 @@ const Scroll = (() => {
 </script>
 
 <style scoped>
+.timeline-wrapper {
+  position: relative;
+}
 .timeline {
   width: 100%;
   overflow-x: hidden;
@@ -137,8 +154,6 @@ const Scroll = (() => {
       background: rgba(255, 255, 255, 0.3);
       backdrop-filter: drop-shadow(0 0) blur(1vh);
     }
-
-
 
     .number {
       padding: 5px;
@@ -201,7 +216,7 @@ const Scroll = (() => {
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-
+    user-select: none;
     transition: background 0.15s ease;
   }
 
