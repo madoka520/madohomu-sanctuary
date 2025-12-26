@@ -2,9 +2,7 @@
   <div class="app-container">
     <madoka-side-drawer>
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
-        <madoka-msg-card v-for="item in Msg.list" >
-          {{ item.comment }}
-        </madoka-msg-card>
+        <madoka-msg-card v-for="item in Msg.list" :content="item.comment" :time="item.time" :uid="item.userId" :username="item.user"/>
       </div>
       <madoka-timeline @change="Msg.changeDate"/>
     </madoka-side-drawer>
@@ -23,8 +21,13 @@ const Msg = (() => {
     console.log(time);
   };
   const getList = async () => {
-    const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
-    s.list = res.data;
+    // const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
+    const res = await axios.get('/dev-cdn/test.ndjson')
+    console.log(res.data);
+    s.list = res.data.map(item => ({
+      ...item,
+      comment: item.content
+    }));
   };
   const s = reactive({
     list: [] as { comment: string }[],
@@ -58,7 +61,7 @@ const Scroll = (() => {
 
     // 👉 内部滚不动了，交给横向
     e.preventDefault();
-    el.scrollLeft += e.deltaY * 20;
+    el.scrollLeft += e.deltaY * 4.08;
   };
 
   return reactive({ wheel });

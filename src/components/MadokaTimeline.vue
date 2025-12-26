@@ -129,7 +129,7 @@ const Scroll = (() => {
 
     // 👉 内部滚不动了，交给横向
     e.preventDefault();
-    el.scrollLeft += e.deltaY * 20;
+    el.scrollLeft += e.deltaY * 4;
   };
 
   return reactive({ wheel });
