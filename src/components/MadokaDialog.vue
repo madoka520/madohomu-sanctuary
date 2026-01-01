@@ -1,12 +1,12 @@
 <template>
-  <madoka-mask v-model="modelValue" >
+  <madoka-mask v-model="modelValue">
     <div class="dialog__overlay" :style="{ width, height }" @click.stop ref="overlayRef">
       <header>
         <slot name="header">
           {{ title }}
         </slot>
       </header>
-      <main>
+      <main style="overflow:hidden;">
         <slot />
       </main>
       <footer>
@@ -48,7 +48,7 @@ const modelValue = defineModel({
   default: false,
 });
 const emits = defineEmits<{
-  (e: "cancel", event: Event): void;
+  (e: "cancel", event?: Event): void;
   (e: "ok", event: Event): void;
 }>();
 
@@ -101,6 +101,7 @@ const Root = (() => {
           el.addEventListener("transitionend", onEnd);
         })
 
+        emits('cancel', )
       }
     });
   };
@@ -163,5 +164,4 @@ const Root = (() => {
   opacity: 0 !important;
   transition: all 0.3s cubic-bezier(0.1, 1, 0.4, 1);
 }
-
 </style>

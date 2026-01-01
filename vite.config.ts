@@ -26,17 +26,18 @@ export default defineConfig(({ mode }) => {
     ],
     base: "",
     server: {
+      allowedHosts: ["nas.madokami.cn"],
       proxy: {
         "/madoka-api": {
           target: env.VITE_API_URL,
           changeOrigin: true,
-          rewrite: p => p.replace(/^\/madoka-api/, "")
+          rewrite: (p) => p.replace(/^\/madoka-api/, ""),
         },
         "/haojiezhe-api": {
-          target: 'https://haojiezhe12345.top:82',
+          target: "https://haojiezhe12345.top:82",
           changeOrigin: true,
-          rewrite: p => p.replace(/^\/haojiezhe-api/, "")
-        }
+          rewrite: (p) => p.replace(/^\/haojiezhe-api/, ""),
+        },
       },
     },
     resolve: {

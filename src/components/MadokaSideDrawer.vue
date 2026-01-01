@@ -1,10 +1,10 @@
 <template>
-  <div class="peek-panel" id="peek-panel">
-    <div class="header"><madoka-ripple style="padding: 10px" @click="dialogRef?.open()">发送留言</madoka-ripple></div>
+  <div class="peek-panel" id="peek-panel" tabindex="-1" :class="{ active: Root.active }">
+    <div class="header"><madoka-ripple style="padding: 10px" @click="Root.openDialog">发送留言</madoka-ripple></div>
     <div class="content">
       <slot />
     </div>
-    <pre-dialog ref="dialogRef"/>
+    <pre-dialog ref="dialogRef" @cancel="Root.cancel" />
   </div>
 </template>
 
@@ -12,7 +12,23 @@
 import MadokaRipple from "@/components/MadokaRipple.vue";
 import PreDialog from "@/views/SoulRippleSlot/PreDialog.vue";
 
-const dialogRef = useTemplateRef("dialogRef")
+const dialogRef = useTemplateRef("dialogRef");
+
+const Root = (() => {
+  const cancel = () => {
+    s.active = false;
+  };
+  const openDialog = () => {
+    dialogRef.value?.open();
+    s.active = true;
+  };
+  const s = reactive({
+    active: false,
+    cancel,
+    openDialog,
+  });
+  return s;
+})();
 </script>
 
 <style scoped>
@@ -29,7 +45,8 @@ const dialogRef = useTemplateRef("dialogRef")
     background 0.35s ease,
     backdrop-filter 0.35s ease,
     box-shadow 0.35s ease;
-  &:hover {
+  &:hover,
+  &:focus-within {
     transform: translateX(-50%) translateY(0);
 
     .content {
@@ -37,10 +54,10 @@ const dialogRef = useTemplateRef("dialogRef")
       -webkit-backdrop-filter: blur(12px);
 
       box-shadow:
-        0 0 30px rgba(255, 255, 255, .2),
-        0 0 60px rgba(255, 255, 255, .2),
-        0 0 110px rgba(255, 255, 255, .2),
-        0 0 160px rgba(255, 255, 255, .2);
+        0 0 30px rgba(255, 255, 255, 0.2),
+        0 0 60px rgba(255, 255, 255, 0.2),
+        0 0 110px rgba(255, 255, 255, 0.2),
+        0 0 160px rgba(255, 255, 255, 0.2);
     }
   }
 
@@ -52,7 +69,20 @@ const dialogRef = useTemplateRef("dialogRef")
     padding-left: 15px;
     position: relative;
   }
-
 }
 
+.active {
+  transform: translateX(-50%) translateY(0);
+
+  .content {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 0 60px rgba(255, 255, 255, 0.2),
+      0 0 110px rgba(255, 255, 255, 0.2),
+      0 0 160px rgba(255, 255, 255, 0.2);
+  }
+}
 </style>
