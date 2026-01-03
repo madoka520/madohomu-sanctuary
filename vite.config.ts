@@ -26,6 +26,9 @@ export default defineConfig(({ mode }) => {
     ],
     base: "",
     server: {
+      mimeTypes: {
+        "audio/webm": ["weba"]
+      },
       allowedHosts: ["nas.madokami.cn"],
       proxy: {
         "/madoka-api": {

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <pre-home-theme/>
     <madoka-side-drawer>
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card v-for="item in Msg.list" :content="item.comment" :time="item.time" :uid="item.userId" :username="item.user"/>
@@ -14,16 +15,15 @@ import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue";
 import axios from "axios";
 import MadokaMsgCard from "@/components/MadokaMsgCard.vue";
 import MadokaTimeline from "@/components/MadokaTimeline.vue";
+import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue";
 const scrollRef = useTemplateRef("scrollRef");
 
 const Msg = (() => {
   const changeDate = (time: string) => {
-    console.log(time);
   };
   const getList = async () => {
     // const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
     const res = await axios.get('/dev-cdn/test.ndjson')
-    console.log(res.data);
     s.list = res.data.map(item => ({
       ...item,
       comment: item.content
@@ -70,10 +70,10 @@ const Scroll = (() => {
 
 <style scoped>
 .app-container {
-  background: url("/dev-cdn/images/madoka.webp");
+/*  background: url("/dev-cdn/images/madoka.webp");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: center;*/
   width: 100vw;
   height: 100vh;
 }
