@@ -11,42 +11,68 @@ type SongItem = {
 
 export default defineStore("madokaAudioPlayer", () => {
   /** 歌单 */
-  const songList = ref<SongItem[]>([
+  const songList: SongItem[] = [
+    {
+      title: "魔法少女のテーマ",
+      artist: "梶浦由記",
+      album: "Best Instrumental Anime Songs",
+    },
+    {
+      title: "コネクト",
+      artist: "ClariS",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+    },
     {
       title: "また あした",
       artist: "ClariS",
       album: "コネクト",
     },
     // 后续可以 push 更多
-  ])
+  ]
 
-  const instance = ref<HTMLAudioElement>(null)
+  const playing = ref(false)
 
-  /** 状态 */
   const current = ref(0)
-  const playing = ref(false) // 可以保留状态，但不操作播放
 
   /** 当前歌曲 */
   const currentSong = computed(() => {
-    return songList.value[current.value] ?? null
+    return songList[current.value] ?? null
   })
-
-  /** 切换当前歌曲索引 */
-  const setCurrent = (index: number) => {
-    if (index < 0 || index >= songList.value.length) return
-    current.value = index
-  }
 
   /** 下一首 */
   const next = () => {
-    if (!songList.value.length) return
-    current.value = (current.value + 1) % songList.value.length
+    if (!songList.length) return
+    current.value = (current.value + 1) % songList.length
+    s.ref.value?.play()
   }
 
   /** 上一首 */
   const prev = () => {
-    if (!songList.value.length) return
-    current.value = (current.value - 1 + songList.value.length) % songList.value.length
+    if (!songList.length) return
+    current.value = (current.value - 1 + songList.length) % songList.length
+    s.ref.value?.play()
+  }
+
+  const play = (index?: number) => {
+    let idx = index
+    playing.value = true
+    if (index === undefined) {
+      idx = 0
+    }
+    current.value = idx
+
+    s.ref.value!.volume = s.volume
+    s.ref.value?.play()
+  }
+
+  const pause = () => {
+    s.ref.value?.pause()
+    playing.value = false
+  }
+
+  const resume = () => {
+    s.ref.value?.play()
+    playing.value = true
   }
 
   /** 获取当前歌曲播放链接（供 <audio> 使用） */
@@ -56,15 +82,24 @@ export default defineStore("madokaAudioPlayer", () => {
     return getAudioUrl(`${song.title}.weba`)
   })
 
-  return {
-    instance,
+  const s = {
+    ref: {
+      set: (v) => (s.ref.value = v),
+      value: null as HTMLAudioElement | null,
+    },
     songList,
     current,
+    volume: 0.5,
     currentSong,
-    playing,
-    setCurrent,
-    next,
-    prev,
     currentUrl,
+    /** 状态 */
+    playing,
+    next,
+    play,
+    prev,
+    pause,
+    resume,
   }
+
+  return s
 })
