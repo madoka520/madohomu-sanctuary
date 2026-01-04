@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import type { IThemeType } from "@/components/project/pre-home-theme/types.ts"
-import { getVideoUrl } from "@/utils/resource.ts"
+import { getImgUrl, getVideoUrl } from "@/utils/resource.ts"
 
 defineOptions({
   name: "pre-home-theme",
@@ -27,6 +27,10 @@ const Root = (() => {
         type: "video",
         src: getVideoUrl("madoka-op-muted.webm"),
       },
+      kami: {
+        type: "singleImg",
+        src: getImgUrl("madoka-op-muted.webm"),
+      }
     } as Record<string, IThemeType>,
   })
   return s
