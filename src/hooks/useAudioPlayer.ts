@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import { getAudioUrl } from "@/utils/resource.ts"
 
 type SongItem = {
@@ -18,48 +18,88 @@ export default defineStore("madokaAudioPlayer", () => {
       album: "Best Instrumental Anime Songs",
     },
     {
+      title: "Dreamin'",
+      artist: "ClariS",
+      album: "コネクト",
+    },
+    {
       title: "コネクト",
       artist: "ClariS",
-      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      album: "コネクト",
     },
+    {
+      title: "キミとふたり",
+      artist: "ClariS",
+      album: "コネクト",
+    },
+    {
+      title: "ルミナス",
+      artist: "ClariS",
+      album: "ルミナス",
+    },
+    {
+      title: "blossom",
+      artist: "ClariS",
+      album: "ルミナス",
+    },
+    {
+      title: "Friends",
+      artist: "ClariS",
+      album: "ルミナス",
+    },
+    {
+      title: "Pieces",
+      artist: "ClariS",
+      album: "カラフル"
+    },
+    {
+      title: "Surely",
+      artist: "ClariS",
+      album: "カラフル"
+    },
+    //五彩斑斓
+    {
+      title: "カラフル",
+      artist: "ClariS",
+      album: "カラフル"
+    },
+    //明天见
     {
       title: "また あした",
       artist: "ClariS",
-      album: "コネクト",
+      album: "",
     },
     // 后续可以 push 更多
   ]
 
-  const playing = ref(false)
-
-  const current = ref(0)
-
   /** 当前歌曲 */
   const currentSong = computed(() => {
-    return songList[current.value] ?? null
+    return songList[s.current] ?? null
   })
 
   /** 下一首 */
   const next = () => {
     if (!songList.length) return
-    current.value = (current.value + 1) % songList.length
+    s.current = (s.current + 1) % songList.length
     s.ref.value?.play()
+    s.playing = true
   }
 
   /** 上一首 */
   const prev = () => {
     if (!songList.length) return
-    current.value = (current.value - 1 + songList.length) % songList.length
+    s.current = (s.current - 1 + songList.length) % songList.length
     s.ref.value?.play()
+    s.playing = true
   }
 
   const play = (index?: number) => {
     let idx = index
-    playing.value = true
+    s.playing = true
     if (index === undefined) {
       idx = 0
     }
-    current.value = idx
+    s.current = idx
 
     s.ref.value!.volume = s.volume
     s.ref.value?.play()
@@ -67,12 +107,12 @@ export default defineStore("madokaAudioPlayer", () => {
 
   const pause = () => {
     s.ref.value?.pause()
-    playing.value = false
+    s.playing = false
   }
 
   const resume = () => {
     s.ref.value?.play()
-    playing.value = true
+    s.playing = true
   }
 
   /** 获取当前歌曲播放链接（供 <audio> 使用） */
@@ -82,24 +122,23 @@ export default defineStore("madokaAudioPlayer", () => {
     return getAudioUrl(`${song.title}.weba`)
   })
 
-  const s = {
+  const s = reactive({
     ref: {
       set: (v) => (s.ref.value = v),
       value: null as HTMLAudioElement | null,
     },
     songList,
-    current,
+    current: 0,
     volume: 0.5,
     currentSong,
     currentUrl,
     /** 状态 */
-    playing,
+    playing: false,
     next,
     play,
     prev,
     pause,
     resume,
-  }
-
-  return s
+  })
+  return toRefs(s)
 })

@@ -1,7 +1,7 @@
 <template>
-  <div class="mini-player" @mousedown="onMouseDown">
+  <div class="mini-player" ref="miniPlayerRef">
     <!-- 封面 -->
-    <img class="cover" src="@/assets/images/madoka_pic/2.jpg" alt="" />
+    <img class="cover" :src="getImgUrl(`/covers/${audioPlayer.currentSong.title}.webp`)" alt="" />
 
     <!-- 歌曲信息 -->
     <div class="info">
@@ -14,30 +14,40 @@
     <span class="mdi control-btn play-btn" :class="audioPlayer.playing ? 'mdi-pause-circle' : 'mdi-play-circle'" @click.stop="onToggle"></span>
 
     <!-- 歌单 -->
-    <span class="mdi mdi-playlist-play control-btn" @click="onOpenList"></span>
+    <span class="mdi mdi-playlist-play control-btn"></span>
+    <madoka-dialog v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="500px">
+      <pre-audio-player-ui />
+    </madoka-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
-
+import { getImgUrl } from "@/utils/resource.ts"
+import MadokaDialog from "@/components/MadokaDialog.vue"
+import PreAudioPlayerUi from "@/components/project/pre-audio-player-ui/Index.vue"
+import { type FullGestureState, useDrag } from "@vueuse/gesture"
 defineOptions({
   name: "MadokaMiniPlayer",
 })
-const props = withDefaults(
-  defineProps<{
-    cover: string
-  }>(),
-  {
-  },
-)
 const audioPlayer = useAudioPlayer()
-const emit = defineEmits<{
-  (e: "open-list"): void
-  (e: "prev"): void
-  (e: "next"): void
-}>()
-
+const miniPlayerRef = useTemplateRef("miniPlayerRef")
+const Dialog = (() => {
+  const open = (name: string, e?: Event) => {
+    switch (name) {
+      case "preAudioPlayerUi": {
+      }
+    }
+    s[name].opened = true
+  }
+  const s = reactive({
+    preAudioPlayerUi: {
+      opened: false,
+    },
+    open,
+  })
+  return s
+})()
 /* 点击 */
 const onToggle = () => {
   if (audioPlayer.playing) {
@@ -47,42 +57,22 @@ const onToggle = () => {
   audioPlayer.resume()
 }
 
-const onOpenList = () => {
-  emit("open-list")
-}
-
-/* 拖拽切歌（PC） */
-let startX = 0
-let dragging = false
-const THRESHOLD = 50
-
-const onMouseDown = (e: MouseEvent) => {
-  startX = e.clientX
-  dragging = true
-
-  window.addEventListener("mousemove", onMouseMove)
-  window.addEventListener("mouseup", onMouseUp)
-}
-
-const onMouseMove = (e: MouseEvent) => {
-  if (!dragging) return
-}
-
-const onMouseUp = (e: MouseEvent) => {
-  if (!dragging) return
-  dragging = false
-
-  const dx = e.clientX - startX
-
-  if (dx > THRESHOLD) {
+const dragHandler = (state: FullGestureState<"drag">) => {
+  const swipeX = state.swipe[0] // 横向滑动
+  const tap = state.tap // 是否点击
+  const el = state.event!.target as HTMLElement
+  if (tap && !el.closest(".control-btn")) {
+    Dialog.open("preAudioPlayerUi")
+  } else if (swipeX === 1) {
     audioPlayer.prev()
-  } else if (dx < -THRESHOLD) {
+  } else if (swipeX === -1) {
     audioPlayer.next()
   }
-
-  window.removeEventListener("mousemove", onMouseMove)
-  window.removeEventListener("mouseup", onMouseUp)
 }
+useDrag(dragHandler, {
+  domTarget: miniPlayerRef,
+  filterTaps: true, // 点击不会触发 swipe 逻辑
+})
 </script>
 
 <style scoped>
