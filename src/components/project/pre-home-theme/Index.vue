@@ -6,6 +6,7 @@
           <source :src="Root.currentTheme.src" />
         </video>
       </div>
+      <component :is="Root.currentTheme.component" v-else-if="Root.currentTheme.type === 'customer'" />
     </div>
   </div>
 </template>
@@ -17,10 +18,11 @@ import { getImgUrl, getVideoUrl } from "@/utils/resource.ts"
 defineOptions({
   name: "pre-home-theme",
 })
+const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
 
 const Root = (() => {
   const s = reactive({
-    current: "default",
+    current: "kami",
     currentTheme: computed(() => s.list[s.current]),
     list: {
       default: {
@@ -28,9 +30,9 @@ const Root = (() => {
         src: getVideoUrl("madoka-op-muted.webm"),
       },
       kami: {
-        type: "singleImg",
-        src: getImgUrl("madoka-op-muted.webm"),
-      }
+        type: "customer",
+        component: toAsyncComponent(() => import("@/components/project/pre-home-theme/components/kami/Index.vue")),
+      },
     } as Record<string, IThemeType>,
   })
   return s
