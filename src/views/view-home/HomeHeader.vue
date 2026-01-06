@@ -10,18 +10,21 @@
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
-      <div class="avatar-frame">
+      <div class="avatar-frame" @click="settingRef?.open()">
         <img src="@/assets/images/madoka_pic/1.jpg" class="avatar" />
       </div>
     </div>
     <!--      <ul class="nav-links">
             <li><a href="#">焰之回廊</a></li>
           </ul>-->
+    <setting ref="settingRef"/>
   </nav>
 </template>
 
 <script setup lang="ts">
 import MadokaPlayerControls from "@/components/madoka-mini-player-controls/Index.vue"
+import Setting from "@/components/project/setting/Index.vue"
+const settingRef = useTemplateRef("settingRef")
 </script>
 
 <style scoped>

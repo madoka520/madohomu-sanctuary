@@ -50,24 +50,24 @@ export default defineStore("madokaAudioPlayer", () => {
     {
       title: "Pieces",
       artist: "ClariS",
-      album: "カラフル"
+      album: "カラフル",
     },
     {
       title: "Surely",
       artist: "ClariS",
-      album: "カラフル"
+      album: "カラフル",
     },
     //五彩斑斓
     {
       title: "カラフル",
       artist: "ClariS",
-      album: "カラフル"
+      album: "カラフル",
     },
     //明天见
     {
       title: "また あした",
       artist: "ClariS",
-      album: "",
+      album: "魔法少女まどか☆マギカ Music Collection",
     },
     // 后续可以 push 更多
   ]

@@ -1,128 +1,133 @@
 <template>
-  <madoka-mask v-model="modelValue">
+  <madoka-mask v-model="modelValue" v-if="!unuseModel">
     <div class="dialog__overlay" :style="{ width, height }" @click.stop ref="overlayRef">
       <header>
         <slot name="header">
           {{ title }}
         </slot>
       </header>
-      <main style="overflow:hidden;">
+      <main style="overflow: hidden">
         <slot />
       </main>
       <footer>
         <slot name="footer">
-          <madoka-btn @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
-          <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
+          <template v-if="footer">
+            <madoka-btn @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
+            <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
+          </template>
         </slot>
       </footer>
     </div>
   </madoka-mask>
+  <slot v-else />
 </template>
 <script setup lang="ts">
-import MadokaMask from "@/components/MadokaMask.vue";
-import MadokaBtn from "@/components/button/Index.vue";
+import MadokaMask from "@/components/MadokaMask.vue"
+import MadokaBtn from "@/components/button/Index.vue"
 
 const props = withDefaults(
   defineProps<{
-    width?: string;
-    height?: string;
-    footer?: boolean;
-    title?: string;
+    width?: string
+    height?: string
+    footer?: boolean
+    title?: string
     okText?: string
     cancelText?: string
+    unuseModel?: boolean
   }>(),
   {
-    title: "弹窗",
+    title: "",
     footer: true,
     width: "400px",
     height: "300px",
     okText: "确 定",
-    cancelText: "取 消"
+    cancelText: "取 消",
+    unuseMode: false,
   },
-);
+)
 
-const overlayRef = useTemplateRef("overlayRef");
+const overlayRef = useTemplateRef("overlayRef")
 
-const mouse = useMouse();
+const mouse = useMouse()
 const modelValue = defineModel({
   default: false,
-});
+})
 const emits = defineEmits<{
-  (e: "cancel", event?: Event): void;
-  (e: "ok", event: Event): void;
-}>();
+  (e: "cancel", event?: Event): void
+  (e: "ok", event: Event): void
+}>()
 
 const Root = (() => {
   const setWatcher = () => {
     watch(modelValue, (visible) => {
-      const el = overlayRef.value;
-      if (!el) return;
+      const el = overlayRef.value
+      if (!el) return
 
       if (visible) {
         /* —— 打开 —— */
         nextTick(async () => {
-          const { width: w, height: h } = el.getBoundingClientRect();
-          const left = mouse.x.value - w * 5;
-          const top = mouse.y.value - h * 5;
+          const { width: w, height: h } = el.getBoundingClientRect()
+          const left = mouse.x.value - w * 5
+          const top = mouse.y.value - h * 5
 
-          s.lastX = left;
-          s.lastY = top;
+          s.lastX = left
+          s.lastY = top
           /* 初始状态：在鼠标中心缩小、透明 */
           Object.assign(el.style, {
             left: left + "px",
             top: top + "px",
-          });
+          })
           /* 下一帧触发过渡到居中放大 */
-          requestAnimationFrame(() => el.classList.add("enter-active"));
-        });
+          requestAnimationFrame(() => el.classList.add("enter-active"))
+        })
       } else {
         /* —— 关闭 —— */
 
         nextTick(() => {
           // 移除打开状态类
-          el.classList.remove("enter-active");
+          el.classList.remove("enter-active")
           // 添加关闭状态类，触发淡出动画
-          el.classList.add("leave-active");
+          el.classList.add("leave-active")
 
           // 监听动画结束事件
           const onEnd = (e: TransitionEvent) => {
             if (e.target === el) {
-              el.removeEventListener("transitionend", onEnd);
-              el.classList.remove("leave-active");
+              el.removeEventListener("transitionend", onEnd)
+              el.classList.remove("leave-active")
               Object.assign(el.style, {
                 // 还原初始内联样式
                 left: "",
                 top: "",
                 transform: "",
                 opacity: "",
-              });
+              })
             }
-          };
-          el.addEventListener("transitionend", onEnd);
+          }
+          el.addEventListener("transitionend", onEnd)
         })
 
-        emits('cancel', )
+        emits("cancel")
       }
-    });
-  };
+    })
+  }
 
   const cancel = async (e: Event) => {
     modelValue.value = false
-    emits("cancel", e);
-  };
+    emits("cancel", e)
+  }
   const ok = async (e: Event) => {
-    modelValue.value = false;
-    emits("ok", e);
-  };
+    modelValue.value = false
+    emits("ok", e)
+  }
   const s = reactive({
     lastX: 0,
     lastY: 0,
     ok,
     cancel,
-  });
-  setWatcher();
-  return s;
-})();
+  })
+  setWatcher()
+  return s
+})()
 </script>
 <style lang="less" scoped>
 .dialog__overlay {
