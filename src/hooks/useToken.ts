@@ -6,28 +6,16 @@ export type UserInfo = {
   username: string;
   nickname: string;
 }
-export default defineStore("user", {
-  state: () => ({
-    _token: useLocalStorage("token", ""),
-    userInfo:  useLocalStorage("userInfo", {} as UserInfo)
-  }),
-  getters: {
-    token: state => state._token
-  },
-  actions: {
-    setToken(newToken: string) {
-      this._token = newToken
-    },
-
-    // 清除 token
-    clearToken() {
-      this._token = ""
-      this.userInfo = {} as UserInfo
-    },
-
-    setUserInfo(userInfo: UserInfo) {
-      this.userInfo = cloneDeep(userInfo)
-    },
-
+export default defineStore("user", () => {
+  const logout = () => {
+    s.token = ""
+    s.userInfo = {} as UserInfo
   }
+  const s = reactive({
+    token: useLocalStorage("token", ""),
+    userInfo:  useLocalStorage("userInfo", {} as UserInfo),
+    logout
+  })
+
+  return toRefs(s)
 })
