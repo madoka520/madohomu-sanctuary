@@ -2,6 +2,18 @@
   <madoka-dialog :footer="false" v-model="Root.opened">
     <login v-if="!tokenStore.token"/>
 
+    <div v-else class="content">
+      <div class="slider">
+        <div v-for="(item, index) in Setting.list" :class="{ 'slider__active': index === Setting.current }" @click="() => Setting.current = index">
+          <div>
+            {{item}}
+          </div>
+        </div>
+      </div>
+      <div class="main" >
+
+      </div>
+    </div>
   </madoka-dialog>
 </template>
 
@@ -14,7 +26,13 @@ defineOptions({
   name: "Setting",
 })
 
-
+const Setting = (() => {
+  const s = reactive({
+    current: 0,
+    list: ["主题", "隐私和安全"]
+  })
+  return s
+})()
 const Root = (() => {
   const open = () => {
     s.opened = true
@@ -30,6 +48,25 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.content {
+  display: flex;
 
+  width: 800px;
+  height: 600px;
+  .slider {
+    width: 200px;
+
+    user-select:none;
+
+    &__active {
+      background: pink;
+      color: white;
+    }
+  }
+
+  .main {
+    flex:  1;
+  }
+}
 </style>

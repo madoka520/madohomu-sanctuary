@@ -1,6 +1,6 @@
 <template>
   <madoka-mask v-model="modelValue" v-if="!unuseModel">
-    <div class="dialog__overlay" :style="{ width, height }" @click.stop ref="overlayRef">
+    <div class="dialog__overlay" :style="{ minWidth: width, minHeight: height }" @click.stop ref="overlayRef">
 <!--      <madoka-meteor-shower/>-->
       <header>
         <slot name="header">
