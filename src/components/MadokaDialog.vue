@@ -1,7 +1,7 @@
 <template>
   <madoka-mask v-model="modelValue" v-if="!unuseModel">
     <div class="dialog__overlay" :style="{ width, height }" @click.stop ref="overlayRef">
-      <madoka-meteor-shower/>
+<!--      <madoka-meteor-shower/>-->
       <header>
         <slot name="header">
           {{ title }}

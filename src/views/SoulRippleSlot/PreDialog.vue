@@ -6,14 +6,14 @@
 
 <script setup lang="ts">
 import MadokaDialog from "@/components/MadokaDialog.vue";
-import SoulRippleApi from "@/api/SoulRippleApi.ts";
+import MessageApi from "@/api/MessageApi.ts"
 
 const Root = (() => {
   const open = () => {
     s.opened = true;
   };
   const ok = () => {
-    SoulRippleApi.send({
+    MessageApi.send({
       text: s.text,
     });
   };

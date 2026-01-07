@@ -1,76 +1,78 @@
 <template>
   <div class="app-container">
-    <pre-home-theme/>
+    <pre-home-theme />
     <madoka-side-drawer>
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
-        <madoka-msg-card v-for="item in Msg.list" :content="item.comment" :time="item.time" :uid="item.userId" :username="item.user"/>
+        <madoka-msg-card v-for="item in Msg.list" :content="item.comment" :time="item.time" :uid="item.userId" :username="item.user" />
       </div>
-      <madoka-timeline @change="Msg.changeDate"/>
+      <madoka-timeline @change="Msg.changeDate" />
     </madoka-side-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
-import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue";
-import axios from "axios";
-import MadokaMsgCard from "@/components/MadokaMsgCard.vue";
-import MadokaTimeline from "@/components/MadokaTimeline.vue";
-import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue";
-const scrollRef = useTemplateRef("scrollRef");
+import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue"
+import MadokaMsgCard from "@/components/MadokaMsgCard.vue"
+import MadokaTimeline from "@/components/MadokaTimeline.vue"
+import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
+import MessageApi from "@/api/MessageApi.ts"
+import axios from "axios"
+
+const scrollRef = useTemplateRef("scrollRef")
 
 const Msg = (() => {
-  const changeDate = (time: string) => {
-  };
+  const changeDate = (time: string) => {}
   const getList = async () => {
     // const res = await axios.get("/haojiezhe-api/madohomu/api/comments");
+    // const res = await MessageApi.list({})
     const res = await axios.get('/dev-cdn/test.ndjson')
-    s.list = res.data.map(item => ({
+    s.list = res.data.map((item) => ({
       ...item,
-      comment: item.content
-    }));
-  };
+      comment: item.content,
+    }))
+  }
   const s = reactive({
     list: [] as { comment: string }[],
-    changeDate
-  });
-  getList();
-  return s;
-})();
+    changeDate,
+  })
+  getList()
+  return s
+})()
 
 const Scroll = (() => {
   const wheel = (e: WheelEvent) => {
-    const el = scrollRef.value;
-    if (!el) return;
+    const el = scrollRef.value
+    if (!el) return
 
-    const target = e.target as HTMLElement;
+    const target = e.target as HTMLElement
 
     // 找最近的可纵向滚动父元素
-    const scrollable = target.closest(".card") as HTMLElement | null;
+    const scrollable = target.closest(".card") as HTMLElement | null
 
     if (scrollable) {
-      const { scrollTop, scrollHeight, clientHeight } = scrollable;
+      const { scrollTop, scrollHeight, clientHeight } = scrollable
 
-      const isAtTop = scrollTop === 0 && e.deltaY < 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0;
+      const isAtTop = scrollTop === 0 && e.deltaY < 0
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0
 
       // 👉 内部还能滚，就放行
       if (!isAtTop && !isAtBottom) {
-        return;
+        return
       }
     }
 
     // 👉 内部滚不动了，交给横向
-    e.preventDefault();
-    el.scrollLeft += e.deltaY * 4.08;
-  };
+    e.preventDefault()
+    el.scrollLeft += e.deltaY * 4.08
+  }
 
-  return reactive({ wheel });
-})();
+  return reactive({ wheel })
+})()
 </script>
 
 <style scoped>
 .app-container {
-/*  background: url("/dev-cdn/images/madoka.webp");
+  /*  background: url("/dev-cdn/images/madoka.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;*/
