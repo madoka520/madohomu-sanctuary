@@ -30,8 +30,8 @@ const loading = defineModel("loading", {
   font-family: "Cinzel", serif;
   font-weight: bold;
   font-size: 1.1rem;
-  cursor: pointer;
   position: relative;
+  user-select: none;
   overflow: hidden;
   transition: all 0.5s;
   text-shadow: 0 0 5px #ff8eb2;

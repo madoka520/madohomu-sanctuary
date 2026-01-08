@@ -32,7 +32,7 @@ const Form = (() => {
   }
   const login = () => {
     const rect = ref_login_button.value!.getBoundingClientRect()
-    createParticle(rect.x - 15, rect.y - 15, rect.width, rect.height, 20)
+    createParticle(rect.x - 15, rect.y - 15, rect.width, rect.height, 5)
   }
 
   const createMouseMoveAnimationInLoginButton = () => {
@@ -83,7 +83,6 @@ const Form = (() => {
   padding: 0 14px;
   margin-top: 20px;
   justify-content: center;
-  cursor: pointer;
   user-select: none;
   background: #ff93d2;
   color: #fff;
