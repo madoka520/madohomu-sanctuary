@@ -34,7 +34,7 @@ const Root = (() => {
   const resolveComponent = () => {
     const basePath = "/src/components";
     const compName = props.componentName;
-    const madokaComp = components[`${basePath}/madoka-${compName}/Index.vue`];
+    const madokaComp = components[`${basePath}/madoka-${compName}/Index.vue`] as () => Promise<Component>;
 
     if (madokaComp) {
       s.component = toAsyncComponent(madokaComp);
