@@ -1,5 +1,5 @@
 <template>
-  <div type="submit" :class="['submit-btn', { loading: loading }]">
+  <div :class="['submit-btn', { loading: loading }]">
     <span v-show="!loading">
       <slot>
         {{ text }}
@@ -35,11 +35,12 @@ const loading = defineModel("loading", {
   overflow: hidden;
   transition: all 0.5s;
   text-shadow: 0 0 5px #ff8eb2;
+  text-align: center;
 }
 
 .submit-btn:hover {
   background: #ff8eb2;
-  color: #1a0b2e;
+  color: white;
   box-shadow: 0 0 20px #ff8eb2;
 }
 
