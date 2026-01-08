@@ -13,8 +13,8 @@
       <footer>
         <slot name="footer">
           <template v-if="footer">
-            <madoka-btn @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
-            <madoka-btn @click="Root.ok" :text="okText" variant="outlined" color="pink" />
+            <madoka-btn type="1" @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
+            <madoka-btn type="1" @click="Root.ok" :text="okText" variant="outlined" color="pink" />
           </template>
         </slot>
       </footer>

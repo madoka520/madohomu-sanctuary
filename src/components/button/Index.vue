@@ -1,86 +1,49 @@
 <template>
-  <madoka-ripple :color>
-    <div class="madoka-btn flex-center" :class="{ [`variant-${variant}`]: true }" tabindex="0">
-    <span>
-      <slot>
-        {{ text }}
-      </slot>
-    </span>
-    </div>
-  </madoka-ripple>
+  <component :is="Root.component" v-bind="$attrs">
+    <slot/>
+  </component>
 </template>
 
 <script setup lang="ts">
-import type { Variant } from "@/components/button/button.ts";
-import ColorUtils from "@/utils/ColorUtils.ts";
-import MadokaRipple from "@/components/MadokaRipple.vue";
+import { capitalize } from "lodash-unified"
 
-defineOptions({
-  name: "MadokaBtn",
-});
 const props = withDefaults(
   defineProps<{
-    text?: string;
-    color?: string;
-    variant?: Variant;
-    radius?: number;
+    type: string
   }>(),
   {
-    color: "black",
-    radius: 4,
+
   },
-);
+)
+defineOptions({
+  name: "madoka-btn",
+})
 
-function isLightColor(colorStr: string): boolean {
-  const rgb = ColorUtils.getRGB(colorStr);
-  if (!rgb) return true; // fallback：亮色
-  const [r, g, b] = rgb;
-  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 128;
-}
+const components = import.meta.glob("/src/components/button/*.vue")
 
-const textColor = computed(() => {
-  return isLightColor(props.color) ? "black" : "white";
-});
+const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
+const Root = (() => {
+  const setWatcher = () => {
+    watch(() => props.type, resolveComponent, { immediate: true })
+  }
+
+  const resolveComponent = () => {
+    const basePath = "/src/components/button"
+    const compName = props.type
+    const madokaComp = components[`${basePath}/Index_${capitalize(compName)}.vue`]
+
+    if (madokaComp) {
+      s.component = toAsyncComponent(madokaComp)
+      return
+    }
+  }
+
+  const s = reactive({
+    component: "div" as string | Component,
+  })
+  setWatcher()
+  return s
+})()
 </script>
 
-<style scoped lang="less">
-.madoka-btn {
-  --primary-color: v-bind(color);
-  --text-color: v-bind(textColor);
-  padding: 5px 16px;
-  border-radius: v-bind("radius + 'px'");
-  gap: 6px;
-  user-select: none;
-}
-
-.variant-text {
-  background: transparent;
-  border: none;
-  color: var(--primary-color);
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-}
-
-.variant-outlined {
-  background: transparent;
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.variant-plain {
-  background: var(--primary-color);
-  color: var(--text-color);
-  border: none;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-</style>
+<style scoped></style>

@@ -11,13 +11,12 @@
       placeholder="密码"
       @toggle="Form.showOrHiddenPsd"
     />
-    <div class="madoka__input login" @click="Form.login">
-      <div>登录/注册</div>
-    </div>
+    <madoka-btn type="2" @click="Form.login"> 登录/注册 </madoka-btn>
   </div>
 </template>
 <script setup lang="ts">
 import MadokaInput from "@/components/MadokaInput.vue"
+import MadokaBtn from "@/components/button/Index.vue"
 
 const Form = (() => {
   const showOrHiddenPsd = () => {

@@ -1,6 +1,8 @@
 <template>
   <component :is="Root.component" v-bind="$attrs">
-    <slot v-for="(_, name) in $slots" :name="name" />
+    <template v-for="(_, name) in $slots" v-slot:[name]>
+      <slot :name="name" />
+    </template>
   </component>
 </template>
 
@@ -16,7 +18,7 @@ const props = withDefaults(
   },
 )
 defineOptions({
-  name: "madoka-base-component",
+  name: "madoka-icon",
 })
 
 const components = import.meta.glob("/src/components/madoka-icon/*.vue")
