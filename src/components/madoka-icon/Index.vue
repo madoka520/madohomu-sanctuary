@@ -1,9 +1,5 @@
 <template>
-  <component :is="Root.component" v-bind="$attrs">
-    <template v-for="(_, name) in $slots" v-slot:[name]>
-      <slot :name="name" />
-    </template>
-  </component>
+  <component :is="Root.component" v-bind="$attrs"/>
 </template>
 
 <script setup lang="ts">

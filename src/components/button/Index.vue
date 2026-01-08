@@ -1,12 +1,14 @@
 <template>
   <component :is="Root.component" v-bind="$attrs">
-    <slot/>
+    <template v-for="(name, index) in Object.keys($slots)" v-slot:[name]>
+      <slot :name="name" />
+    </template>
   </component>
 </template>
 
 <script setup lang="ts">
 import { capitalize } from "lodash-unified"
-
+const slots = defineSlots()
 const props = withDefaults(
   defineProps<{
     type: string

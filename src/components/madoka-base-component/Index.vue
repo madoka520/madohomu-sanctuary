@@ -1,6 +1,8 @@
 <template>
   <component :is="Root.component" v-bind="$attrs">
-    <slot v-for="(_, name) in $slots" :name="name" />
+    <template v-for="(name, index) in Object.keys($slots)" v-slot:[name]>
+      <slot :name="name" />
+    </template>
   </component>
 </template>
 
