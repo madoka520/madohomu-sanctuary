@@ -50,7 +50,6 @@ export const generateRact = (img: HTMLImageElement, x: number, y: number, w: num
     rotateSpeed,
     is_deleted: false,
   })
-  console.log(particle_list)
 }
 
 move()
