@@ -11,16 +11,25 @@
       placeholder="密码"
       @toggle="Form.showOrHiddenPsd"
     />
-    <madoka-btn type="2" > 登录/注册 </madoka-btn>
+    <madoka-btn type="2" @click="Form.login"> 登录/注册 </madoka-btn>
   </div>
 </template>
 <script setup lang="ts">
 import MadokaInput from "@/components/MadokaInput.vue"
 import MadokaBtn from "@/components/button/Index.vue"
+import AuthApi from "@/api/AuthApi.ts"
+import useToken from "@/hooks/useToken.ts"
+
+
 
 const Form = (() => {
   const showOrHiddenPsd = () => {
     s.showPassword = !s.showPassword
+  }
+
+  const login = async () => {
+    await useToken().login(s.model)
+
   }
 
   const s = reactive({
@@ -30,6 +39,7 @@ const Form = (() => {
     },
     showPassword: false,
     showOrHiddenPsd,
+    login
   })
   return s
 })()

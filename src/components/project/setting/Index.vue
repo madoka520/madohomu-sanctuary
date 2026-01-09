@@ -1,5 +1,5 @@
 <template>
-  <madoka-dialog :footer="false" v-model="Root.opened" title="登录/注册">
+  <madoka-dialog :footer="false" v-model="Root.opened">
     <login v-if="!tokenStore.token"/>
 
     <div v-else class="content">
