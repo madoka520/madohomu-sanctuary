@@ -14,7 +14,7 @@ import particleStarUrl from "@/assets/particle/star.png"
 import particleStarPlainUrl from "@/assets/particle/star_plain.png"
 import particleHeartUrl from "@/assets/particle/heart.png"
 import particleHeartPlainUrl from "@/assets/particle/heart_plain.png"
-import { animate } from "animejs"
+
 const props = withDefaults(
   defineProps<{
     text?: string
