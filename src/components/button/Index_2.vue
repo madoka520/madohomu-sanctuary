@@ -50,14 +50,14 @@ const Particle = (() => {
       const rect = ref_button.value!.getBoundingClientRect()
       // 判断鼠标是否在按钮上
       if (e.clientX >= rect.x && e.clientX <= rect.x + rect.width && e.clientY >= rect.y && e.clientY <= rect.y + rect.height) {
-        s.is_hover = true
+        is_hover = true
       } else {
-        s.is_hover = false
+        is_hover = false
       }
     }
     const enterFrame = () => {
-      if (s.is_destroy) return
-      if (s.is_hover) {
+      if (is_destroy) return
+      if (is_hover) {
         if (frame < 1e6) {
           frame++
         } else {
@@ -76,11 +76,14 @@ const Particle = (() => {
       enterFrame()
     })
     onUnmounted(() => {
-      s.is_destroy = true
+      is_destroy = true
       window.removeEventListener("mousemove", onMouseMove)
     })
   }
+
   let frame = 0
+  let is_hover = false
+  let is_destroy = false
   const particleStar = new Image()
   const particleStarPlain = new Image()
   const particleHeart = new Image()
@@ -89,11 +92,8 @@ const Particle = (() => {
   particleStarPlain.src = particleStarPlainUrl
   particleHeart.src = particleHeartUrl
   particleHeartPlain.src = particleHeartPlainUrl
+
   createMouseMoveAnimationInLoginButton()
-  const s = reactive({
-    is_hover: false,
-    is_destroy: false,
-  })
 })()
 </script>
 <style scoped>
