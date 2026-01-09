@@ -5,11 +5,12 @@ const move = () => {
     particle.x += particle.vx
     particle.y += particle.vy
     particle.vy += particle.gravity
-    particle.opacity += particle.opacitySpeed
+    particle.opacity += particle.is_growing ? 0.004 : particle.opacitySpeed
     particle.rotate += particle.rotateSpeed
     particle.rotate = particle.rotate % 360
     particle.x = particle.x % window.innerWidth
 
+    if (particle.opacity > particle.opacityLine) particle.is_growing = false
     if (particle.x < -1e5) particle.is_deleted = true
     if (particle.y < -1e5) particle.is_deleted = true
     if (particle.x > window.innerWidth + 1e5) particle.is_deleted = true
@@ -30,10 +31,10 @@ export const generateRact = (img: HTMLImageElement, x: number, y: number, w: num
   const py = y + Math.random() * h
   const vx = speed * Math.cos(Math.random() * Math.PI * 2)
   const vy = speed * Math.sin(Math.random() * Math.PI * 2)
-  const opacity = Math.random() * 0.5 + 0.5
-  const opacitySpeed = -Math.random() * 0.005 - 0.0025
+  const opacityLine = Math.random() * 0.5 + 0.5
+  const opacitySpeed = -Math.random() * 0.006 - 0.002
   const rotate = Math.random() * 360
-  const rotateSpeed = Math.random() * 0.2 - 0.1
+  const rotateSpeed = Math.random() * 0.1 - 0.05
   particle_list.push({
     id: generateId(),
     img,
@@ -43,12 +44,14 @@ export const generateRact = (img: HTMLImageElement, x: number, y: number, w: num
     vy,
     w: size,
     h: size,
-    gravity: 0.003,
-    opacity,
+    gravity: 0.0005,
+    opacity: 0,
+    opacityLine,
     opacitySpeed,
     rotate,
     rotateSpeed,
     is_deleted: false,
+    is_growing: true,
   })
 }
 
@@ -70,5 +73,6 @@ export namespace I {
     opacity: number
     opacitySpeed: number
     is_deleted: boolean
+    [key: string]: any
   }
 }
