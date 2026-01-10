@@ -6,12 +6,13 @@ import AuthApi from "@/api/AuthApi.ts"
 export type UserInfo = {
   username: string;
   password: string;
+  token?: string;
 }
 export default defineStore("user", () => {
   const login = async (data: UserInfo) => {
-    const res = await AuthApi.login(data)
-    s.token = res.token
-    s.userInfo = res as any
+    const res = await AuthApi.login(data) as unknown as UserInfo
+    s.token = res.token!
+    s.userInfo = res
   }
   const logout = () => {
     s.token = ""

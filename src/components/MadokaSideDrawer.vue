@@ -1,6 +1,9 @@
 <template>
-  <div class="peek-panel" id="peek-panel" tabindex="-1" :class="{ active: Root.active }">
-    <div class="header"><madoka-ripple style="padding: 10px" @click="Root.openDialog">发送留言</madoka-ripple></div>
+  <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }">
+    <div class="header">
+      <!--      <madoka-ripple style="padding: 10px" >发送留言</madoka-ripple>-->
+      <madoka-btn type="3" text="发送留言" @click="Root.openDialog" style="height: 40px" />
+    </div>
     <div class="content">
       <slot />
     </div>
@@ -9,26 +12,45 @@
 </template>
 
 <script setup lang="ts">
-import MadokaRipple from "@/components/MadokaRipple.vue";
-import PreDialog from "@/views/SoulRippleSlot/PreDialog.vue";
+import PreDialog from "@/views/SoulRippleSlot/PreDialog.vue"
+import { useDrag } from "@vueuse/gesture"
+import MadokaBtn from "@/components/button/Index.vue"
 
-const dialogRef = useTemplateRef("dialogRef");
+const peekPanelRef = useTemplateRef("peekPanelRef")
+const dialogRef = useTemplateRef("dialogRef")
 
 const Root = (() => {
   const cancel = () => {
-    s.active = false;
-  };
+    setTimeout(() => {
+      const listener = () => {
+        s.active = false
+        removeEventListener("click", listener)
+      }
+      addEventListener("click", listener)
+    }, 500)
+  }
   const openDialog = () => {
-    dialogRef.value?.open();
-    s.active = true;
-  };
+    dialogRef.value?.open()
+    s.active = true
+  }
   const s = reactive({
     active: false,
     cancel,
     openDialog,
-  });
-  return s;
-})();
+  })
+  return s
+})()
+const emits = defineEmits(["madokaScroll"])
+useDrag(
+  (state) => {
+    const swipeX = state.swipe[0] // 横向滑动
+    const el = state.event!.target as HTMLElement
+    emits("madokaScroll", { el, delta: -swipeX })
+  },
+  {
+    domTarget: peekPanelRef,
+  },
+)
 </script>
 
 <style scoped>

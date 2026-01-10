@@ -1,4 +1,6 @@
-import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from "axios"
+import { message } from "@/components/message.tsx"
+import type { MyAxiosRequestConfig } from "@/types/IAxiosType.ts"
 // import { useToken } from "@/hooks/useToken.ts";
 
 // const authenticated = computed(() => !!useToken().getToken());
@@ -7,30 +9,37 @@ const service = axios.create({
   timeout: 10000,
 });
 
+
 service.interceptors.request.use(
   (cfg) => {
-    const tokenRequired = (cfg.headers || {}).tokenRequired === false;
+    const tokenRequired = (cfg.headers || {}).tokenRequired === false
     if (tokenRequired) {
-      cfg.headers.Authorization = `Bearer ${tokenRequired}`;
+      cfg.headers.Authorization = `Bearer ${tokenRequired}`
     }
-    return cfg;
+    return cfg
   },
   (e) => {
-    Promise.reject(e).then((r) => r);
+    Promise.reject(e).then((r) => r)
   },
-);
+)
 
 service.interceptors.response.use(
   (res) => {
-    return Promise.resolve(res.data);
+    return Promise.resolve(res.data)
   },
   (err) => {
-    console.log("Error: ", err);
-    const res = err.response?.data ?? {};
-    let { message } = res;
-    return Promise.reject(message);
+    const cfg = err.config as MyAxiosRequestConfig
+    const res = err.response?.data ?? {}
+    const { message: msg } = res
+
+    // 根据配置决定是否显示错误提示
+    if (cfg?.showErrorMessage ?? true) {
+      message.error(msg || "出错啦~")
+    }
+
+    return Promise.reject(msg || err)
   },
-);
+)
 //参数类型
 export type RequestParams = { params?: any; data?: any };
 
@@ -49,9 +58,9 @@ export const madokaGet = (url: string, params: any, config?: InternalAxiosReques
  * @param data
  * @param config
  */
-export const madokaPost = <T>(url: string, data: any, config?: InternalAxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  return service.post(url, data, config);
-};
+export const madokaPost = <T>(url: string, data: any, config?: MyAxiosRequestConfig): Promise<AxiosResponse<T>> => {
+  return service.post(url, data, config)
+}
 /**
  * PUT请求
  @param url

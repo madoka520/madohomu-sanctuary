@@ -9,11 +9,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { generateRact } from "@/utils/ParticleUtils.ts"
-import particleStarUrl from "@/assets/particle/star.png"
-import particleStarPlainUrl from "@/assets/particle/star_plain.png"
-import particleHeartUrl from "@/assets/particle/heart.png"
-import particleHeartPlainUrl from "@/assets/particle/heart_plain.png"
 
 const props = withDefaults(
   defineProps<{
@@ -25,84 +20,17 @@ const loading = defineModel("loading", {
   default: false,
 })
 
-const ref_button = useTemplateRef("ref_button")
 
-const Particle = (() => {
-  const createParticle = (x: number, y: number, w: number, h: number, count: number) => {
-    for (let i = 0; i < count; i++) {
-      const imageMap = {
-        0: particleStar,
-        1: particleHeart,
-        2: particleHeartPlain,
-        3: particleStarPlain,
-      }
-      const image = imageMap[Math.floor(Math.random() * 4)]
-      generateRact(image, x, y, w, h, 0.4, 20)
-    }
-  }
-  const createMouseMoveAnimationInLoginButton = () => {
-    const renderParticle = () => {
-      const rect = ref_button.value!.getBoundingClientRect()
-      createParticle(rect.x - 15, rect.y - 15, rect.width, rect.height, 6)
-    }
-    const onMouseMove = (e: MouseEvent) => {
-      if (!ref_button.value) return
-      const rect = ref_button.value!.getBoundingClientRect()
-      // 判断鼠标是否在按钮上
-      if (e.clientX >= rect.x && e.clientX <= rect.x + rect.width && e.clientY >= rect.y && e.clientY <= rect.y + rect.height) {
-        is_hover = true
-      } else {
-        is_hover = false
-      }
-    }
-    const enterFrame = () => {
-      if (is_destroy) return
-      if (is_hover) {
-        if (frame < 1e6) {
-          frame++
-        } else {
-          frame = 0
-        }
-        if (frame % 300 === 0) {
-          renderParticle()
-        }
-      } else {
-        frame = -1
-      }
-      requestAnimationFrame(() => enterFrame())
-    }
-    window.addEventListener("mousemove", onMouseMove)
-    onMounted(() => {
-      enterFrame()
-    })
-    onUnmounted(() => {
-      is_destroy = true
-      window.removeEventListener("mousemove", onMouseMove)
-    })
-  }
-
-  let frame = 0
-  let is_hover = false
-  let is_destroy = false
-  const particleStar = new Image()
-  const particleStarPlain = new Image()
-  const particleHeart = new Image()
-  const particleHeartPlain = new Image()
-  particleStar.src = particleStarUrl
-  particleStarPlain.src = particleStarPlainUrl
-  particleHeart.src = particleHeartUrl
-  particleHeartPlain.src = particleHeartPlainUrl
-
-  createMouseMoveAnimationInLoginButton()
-})()
 </script>
 <style scoped>
 /* 提交按钮 */
 .submit-btn {
-  width: 100%;
   padding: 15px;
   background: linear-gradient(90deg, rgba(255, 142, 178, 0.1), rgba(255, 142, 178, 0.3), rgba(255, 142, 178, 0.1));
   border: 1px solid #ff8eb2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ff8eb2;
   font-family: "Cinzel", serif;
   font-weight: bold;

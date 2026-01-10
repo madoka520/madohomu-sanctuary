@@ -13,6 +13,7 @@
       autocomplete="off"
       autocapitalize="off"
       spellcheck="false"
+      :placeholder
     />
     <span class="icon" v-if="rightIcon">
       <i :class="`mdi ${rightIcon}`" @click="emit('toggle')" class="show-or-hidden-psd" />
@@ -87,7 +88,6 @@ input {
   color: #424242;
   outline: none;
   border-bottom: 1px solid transparent;
-  backdrop-filter: blur(4px);
   transition: color 0.3s ease;
 
 

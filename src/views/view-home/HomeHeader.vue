@@ -6,7 +6,6 @@
       <span class="sanctuary"> Sanctuary </span>
     </div>
     <div class="center-entry">
-      <input class="input show-with-hover" type="text" placeholder="Search..." />
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
@@ -94,17 +93,6 @@ const settingRef = useTemplateRef("settingRef")
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .input {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid pink;
-    height: 50px;
-    width: 500px;
-    &:focus {
-      outline: none;
-      border: 1px solid pink;
-    }
-  }
 }
 
 .right-entry {
