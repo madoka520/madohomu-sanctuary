@@ -1,7 +1,7 @@
 <template>
   <madoka-mask v-model="modelValue" v-if="!unuseModel">
-    <div class="dialog__overlay" :style="{ minWidth: width, minHeight: height }" @click.stop ref="overlayRef">
-<!--      <madoka-meteor-shower/>-->
+    <div class="dialog__overlay" :style="{ minWidth: width, minHeight: height, background }" @click.stop ref="overlayRef">
+      <!--      <madoka-meteor-shower/>-->
       <header>
         <slot name="header">
           {{ title }}
@@ -36,6 +36,7 @@ const props = withDefaults(
     okText?: string
     cancelText?: string
     unuseModel?: boolean
+    background?: string
   }>(),
   {
     title: "",
@@ -45,6 +46,7 @@ const props = withDefaults(
     okText: "确 定",
     cancelText: "取 消",
     unuseMode: false,
+    background: "rgba(255, 240, 245, 0.7)",
   },
 )
 
@@ -137,17 +139,28 @@ const Root = (() => {
   flex-direction: column;
   position: fixed;
   transform: scale(0.1);
-  border-radius: 5px;
+  border-radius: 12px; // 稍微圆润一点更适合粉色主题
+
+  // ✨ 核心增强：只添加毛玻璃和微光边框，不改动布局逻辑
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(255, 183, 197, 0.3);
+
   background: white;
   overflow: hidden;
   opacity: 0;
+
   header {
     padding: 20px;
+    // 增加一个粉色文字默认样式
+    font-weight: bold;
+    color: #ff8fab;
   }
 
   main {
     flex: 1;
-    overflow: auto; // 如果内容过多，可以滚动
+    overflow: auto;
     padding: 0 20px;
   }
 

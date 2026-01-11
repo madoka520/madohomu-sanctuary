@@ -25,6 +25,7 @@ import MadokaMsgCard from "@/components/MadokaMsgCard.vue"
 import MadokaTimeline from "@/components/MadokaTimeline.vue"
 import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
 import MessageApi from "@/api/MessageApi.ts"
+import emitter from "@/utils/emitter.ts"
 
 const scrollRef = useTemplateRef("scrollRef")
 type IParams = {
@@ -34,17 +35,42 @@ type IParams = {
   createTime?: number
 }
 const Msg = (() => {
-  const changeDate = (time: number) => {
+  const changeDate = async (time: number) => {
+    // 1. 状态初始化
     s.noMore = false
     s.list = []
     pageReset()
     delete s.params.from
     s.params.createTime = time
-    getList()
+
+    // 2. 执行加载 (确保 getList 内部没有因为 loading 锁被挡住)
+    // 注意：getList 内部执行时会自动设置 s.loading = true
+    await getList()
+
+    // 3. 此时数据已经回到 s.list，等待 Vue 将 DOM 渲染出来
+    await nextTick()
+
+    if (scrollRef.value) {
+      const el = scrollRef.value
+      // 4. 重点：在调整位置前，先手动锁住，防止 scroll 事件触发 checkLoad
+      s.loading = true
+
+      // 稍微向右偏移一点点，1px 即可激活滚动层并避开 0 判定
+      el.scrollLeft = 5
+
+      // 5. 给予一个极短的延迟后解锁
+      setTimeout(() => {
+        s.loading = false
+      }, 150)
+    }
   }
 
   const next = async () => {
-    s.params.page++
+    if (s.params.page <= 0) {
+      s.params.page = 1
+    } else {
+      s.params.page++
+    }
     await getList()
   }
 
@@ -83,7 +109,10 @@ const Msg = (() => {
   const prev = async () => {
     if (s.leftLoading) return
     s.leftLoading = true
-    if (s.list[0].createTime === s.maxTime) return
+    if (s.list[0].createTime === s.maxTime) {
+      s.leftLoading = false
+      return
+    }
     s.params.from = s.list[0].id
     s.params.page--
     if (s.params.page === 0) {
@@ -123,7 +152,8 @@ const Msg = (() => {
 
 // 滚动逻辑
 const Scroll = (() => {
-  const wheel = (e: WheelEvent) => {
+  const wheel = async (e: WheelEvent) => {
+    await nextTick()
     const el = scrollRef.value
     if (!el) return
 
@@ -139,31 +169,35 @@ const Scroll = (() => {
 
     e.preventDefault()
     el.scrollLeft += e.deltaY * 8.08
-    checkLoad(el)
+    await checkLoad(el)
   }
 
   const checkLoad = async (el: HTMLElement) => {
+    if (Msg.loading || Msg.leftLoading) return // 必须同时检查两个锁
+
     const scrollLeft = el.scrollLeft
     const maxScrollLeft = el.scrollWidth - el.clientWidth
-    const threshold = 2
+    const threshold = 5 // 稍微加大一点点
 
-    // 👉 向右加载下一页
-    if (scrollLeft >= maxScrollLeft - threshold && !Msg.loading) {
+    // 👉 向右加载
+    if (scrollLeft >= maxScrollLeft - threshold && !Msg.noMore) {
       await Msg.next()
     }
 
-    // 👉 向左加载上一页
-    if (scrollLeft <= threshold && !Msg.leftLoading) {
-      const oldScrollLeft = el.scrollLeft
+    // 👉 向左加载
+    if (scrollLeft <= threshold) {
       const oldScrollWidth = el.scrollWidth
 
-      await Msg.prev() // 调用你原本的 prev 逻辑
+      await Msg.prev()
 
-      // 等 DOM 渲染完再调整 scrollLeft
       await nextTick()
       const newScrollWidth = el.scrollWidth
-      el.scrollLeft = oldScrollLeft + (newScrollWidth - oldScrollWidth)
+      const diff = newScrollWidth - oldScrollWidth
 
+      if (diff > 0) {
+        // 这里的 +5 是关键，确保加载完后不在触发区，用户可以顺利向右滑
+        el.scrollLeft = diff + 5
+      }
     }
   }
 

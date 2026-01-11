@@ -41,8 +41,6 @@ const props = withDefaults(
 .card__wrapper {
   padding: 20px 5px 5px;
 
-  display: flex;
-  flex-wrap: nowrap;
   &:hover {
     .name {
       text-decoration: underline;
