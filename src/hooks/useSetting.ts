@@ -4,17 +4,21 @@ import type { IThemeType } from "@/components/project/pre-home-theme/types.ts"
 export default defineStore("setting", () => {
   const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
   const s = reactive({
-    theme: "op",
-    themeList: {
-      op: {
+    theme: 0,
+    themeList: [
+      {
+        name: "op",
         type: "video",
         src: getVideoUrl("madoka-op-muted.webm"),
+        cover: ""
       },
-      kami: {
+      {
+        name: "kami",
         type: "customer",
         component: toAsyncComponent(() => import("@/components/project/pre-home-theme/components/kami/Index.vue")),
-      },
-    } as Record<string, IThemeType>,
+        cover: ""
+      }
+    ] as IThemeType[],
   })
 
   return toRefs(s)
