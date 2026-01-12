@@ -5,7 +5,7 @@
         <div class="number">
           {{ year }}
         </div>
-        <div v-for="month in 12" class="month-wrapper">
+        <div v-for="month in Array.from({ length: 12 }, (_, i) => 12 - i)" class="month-wrapper">
           <div class="month number" @mouseenter="DateCard.showDateCard(year, month, $event)" @mouseleave="DateCard.hideDateCard">
             {{ month }}
           </div>
@@ -21,72 +21,72 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from "dayjs";
-const scrollRef = useTemplateRef("scrollRef");
-const wrapperRef = useTemplateRef("wrapperRef");
-const emits = defineEmits(["change"]);
+import dayjs from "dayjs"
+const scrollRef = useTemplateRef("scrollRef")
+const wrapperRef = useTemplateRef("wrapperRef")
+const emits = defineEmits(["change"])
 
 const TimeLine = (() => {
   // 返回从 startYear 到 endYear 的年份数组
-  const getYears = () => Array.from({ length: s.currentYear - 2018 + 1 }, (_, i) => 2018 + i).reverse();
+  const getYears = () => Array.from({ length: s.currentYear - 2019 + 1 }, (_, i) => 2019 + i).reverse()
   const dayClick = (day: number) => {
-    emits("change", `${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`);
+    emits("change", dayjs(`${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`, "YYYY-MM-DD").endOf("day").valueOf())
     DateCard.hideDateCard()
-  };
+  }
   const s = reactive({
     currentYear: dayjs().year(),
     dayClick,
     getYears,
-  });
-  return s;
-})();
+  })
+  return s
+})()
 const DateCard = (() => {
   const showDateCard = (year: number, month: number, e: MouseEvent) => {
     const daysInMonth = dayjs()
       .year(year)
       .month(month - 1)
       .date(1)
-      .daysInMonth();
-    s.days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+      .daysInMonth()
+    s.days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
-    s.hoverYear = year;
-    s.hoverMonth = month;
-    const monthEl = e.target as HTMLElement;
-    const wrapperEl = wrapperRef.value!;
+    s.hoverYear = year
+    s.hoverMonth = month
+    const monthEl = e.target as HTMLElement
+    const wrapperEl = wrapperRef.value!
 
-    const monthRect = monthEl.getBoundingClientRect();
-    const wrapperRect = wrapperEl.getBoundingClientRect();
+    const monthRect = monthEl.getBoundingClientRect()
+    const wrapperRect = wrapperEl.getBoundingClientRect()
 
-    s.style.left = `${monthRect.left - wrapperRect.left + monthRect.width / 2}px`;
-    s.style.top = `${monthRect.top - wrapperRect.top - 12}px`;
+    s.style.left = `${monthRect.left - wrapperRect.left + monthRect.width / 2}px`
+    s.style.top = `${monthRect.top - wrapperRect.top - 12}px`
 
-    s.visible = true;
+    s.visible = true
 
     // 进入显示时清理隐藏定时器
     if (s.timer) {
-      clearTimeout(s.timer);
-      s.timer = null;
+      clearTimeout(s.timer)
+      s.timer = null
     }
-  };
+  }
 
   const hideDateCard = () => {
     // 先清理之前的定时器
-    if (s.timer) clearTimeout(s.timer);
+    if (s.timer) clearTimeout(s.timer)
 
     s.timer = window.setTimeout(() => {
-      s.visible = false;
-      s.timer = null;
-    }, 100);
-  };
+      s.visible = false
+      s.timer = null
+    }, 100)
+  }
 
   const keepDateCard = () => {
-    s.visible = true;
+    s.visible = true
     // 鼠标进入时也清理隐藏定时器
     if (s.timer) {
-      clearTimeout(s.timer);
-      s.timer = null;
+      clearTimeout(s.timer)
+      s.timer = null
     }
-  };
+  }
 
   const s = reactive({
     style: {
@@ -101,39 +101,39 @@ const DateCard = (() => {
     showDateCard,
     hideDateCard,
     keepDateCard,
-  });
-  return s;
-})();
+  })
+  return s
+})()
 
 const Scroll = (() => {
   const wheel = (e: WheelEvent) => {
-    const el = scrollRef.value;
-    if (!el) return;
+    const el = scrollRef.value
+    if (!el) return
 
-    const target = e.target as HTMLElement;
+    const target = e.target as HTMLElement
 
     // 找最近的可纵向滚动父元素
-    const scrollable = target.closest(".card") as HTMLElement | null;
+    const scrollable = target.closest(".card") as HTMLElement | null
 
     if (scrollable) {
-      const { scrollTop, scrollHeight, clientHeight } = scrollable;
+      const { scrollTop, scrollHeight, clientHeight } = scrollable
 
-      const isAtTop = scrollTop === 0 && e.deltaY < 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0;
+      const isAtTop = scrollTop === 0 && e.deltaY < 0
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0
 
       // 👉 内部还能滚，就放行
       if (!isAtTop && !isAtBottom) {
-        return;
+        return
       }
     }
 
     // 👉 内部滚不动了，交给横向
-    e.preventDefault();
-    el.scrollLeft += e.deltaY * 4;
-  };
+    e.preventDefault()
+    el.scrollLeft += e.deltaY * 4
+  }
 
-  return reactive({ wheel });
-})();
+  return reactive({ wheel })
+})()
 </script>
 
 <style scoped>

@@ -5,9 +5,7 @@
       <span class="mado">Mado</span><span class="homu">Homu</span>
       <span class="sanctuary"> Sanctuary </span>
     </div>
-    <div class="center-entry">
-      <input class="input show-with-hover" type="text" placeholder="Search..." />
-    </div>
+    <div class="center-entry"></div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <div class="avatar-frame" @click="settingRef?.open()">
@@ -17,7 +15,7 @@
     <!--      <ul class="nav-links">
             <li><a href="#">焰之回廊</a></li>
           </ul>-->
-    <setting ref="settingRef"/>
+    <setting ref="settingRef" />
   </nav>
 </template>
 
@@ -44,6 +42,10 @@ const settingRef = useTemplateRef("settingRef")
   & > div {
     flex: 1;
   }
+
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
   &:hover,
   &:focus-within {
     background: rgba(255, 200, 220, 0.5);
@@ -94,17 +96,6 @@ const settingRef = useTemplateRef("settingRef")
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .input {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid pink;
-    height: 50px;
-    width: 500px;
-    &:focus {
-      outline: none;
-      border: 1px solid pink;
-    }
-  }
 }
 
 .right-entry {

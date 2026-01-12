@@ -13,9 +13,29 @@ export default defineStore("madokaAudioPlayer", () => {
   /** 歌单 */
   const songList: SongItem[] = [
     {
+      title: "never leave you alone",
+      artist: "梶浦由記",
+      album: "劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語 オリジナルサウンドトラック",
+    },
+    {
       title: "魔法少女のテーマ",
       artist: "梶浦由記",
       album: "Best Instrumental Anime Songs",
+    },
+    {
+      title: "Sagitta luminis",
+      artist: "梶浦由記",
+      album: "魔法少女まどか☆マギカ Music Collection",
+    },
+    {
+      title: "君の銀の庭 _より",
+      artist: "オルゴール ミドリ",
+      album: "オルゴール アニメソングス!Vol.11 「劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語」 「マギ」 他、特集!",
+    },
+    {
+      title: "Decretum",
+      artist: "梶浦由記",
+      album: "魔法少女まどか☆マギカ Music Collection",
     },
     {
       title: "Dreamin'",
@@ -77,13 +97,30 @@ export default defineStore("madokaAudioPlayer", () => {
     return songList[s.current] ?? null
   })
 
-  /** 下一首 */
-  const next = () => {
+  const next = async () => {
     if (!songList.length) return
+
     s.current = (s.current + 1) % songList.length
-    s.ref.value?.play()
     s.playing = true
+
+    const audio = s.ref.value
+    if (!audio) return
+
+    // 暂停上一个播放，重置时间
+    audio.pause()
+    audio.currentTime = 0
+    audio.volume = s.volume
+
+    try {
+      await audio.play()
+    } catch (e) {
+      if ((e as DOMException).name !== "AbortError") {
+        console.error(e)
+      }
+      // AbortError 可以忽略
+    }
   }
+
 
   /** 上一首 */
   const prev = () => {
@@ -93,16 +130,30 @@ export default defineStore("madokaAudioPlayer", () => {
     s.playing = true
   }
 
-  const play = (index?: number) => {
-    let idx = index
-    s.playing = true
-    if (index === undefined) {
-      idx = 0
-    }
+  const play = async (index?: number) => {
+    let idx = index ?? 0
     s.current = idx
+    s.playing = true
 
-    s.ref.value!.volume = s.volume
-    s.ref.value?.play()
+    const audio = s.ref.value
+    if (!audio) return
+
+    audio.volume = s.volume
+
+    try {
+      await audio.play()
+    } catch (e) {
+      if ((e as DOMException).name !== "AbortError") {
+        console.error(e)
+      }
+      // AbortError 可以忽略
+    }
+  }
+
+
+  const playByName = (name: string) => {
+    const songIndex = songList.findIndex(item => item.title === name)
+    play(songIndex)
   }
 
   const pause = () => {
@@ -139,6 +190,7 @@ export default defineStore("madokaAudioPlayer", () => {
     prev,
     pause,
     resume,
+    playByName,
   })
   return toRefs(s)
 })

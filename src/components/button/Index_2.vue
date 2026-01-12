@@ -1,5 +1,5 @@
 <template>
-  <div :class="['submit-btn', { loading: loading }]">
+  <div :class="['submit-btn', { loading: loading }]" ref="ref_button">
     <span v-show="!loading">
       <slot>
         {{ text }}
@@ -9,6 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
+
 const props = withDefaults(
   defineProps<{
     text?: string
@@ -18,14 +19,18 @@ const props = withDefaults(
 const loading = defineModel("loading", {
   default: false,
 })
+
+
 </script>
 <style scoped>
 /* 提交按钮 */
 .submit-btn {
-  width: 100%;
   padding: 15px;
   background: linear-gradient(90deg, rgba(255, 142, 178, 0.1), rgba(255, 142, 178, 0.3), rgba(255, 142, 178, 0.1));
   border: 1px solid #ff8eb2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ff8eb2;
   font-family: "Cinzel", serif;
   font-weight: bold;

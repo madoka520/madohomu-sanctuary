@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
 import { capitalize } from "lodash-unified"
-const slots = defineSlots()
 const props = withDefaults(
   defineProps<{
     type: string

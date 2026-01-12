@@ -3,15 +3,12 @@
     <div class="card">
       <div class="card__header">
         <div class="avatar">
-          <img
-            draggable="false"
-            :src="`https://kami.im/getavatar.php?uid=${uid}`"
-            loading="lazy"
-          />
+          <img draggable="false" :src="`https://kami.im/getavatar.php?uid=${uid}`" loading="lazy" />
         </div>
         <div class="user">
           <div class="name">{{ username }}</div>
         </div>
+        <div style="margin-left: auto;">#{{ externalId }}</div>
       </div>
 
       <div class="card__content">
@@ -19,31 +16,28 @@
       </div>
 
       <div class="card__footer">
-        {{ dayjs(time).format('YYYY/MM/DD HH:mm:ss') }}
+        {{ dayjs(createTime).format("YYYY/MM/DD HH:mm:ss") }}
       </div>
     </div>
   </div>
 </template>
 
-
 <script setup lang="ts">
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 
 const props = withDefaults(
   defineProps<{
     content: string
     uid: number
-    time: string
+    createTime: number
     username: string
+    externalId: number
   }>(),
-  {
-
-  }
+  {},
 )
 </script>
 
 <style scoped>
-
 .card__wrapper {
   padding: 20px 5px 5px;
 
@@ -115,5 +109,4 @@ const props = withDefaults(
     text-align: right;
   }
 }
-
 </style>
