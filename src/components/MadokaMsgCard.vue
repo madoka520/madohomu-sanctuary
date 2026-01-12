@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card__header">
         <div class="avatar">
-          <img draggable="false" :src="`https://kami.im/getavatar.php?uid=${uid}`" loading="lazy" />
+          <img draggable="false" :src="`https://kami.im/getavatar.php?uid=${uid}`" loading="lazy"  alt=""/>
         </div>
         <div class="user">
           <div class="name">{{ username }}</div>

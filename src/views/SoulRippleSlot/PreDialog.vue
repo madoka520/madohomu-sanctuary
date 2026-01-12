@@ -8,14 +8,19 @@
 import MadokaDialog from "@/components/MadokaDialog.vue";
 import MessageApi from "@/api/MessageApi.ts"
 
+const emits = defineEmits(["ok"]);
+
 const Root = (() => {
   const open = () => {
     s.opened = true;
   };
-  const ok = () => {
-    MessageApi.send({
+  const ok = async () => {
+    const res = MessageApi.send({
       text: s.text,
     });
+
+    emits('ok', res);
+
   };
   const s = reactive({
     opened: false,

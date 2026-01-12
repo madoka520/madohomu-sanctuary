@@ -20,9 +20,6 @@
           <component v-if="item.component" :is="item.component" />
         </madoka-picture-album-card>
       </template>
-      <madoka-picture-album-card>
-        <pre-soul-ripple-slot />
-      </madoka-picture-album-card>
     </div>
   </div>
 </template>
@@ -31,7 +28,6 @@
 import { getVideoUrl } from "@/utils/resource.ts";
 import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue";
 import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue";
-import PreSoulRippleSlot from "@/views/SoulRippleSlot/PreSoulRippleSlot.vue";
 
 const emits = defineEmits(["changeCurrent"]);
 

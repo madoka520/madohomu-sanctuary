@@ -6,7 +6,7 @@
           <source :src="Root.currentTheme.src" />
         </video>
       </div>
-      <component :is="Root.currentTheme.component" v-else-if="Root.currentTheme.type === 'customer'" />
+      <component :is="Root.currentTheme.component as object" v-else-if="Root.currentTheme.type === 'customer'" />
     </div>
   </div>
 </template>

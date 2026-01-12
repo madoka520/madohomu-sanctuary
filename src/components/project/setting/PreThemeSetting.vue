@@ -1,6 +1,6 @@
 <template>
   <div class="theme-select-container">
-    <div v-for="(item, index) in setting.themeList" class="theme-option" @click="() => setting.theme = index">
+    <div v-for="(item, index) in setting.themeList" class="theme-option" @click="() => (setting.theme = index)">
       <img :src="item.cover" alt="" />
       <div class="name">{{ item.name }}</div>
     </div>
@@ -24,14 +24,16 @@ const setting = useSetting()
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    user-select: none;
 
     &:hover {
       box-shadow: 0 4px 12px rgba(255, 192, 203, 100);
     }
 
     img {
-      width: 100px;
-      height: 100px;
+      width: auto;
+      height: 80px;
+
       &:hover {
         scale: 1.1;
         transition: scale 0.1s;
