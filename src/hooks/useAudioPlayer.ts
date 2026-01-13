@@ -13,34 +13,45 @@ export default defineStore("madokaAudioPlayer", () => {
   /** 歌单 */
   const songList: SongItem[] = [
     {
+      //纯音乐
       title: "never leave you alone",
       artist: "梶浦由記",
       album: "劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語 オリジナルサウンドトラック",
+      duration: 293,
     },
     {
+      //纯音乐
       title: "魔法少女のテーマ",
       artist: "梶浦由記",
       album: "Best Instrumental Anime Songs",
+      duration: 222,
     },
     {
+      //纯音乐
       title: "Sagitta luminis",
       artist: "梶浦由記",
       album: "魔法少女まどか☆マギカ Music Collection",
+      duration: 343,
     },
     {
+      //纯音乐
       title: "君の銀の庭[同人曲]",
       artist: "オルゴール ミドリ",
-      album: "オルゴール アニメソングス!Vol.11 「劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語」 「マギ」 他、特集!",
+      album: "劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語 オリジナルサウンドトラック",
+      duration: 266,
     },
     {
+      //纯音乐
       title: "Decretum",
       artist: "梶浦由記",
       album: "魔法少女まどか☆マギカ Music Collection",
+      duration: 109,
     },
     {
       title: "Dreamin'",
       artist: "ClariS",
       album: "コネクト",
+      duration: 277,
     },
     {
       title: "コネクト",
@@ -52,99 +63,162 @@ export default defineStore("madokaAudioPlayer", () => {
       title: "キミとふたり",
       artist: "ClariS",
       album: "コネクト",
+      duration: 254,
     },
     {
       title: "ルミナス",
       artist: "ClariS",
       album: "ルミナス",
+      duration: 248,
     },
     {
       title: "blossom",
       artist: "ClariS",
       album: "ルミナス",
+      duration: 248,
     },
     {
       title: "Friends",
       artist: "ClariS",
       album: "ルミナス",
+      duration: 231,
     },
     {
       title: "Pieces",
       artist: "ClariS",
       album: "カラフル",
+      duration: 258,
     },
     {
       title: "Surely",
       artist: "ClariS",
       album: "カラフル",
+      duration: 261,
     },
     //五彩斑斓
     {
       title: "カラフル",
       artist: "ClariS",
       album: "カラフル",
+      duration: 293,
     },
     //明天见
     {
       title: "また あした",
       artist: "ClariS",
       album: "魔法少女まどか☆マギカ Music Collection",
+      duration: 264,
     },
     {
       title: "and I'm home",
       artist: "喜多村英梨/野中藍",
       album: "魔法少女まどか☆マギカ 5",
+      duration: 169,
     },
     {
       title: "Magia",
+      artist: "Kalafina",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 313,
     },
     {
       title: "Mebius Ash",
+      artist: "斎藤千和",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 203,
     },
     {
       title: "misterioso",
+      artist: "Kalafina",
+      album: "Kalafina All Time Best 2008-2018",
+      duration: 242,
     },
     {
-      title: "Nux Walpurgis",
-    },
-    {
+      //纯音乐
       title: "Pergo pugnare",
+      artist: "梶浦由記",
+      album: "魔法少女まどか☆マギカ Music Collection",
+      duration: 139,
     },
     {
+      //纯音乐
       title: "Sis puella magica!",
+      artist: "梶浦由記/伊東恵里",
+      album: "魔法少女まどか☆マギカ Music Collection",
+      duration: 169,
     },
     {
       title: "Stairs",
+      artist: "水橋かおり/野中藍",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 231,
     },
     {
       title: "あこがれた咲いた",
+      artist: "悠木碧",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 231,
     },
     {
+      //纯音乐
       title: "コネクト -ゲームインスト",
+      artist: "梶浦由記",
+      album: "「魔法少女まどか☆マギカ」 Music Collection",
+      duration: 93,
     },
     {
       title: "ひかりふる",
+      artist: "Kalafina",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 293,
     },
     {
       title: "また あした (Instrumental)",
+      artist: "悠木碧",
+      album: "TVアニメ 魔法少女まどか☆マギカ 角色歌“また あした”",
+      duration: 263,
     },
     {
       title: "ユメおと",
+      artist: "悠木碧/斎藤千和",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 236,
     },
     {
       title: "君の銀の庭 (instrumental)",
+      artist: "Kalafina",
+      album: "君の銀の庭",
+      duration: 306,
     },
     {
       title: "君の銀の庭",
+      artist: "Kalafina",
+      album: "君の銀の庭",
+      duration: 307,
     },
     {
       title: "未来 ～instrumental～",
+      artist: "Kalafina",
+      album: "ひかりふる",
+      duration: 272,
     },
     {
       title: "未来",
+      artist: "Kalafina",
+      album: "ひかりふる",
+      duration: 272,
     },
     {
       title: "追憶",
+      artist: "Kalafina",
+      album: "君の銀の庭",
+      duration: 277,
+    },
+    {
+      title: "リンクス",
+      artist: "ClariS",
+      album: "リンクス",
+      duration: 265
     },
   ]
 
