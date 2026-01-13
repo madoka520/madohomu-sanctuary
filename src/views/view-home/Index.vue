@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="tsx">
-// 焰酱什么都准备好了～
 import ViewScene from "../ViewScene.vue";
 import ViewPlayer from "@/views/ViewPlayer.vue";
 import ViewParticle from "@/views/ViewParticle.vue";

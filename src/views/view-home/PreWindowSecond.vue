@@ -177,7 +177,7 @@ const Scroll = (() => {
 
     const scrollLeft = el.scrollLeft
     const maxScrollLeft = el.scrollWidth - el.clientWidth
-    const threshold = 5 // 稍微加大一点点
+    const threshold = 1 // 稍微加大一点点
 
     // 👉 向右加载
     if (scrollLeft >= maxScrollLeft - threshold && !Msg.noMore) {
