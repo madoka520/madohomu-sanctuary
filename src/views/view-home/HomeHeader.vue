@@ -5,7 +5,9 @@
       <span class="mado">Mado</span><span class="homu">Homu</span>
       <span class="sanctuary"> Sanctuary </span>
     </div>
-    <div class="center-entry"></div>
+    <div class="center-entry">
+      <madoka-desk-lrc/>
+    </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <div class="avatar-frame" @click="settingRef?.open()">
@@ -22,6 +24,7 @@
 <script setup lang="ts">
 import MadokaPlayerControls from "@/components/madoka-mini-player-controls/Index.vue"
 import Setting from "@/components/project/setting/Index.vue"
+import MadokaDeskLrc from "@/components/MadokaDeskLrc.vue"
 const settingRef = useTemplateRef("settingRef")
 </script>
 

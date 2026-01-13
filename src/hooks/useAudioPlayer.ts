@@ -46,6 +46,7 @@ export default defineStore("madokaAudioPlayer", () => {
       title: "コネクト",
       artist: "ClariS",
       album: "コネクト",
+      duration: 271
     },
     {
       title: "キミとふたり",
@@ -173,6 +174,11 @@ export default defineStore("madokaAudioPlayer", () => {
     return getAudioUrl(`${song.title}.weba`)
   })
 
+  const timeupdate = () => {
+    const audio = s.ref.value
+    if (!audio || !audio.duration) return
+    s.currentTime = audio.currentTime
+  }
   const s = reactive({
     ref: {
       set: (v) => (s.ref.value = v),
@@ -180,6 +186,7 @@ export default defineStore("madokaAudioPlayer", () => {
     },
     songList,
     current: 0,
+    currentTime: 0,
     volume: 0.5,
     currentSong,
     currentUrl,
@@ -191,6 +198,7 @@ export default defineStore("madokaAudioPlayer", () => {
     pause,
     resume,
     playByName,
+    timeupdate,
   })
   return toRefs(s)
 })

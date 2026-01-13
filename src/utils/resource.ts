@@ -4,3 +4,5 @@ export const getVideoUrl = (path:string) => `${import.meta.env.VITE_CDN_URL}vide
 export const getAudioUrl = (path:string) => `${import.meta.env.VITE_CDN_URL}music/${path}`
 //获取图片链接
 export const getImgUrl = (path: string) => `${import.meta.env.VITE_CDN_URL}images/${path}`
+
+export const getAssetUrl = (path:string) => `${import.meta.env.VITE_CDN_URL}/${path}`
