@@ -28,7 +28,7 @@ export default defineStore("madokaAudioPlayer", () => {
       album: "魔法少女まどか☆マギカ Music Collection",
     },
     {
-      title: "君の銀の庭 _より",
+      title: "君の銀の庭[同人曲]",
       artist: "オルゴール ミドリ",
       album: "オルゴール アニメソングス!Vol.11 「劇場版 魔法少女まどか☆マギカ[新編]叛逆の物語」 「マギ」 他、特集!",
     },
@@ -46,7 +46,7 @@ export default defineStore("madokaAudioPlayer", () => {
       title: "コネクト",
       artist: "ClariS",
       album: "コネクト",
-      duration: 271
+      duration: 271,
     },
     {
       title: "キミとふたり",
@@ -90,7 +90,62 @@ export default defineStore("madokaAudioPlayer", () => {
       artist: "ClariS",
       album: "魔法少女まどか☆マギカ Music Collection",
     },
-    // 后续可以 push 更多
+    {
+      title: "and I'm home",
+      artist: "喜多村英梨/野中藍",
+      album: "魔法少女まどか☆マギカ 5",
+    },
+    {
+      title: "Magia",
+    },
+    {
+      title: "Mebius Ash",
+    },
+    {
+      title: "misterioso",
+    },
+    {
+      title: "Nux Walpurgis",
+    },
+    {
+      title: "Pergo pugnare",
+    },
+    {
+      title: "Sis puella magica!",
+    },
+    {
+      title: "Stairs",
+    },
+    {
+      title: "あこがれた咲いた",
+    },
+    {
+      title: "コネクト -ゲームインスト",
+    },
+    {
+      title: "ひかりふる",
+    },
+    {
+      title: "また あした (Instrumental)",
+    },
+    {
+      title: "ユメおと",
+    },
+    {
+      title: "君の銀の庭 (instrumental)",
+    },
+    {
+      title: "君の銀の庭",
+    },
+    {
+      title: "未来 ～instrumental～",
+    },
+    {
+      title: "未来",
+    },
+    {
+      title: "追憶",
+    },
   ]
 
   /** 当前歌曲 */
