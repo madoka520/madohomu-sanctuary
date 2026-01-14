@@ -42,10 +42,6 @@ const settingRef = useTemplateRef("settingRef")
   padding-top: 10px;
   padding-bottom: 10px;
   height: 60px;
-  & > div {
-    flex: 1;
-  }
-
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
@@ -99,6 +95,7 @@ const settingRef = useTemplateRef("settingRef")
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
 }
 
 .right-entry {

@@ -1,144 +1,182 @@
 <template>
   <div class="lyric-container">
-    <div
-      class="cyber-pink-lyric"
-      :data-text="Root.currentLine"
-      :style="lyricStyle"
-    >
-      {{ Root.currentLine }}
+    <div class="cyber-pink-lyric" :data-text="LyricState.currentLineText" :style="LyricState.lyricStyle">
+      {{ LyricState.currentLineText }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, watch, onUnmounted } from "vue"
-import Lyric from "lyric-parser"
+import { reactive, onUnmounted, watch } from "vue"
 import useAudioPlayer from "@/hooks/useAudioPlayer"
 import { getAssetUrl } from "@/utils/resource"
 
-interface LyricLine {
-  time: number // 秒
-  text: string
-}
+const LyricState = (() => {
+  const audioPlayer = useAudioPlayer()
 
-const audioPlayer = useAudioPlayer()
+  interface Word {
+    text: string
+    start: number
+    end: number
+  }
+  interface Line {
+    start: number
+    end: number
+    words: Word[]
+    text: string
+  }
 
-const Root = (() => {
+  const parseLrc = (text: string) => {
+    const lines: Line[] = []
+    const lineRegex = /^\[(\d+),(\d+)\](.+)$/gm
+    let match: RegExpExecArray | null
+    while ((match = lineRegex.exec(text))) {
+      const lineStart = +match[1]
+      const lineDuration = +match[2]
+      const lineText = match[3]
+
+      const words: Word[] = []
+      const wordRegex = /([^\(\)]+)\((\d+),(\d+)\)/g
+      let wMatch: RegExpExecArray | null
+      while ((wMatch = wordRegex.exec(lineText))) {
+        const wText = wMatch[1]
+        const wStart = +wMatch[2]
+        const wDuration = +wMatch[3]
+        words.push({ text: wText, start: wStart, end: wStart + wDuration })
+      }
+
+      lines.push({
+        start: lineStart,
+        end: words.length ? words[words.length - 1].end : lineStart + lineDuration,
+        words,
+        text: words.map((w) => w.text).join(""),
+      })
+    }
+    return lines
+  }
+
   const s = reactive({
-    lyricInst: null as Lyric | null,
-
-    currentLine: " ",
-    currentLineNum: -1,
-
-    lineStart: 0,   // ms
-    lineEnd: 0      // ms
+    lines: [] as Line[],
+    currentLineIndex: -1,
+    currentLine: null as Line | null,
+    currentLineText: " ",
+    lyricStyle: { "--p": "0%" } as Record<string, string>,
   })
 
-  const reset = () => {
-    s.currentLine = "暂无歌词"
-    s.currentLineNum = -1
-    s.lineStart = 0
-    s.lineEnd = 0
-    s.lyricInst?.stop()
-    s.lyricInst = null
-  }
-
-  /**
-   * ⚠️ 唯一的歌词驱动入口
-   * 所有状态都从 lyricInst 来
-   */
-  const handleLyric = ({ lineNum, txt }: { lineNum: number; txt: string }) => {
-    if (!s.lyricInst) return
-
-    s.currentLineNum = lineNum
-    s.currentLine = txt || " "
-
-    const lines = s.lyricInst.lines
-    s.lineStart = lines[lineNum].time
-    s.lineEnd =
-      lineNum < lines.length - 1
-        ? lines[lineNum + 1].time
-        : lines[lineNum].time + 3000 // 最后一行兜底
-  }
-
-  const buildLrc = (list: LyricLine[]) =>
-    list
-      .map(({ time, text }) => {
-        const m = Math.floor(time / 60).toString().padStart(2, "0")
-        const s = (time % 60).toFixed(3).padStart(6, "0")
-        return `[${m}:${s}]${text}`
-      })
-      .join("\n")
+  let rafId: number | null = null
+  let lastProgress = 0
 
   const loadLyrics = async (name?: string) => {
-    reset()
-    if (!name) return
+    s.currentLineIndex = -1
+    s.currentLine = null
+    lastProgress = 0
+    s.lyricStyle["--p"] = "0%"
+
+    if (!name) {
+      s.currentLineText = "纯音乐，请欣赏"
+      s.lines = []
+      return
+    }
 
     try {
-      const res = await fetch(getAssetUrl(`lrc/${name}.json`))
+      const res = await fetch(getAssetUrl(`lrc/${name}.lrc`))
       if (!res.ok) throw new Error()
-
-      const json = (await res.json()) as LyricLine[]
-      const lrc = buildLrc(json)
-
-      s.lyricInst = new Lyric(lrc, handleLyric)
-
-      // 用 seek 驱动（不 play）
-      // s.lyricInst.seek(audioPlayer.currentTime * 1000)
+      const text = await res.text()
+      const newLines = parseLrc(text)
+      s.lines = newLines.length ? newLines : []
+      if (!s.lines.length) s.currentLineText = "纯音乐，请欣赏"
     } catch {
-      reset()
+      s.lines = []
+      s.currentLineText = "纯音乐，请欣赏"
     }
   }
 
-  /**
-   * ⬇️ 唯一的时间同步方式
-   * 不 play / 不 stop
-   */
-  watch(
-    () => audioPlayer.currentTime,
-    (t) => s.lyricInst?.seek(t * 1000)
-  )
+  const updateLyric = () => {
+    const nowMs = audioPlayer.currentTime * 1000
+
+    if (!s.lines.length) {
+      s.currentLineText = "纯音乐，请欣赏"
+      s.lyricStyle["--p"] = "0%"
+      lastProgress = 0
+    } else {
+      let index = s.lines.findIndex((l) => nowMs >= l.start && nowMs <= l.end)
+      if (index === -1) {
+        if (nowMs < s.lines[0].start) index = 0
+        else if (nowMs > s.lines[s.lines.length - 1].end) index = s.lines.length - 1
+      }
+
+      if (index !== -1 && index !== s.currentLineIndex) {
+        s.currentLineIndex = index
+        s.currentLine = s.lines[index]
+        s.currentLineText = s.currentLine.text
+        lastProgress = 0
+      }
+
+      const line = s.currentLine
+      let targetProgress = 0
+
+      if (line && line.words.length) {
+        // 逐字渐变计算
+        let progress = 0
+        for (let i = 0; i < line.words.length; i++) {
+          const w = line.words[i]
+          if (nowMs >= w.end) {
+            progress = (i + 1) / line.words.length
+          } else if (nowMs >= w.start) {
+            progress = (i + (nowMs - w.start) / (w.end - w.start)) / line.words.length
+            break
+          } else {
+            break
+          }
+        }
+        targetProgress = progress * 100
+      }
+
+      // 平滑过渡
+      lastProgress += (targetProgress - lastProgress) * 0.2
+      s.lyricStyle["--p"] = `${Math.min(Math.max(lastProgress, 0), 100)}%`
+    }
+
+    rafId = requestAnimationFrame(updateLyric)
+  }
 
   watch(
     () => audioPlayer.currentSong?.title,
-    (name) => loadLyrics(name),
-    { immediate: true }
+    async (title) => {
+      if (!title) return
+      if (rafId) cancelAnimationFrame(rafId)
+
+      // 保留旧歌词显示
+      s.currentLineIndex = -1
+      s.currentLine = null
+      s.currentLineText = s.lines[s.currentLineIndex]?.text ?? " "
+      lastProgress = 0
+      s.lyricStyle["--p"] = "0%"
+
+      await loadLyrics(title)
+      rafId = requestAnimationFrame(updateLyric)
+    },
+    { immediate: true },
   )
 
   onUnmounted(() => {
-    s.lyricInst?.stop()
+    if (rafId) cancelAnimationFrame(rafId)
+    s.lines = []
+    s.currentLine = null
+    s.currentLineIndex = -1
+    s.currentLineText = " "
+    s.lyricStyle = { "--p": "0%" }
   })
 
   return s
 })()
-
-/**
- * 进度 = 当前时间在 lyricInst 给的行区间中的占比
- */
-const lyricStyle = computed(() => {
-  if (!Root.lineEnd || !Root.lineStart) {
-    return { "--p": "0%" }
-  }
-
-  const now = audioPlayer.currentTime * 1000
-  const progress =
-    ((now - Root.lineStart) / (Root.lineEnd - Root.lineStart)) * 100
-
-  return {
-    "--p": `${Math.min(Math.max(progress, 0), 100)}%`
-  }
-})
 </script>
-
-
-
 
 <style scoped lang="less">
 @active-pink: #ff85a2;
 
 .lyric-container {
   padding: 40px;
-  background: transparent;
   display: flex;
   justify-content: center;
 }
@@ -147,26 +185,29 @@ const lyricStyle = computed(() => {
   position: relative;
   font-size: 32px;
   font-weight: 800;
+  text-align: center;
   color: rgba(255, 133, 162, 0.25);
 
   &::before {
     content: attr(data-text);
     position: absolute;
     inset: 0;
-
-    background: linear-gradient(
-      to right,
-      @active-pink var(--p),
-      transparent var(--p)
-    );
+    background: linear-gradient(to right, @active-pink var(--p), transparent var(--p));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    transition: none;
+  }
 
-    /* 🌸 关键就在这 */
-    transition: background-size 0.18s linear,
-    background-position 0.18s linear;
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: @active-pink;
+    filter: blur(8px);
+    opacity: 0.6;
+    z-index: -1;
+    pointer-events: none;
   }
 }
-
 </style>
