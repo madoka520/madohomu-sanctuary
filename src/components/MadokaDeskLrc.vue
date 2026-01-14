@@ -173,41 +173,90 @@ const LyricState = (() => {
 </script>
 
 <style scoped lang="less">
-@active-pink: #ff85a2;
+// 调色盘：更纯净的少女粉与星光白
+@madoka-pink: #ffb7ce;
+@star-white: #ffffff;
+@glow-soft: rgba(255, 183, 206, 0.6);
+@text-dim: rgba(255, 183, 206, 0.15);
 
 .lyric-container {
   padding: 40px;
   display: flex;
   justify-content: center;
+  background: transparent;
+  user-select: none;
 }
 
 .cyber-pink-lyric {
   position: relative;
-  font-size: 32px;
-  font-weight: 800;
+  font-size: 38px;
+  font-weight: 900;
+  color: @text-dim;
   text-align: center;
-  color: rgba(255, 133, 162, 0.25);
+  font-family: "PingFang SC", sans-serif;
 
+  // 1. 核心粉色填充层
   &::before {
     content: attr(data-text);
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, @active-pink var(--p), transparent var(--p));
+    // --p 是从 JS 传进来的百分比变量 (例如: 45%)
+    background: linear-gradient(to right, @madoka-pink var(--p), transparent var(--p));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transition: none;
+    z-index: 2;
+    // 外发光效果
+    filter: drop-shadow(0 0 8px @glow-soft);
   }
 
+  // 2. 繁星闪烁层
   &::after {
     content: attr(data-text);
     position: absolute;
     inset: 0;
-    color: @active-pink;
-    filter: blur(8px);
-    opacity: 0.6;
-    z-index: -1;
-    pointer-events: none;
+    z-index: 3;
+
+    // 用径向渐变模拟细小的星点
+    background-image:
+      radial-gradient(circle at 20% 30%, @star-white 1px, transparent 1px), radial-gradient(circle at 50% 70%, @star-white 1.5px, transparent 1.5px),
+      radial-gradient(circle at 80% 40%, @star-white 1px, transparent 1px), radial-gradient(circle at 30% 80%, @star-white 1.2px, transparent 1.2px),
+      radial-gradient(circle at 70% 20%, @star-white 1px, transparent 1px);
+    background-size: 100px 100%; // 星点分布周期
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+
+    // 闪烁动画
+    animation: stars-twinkle 2s infinite ease-in-out;
+  }
+
+  // 3. 底层的粉色氛围光晕
+  .lyric-glow {
+    position: absolute;
+    inset: 0;
+    color: @madoka-pink;
+    filter: blur(15px);
+    opacity: 0.4;
+    z-index: 1;
+    // 同样跟随进度
+    mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
+    -webkit-mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
+  }
+}
+
+// 星星闪烁动画：改变透明度和微小位移
+@keyframes stars-twinkle {
+  0%,
+  100% {
+    opacity: 0.4;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.5) drop-shadow(0 0 2px @star-white);
   }
 }
 </style>
