@@ -218,7 +218,7 @@ export default defineStore("madokaAudioPlayer", () => {
       title: "リンクス",
       artist: "ClariS",
       album: "リンクス",
-      duration: 265
+      duration: 265,
     },
   ]
 
@@ -251,7 +251,6 @@ export default defineStore("madokaAudioPlayer", () => {
     }
   }
 
-
   /** 上一首 */
   const prev = () => {
     if (!songList.length) return
@@ -271,6 +270,7 @@ export default defineStore("madokaAudioPlayer", () => {
     audio.volume = s.volume
 
     try {
+      timeupdate()
       await audio.play()
     } catch (e) {
       if ((e as DOMException).name !== "AbortError") {
@@ -280,9 +280,8 @@ export default defineStore("madokaAudioPlayer", () => {
     }
   }
 
-
   const playByName = (name: string) => {
-    const songIndex = songList.findIndex(item => item.title === name)
+    const songIndex = songList.findIndex((item) => item.title === name)
     play(songIndex)
   }
 
@@ -304,6 +303,7 @@ export default defineStore("madokaAudioPlayer", () => {
   })
 
   const timeupdate = () => {
+    requestAnimationFrame(timeupdate)
     const audio = s.ref.value
     if (!audio || !audio.duration) return
     s.currentTime = audio.currentTime

@@ -5,7 +5,6 @@
     :ref="audioPlayer.ref.set"
     @ended="audioPlayer.next"
     type="audio/webm; codecs=opus"
-    @timeupdate="audioPlayer.timeupdate"
   ></audio>
 </template>
 <script setup lang="ts">
