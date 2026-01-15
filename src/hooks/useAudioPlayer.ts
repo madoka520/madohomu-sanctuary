@@ -95,6 +95,12 @@ export default defineStore("madokaAudioPlayer", () => {
       album: "カラフル",
       duration: 261,
     },
+    {
+      title: "naturally",
+      artist: "悠木碧/喜多村英梨",
+      album: "「魔法少女まどか☆マギカ」 Ultimate Best",
+      duration: 268
+    },
     //五彩斑斓
     {
       title: "カラフル",
