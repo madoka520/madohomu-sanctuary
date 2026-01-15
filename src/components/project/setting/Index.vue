@@ -43,8 +43,8 @@ const Setting = (() => {
         component: toAsyncComponent(() => import("@/components/project/setting/PreThemeSetting.vue")),
       },
       {
-        title: "隐私保护",
-        component: toAsyncComponent(() => import("@/components/project/setting/PreThemeSetting.vue")),
+        title: "账号设置",
+        component: toAsyncComponent(() => import("@/components/project/setting/PreAccountMgr.vue")),
       },
       {
         title: "关于系统",

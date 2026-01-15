@@ -6,17 +6,14 @@
       <span class="sanctuary"> Sanctuary </span>
     </div>
     <div class="center-entry">
-      <madoka-desk-lrc/>
+      <madoka-desk-lrc />
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <div class="avatar-frame" @click="settingRef?.open()">
-        <img src="@/assets/images/madoka_pic/1.jpg" class="avatar" />
+        <madoka-avatar :width="46"/>
       </div>
     </div>
-    <!--      <ul class="nav-links">
-            <li><a href="#">焰之回廊</a></li>
-          </ul>-->
     <setting ref="settingRef" />
   </nav>
 </template>
@@ -25,6 +22,7 @@
 import MadokaPlayerControls from "@/components/madoka-mini-player-controls/Index.vue"
 import Setting from "@/components/project/setting/Index.vue"
 import MadokaDeskLrc from "@/components/MadokaDeskLrc.vue"
+import MadokaAvatar from "@/components/MadokaAvatar.vue"
 const settingRef = useTemplateRef("settingRef")
 </script>
 
@@ -103,25 +101,5 @@ const settingRef = useTemplateRef("settingRef")
   display: flex;
   align-items: center;
   gap: 30px;
-  .avatar-frame {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    padding: 2px;
-
-    box-sizing: border-box;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    background: #fff;
-  }
 }
 </style>

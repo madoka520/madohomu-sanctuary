@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import AuthApi from "@/api/AuthApi.ts"
 
 export type UserInfo = {
+  id: number;
   username: string;
   password: string;
   token?: string;
