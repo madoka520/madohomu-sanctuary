@@ -2,10 +2,9 @@
   <teleport to="body">
     <div>
       <Transition name="fade">
-        <div class="mask" v-show="modelValue" @click="Root.cancel">
-        </div>
+        <div class="mask" v-show="modelValue" @click="Root.cancel" :style="{ zIndex }"></div>
       </Transition>
-      <div class="content">
+      <div class="content" :style="{ zIndex: contentZIndex }">
         <slot />
       </div>
     </div>
@@ -13,20 +12,24 @@
 </template>
 
 <script setup lang="ts">
+import useModalState from "@/hooks/useModalState.ts"
+
 const props = withDefaults(
   defineProps<{
     maskClosable?: boolean
     beforeClose?: () => void | Promise<void>
   }>(),
   {
-    maskClosable: true
-  }
+    maskClosable: true,
+  },
 )
 
 const modelValue = defineModel({
-  default: false
+  default: false,
 })
-
+const zIndex = useModalState().zIndex
+const contentZIndex = computed(() => zIndex + 1)
+useModalState().zIndex++
 const emits = defineEmits<{
   (e: "cancel", event: Event): void
 }>()
@@ -38,7 +41,7 @@ const Root = (() => {
       //这个await去掉会导致弹窗关闭的时候突然跑到左下角
       await props.beforeClose()
     }
-    emits('cancel', e)
+    emits("cancel", e)
     modelValue.value = false
   }
   return reactive({ cancel })

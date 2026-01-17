@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <pre-home-theme />
-    <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll">
+    <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne">
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card
           v-for="item in Msg.list"
@@ -11,6 +11,7 @@
           :uid="item.userId ?? item.externalUserId"
           :username="item.username ?? item.externalUsername"
           :external-id="item.externalId"
+          :origin="item.origin"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" />
@@ -35,6 +36,9 @@ type IParams = {
   createTime?: number
 }
 const Msg = (() => {
+  const pushOne = (e) => {
+    console.log(e)
+  }
   const changeDate = async (time: number) => {
     // 1. 状态初始化
     s.noMore = false
@@ -135,6 +139,7 @@ const Msg = (() => {
       externalUserId: number
       username: string
       externalId: number
+      origin: string
     }[],
     changeDate,
     getList,
@@ -143,6 +148,7 @@ const Msg = (() => {
     noMore: false,
     loading: false,
     leftLoading: false,
+    pushOne,
   })
 
   getList() // 初始化加载

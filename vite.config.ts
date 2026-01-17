@@ -1,10 +1,9 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
 import { fileURLToPath, URL } from "node:url";
 import AutoImport from "unplugin-auto-import/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
-
+import vueJsxVapor from "vue-jsx-vapor/vite"
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
@@ -15,7 +14,10 @@ export default defineConfig(({ mode }) => {
           propsDestructure: true,
         },
       }),
-      vueJsx(),
+      vueJsxVapor({
+        macros: true,
+        interop: true,
+      }),
       AutoImport({
         imports: ["vue", "vue-router", "@vueuse/core", "vue/macros"],
         dts: "auto-imports.d.ts",
@@ -27,7 +29,7 @@ export default defineConfig(({ mode }) => {
     base: "",
     server: {
       mimeTypes: {
-        "audio/webm": ["weba"]
+        "audio/webm": ["weba"],
       },
       allowedHosts: ["nas.madokami.cn"],
       proxy: {
@@ -48,6 +50,6 @@ export default defineConfig(({ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
-  };
+  }
 });
 

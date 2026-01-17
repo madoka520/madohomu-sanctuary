@@ -1,6 +1,6 @@
 <template>
   <madoka-dialog v-model="Root.opened" title="发送留言" ok-text="发送" @ok="Root.ok">
-    <textarea class="madoka-input" v-model="Root.text" />
+    <textarea class="madoka-input" v-model="Root.text" placeholder="请输入留言内容"/>
   </madoka-dialog>
 </template>
 
@@ -15,10 +15,10 @@ const Root = (() => {
     s.opened = true;
   };
   const ok = async () => {
-    const res = MessageApi.send({
-      text: s.text,
+    const res = await MessageApi.send({
+      content: s.text,
     });
-
+    s.opened = false;
     emits('ok', res);
 
   };
@@ -41,7 +41,7 @@ defineExpose({
 
   border-radius: 5px;
   width: 100%;
-  height: 70%;
+  height: 120px;
   &:focus {
     outline: none;
   }

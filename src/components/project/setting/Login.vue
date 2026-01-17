@@ -16,13 +16,11 @@
             placeholder="请输入密码"
             @toggle="Form.showOrHiddenPsd"
           />
-
-          <div class="form__error" :class="{ 'is-active': Form.error }">
-            <span v-if="Form.error"><span class="mdi mdi-alert-circle-outline"></span> {{ Form.error }}</span>
-          </div>
         </div>
       </Transition>
-
+      <div class="form__error" :class="{ 'is-active': Form.error }">
+        <span v-if="Form.error"><span class="mdi mdi-alert-circle-outline"></span> {{ Form.error }}</span>
+      </div>
       <div class="form-options">
         <madoka-checkbox v-model="Form.model.usePassword" label="使用密码登录" />
       </div>
@@ -49,7 +47,7 @@ const Form = (() => {
       if (!s.model.usePassword) {
         s.model.password = ""
       }
-      await useToken().login(s.model)
+      await useToken().login(s.model as any)
       s.error = ""
     } catch (e: any) {
       s.error = e
@@ -139,6 +137,6 @@ const Form = (() => {
 .slide-fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
-  margin-bottom: -110px; // 抵消输入框的高度，防止下方元素瞬间跳动
+  margin-bottom: -88px; // 抵消输入框的高度，防止下方元素瞬间跳动
 }
 </style>

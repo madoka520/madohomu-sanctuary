@@ -2,17 +2,24 @@
   <div class="profile-page">
     <div class="card avatar-card">
       <div class="avatar-wrapper">
-        <madoka-avatar v-if="Root.model.id" :user-id="Root.model.id" @click="Root.handleUpload" :avatar-update-time="Root.avatarUpdateTime" :width="120" uploadadble/>
+        <madoka-avatar
+          v-if="Root.model.id"
+          :user-id="Root.model.id"
+          @click="Root.handleUpload"
+          :avatar-update-time="Root.avatarUpdateTime"
+          :width="120"
+          uploadadble
+        />
         <input type="file" accept="image/jpeg,image/png,image/webp" @change="Root.onSelectAvatar" style="display: none" ref="uploadRef" />
       </div>
     </div>
 
-    <div class="card item">
+    <div class="card item" @click="Root.handleUpdateUsername">
       <span class="label">昵称</span>
       <span class="value">{{ Root.model.username }}</span>
     </div>
 
-    <div class="card item">
+    <div class="card item" @click="Root.handleUpdatePassword">
       <span class="label">密码</span>
       <span class="value">••••••••</span>
     </div>
@@ -28,13 +35,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { reactive } from "vue"
 import MadokaBtn from "@/components/button/Index.vue"
-import useToken from "@/hooks/useToken.ts"
+import useToken, { type UserInfo } from "@/hooks/useToken.ts"
 import AuthApi from "@/api/AuthApi.ts"
 import { message } from "@/components/message.tsx"
 import MadokaAvatar from "@/components/MadokaAvatar.vue"
+import useModal from "@/components/useModal.tsx"
+import MadokaInput from "@/components/MadokaInput.vue"
 
 const uploadRef = useTemplateRef("uploadRef")
 const tokenHook = useToken()
@@ -46,6 +55,45 @@ const Root = (() => {
   onMounted(() => {
     s.model = tokenHook.userInfo
   })
+
+  const handleUpdateUsername = () => {
+    const value = ref(s.model.username)
+    useModal.confirm({
+      title: "修改昵称",
+      //@ts-ignore
+      content: () => <MadokaInput placeholder="请输入用户名" v-model={value.value} />,
+      onOk: async () => {
+        await AuthApi.updateUsername(value.value)
+        s.model.username = value.value
+      },
+    })
+  }
+
+  const handleUpdatePassword = () => {
+    const value = ref("")
+    const valueAgain = ref("")
+    const equal = ref(true)
+    useModal.confirm({
+      title: "修改密码",
+      //@ts-ignore
+      content: () => (
+        <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
+          <MadokaInput type="password" placeholder="请输入新密码" v-model={value.value} />
+          <MadokaInput type="password" placeholder="请再次输入新密码" v-model={valueAgain.value} />
+          <div v-if={!equal.value} style="color: red;font-size: 13px">
+            两次输入密码不一致!
+          </div>
+        </div>
+      ),
+      onOk: async () => {
+        if (value.value !== valueAgain.value) {
+          equal.value = false
+          throw new Error("密码输入不一致!")
+        }
+        await AuthApi.updatePassword(value.value)
+      },
+    })
+  }
 
   const handleUpload = () => {
     uploadRef.value?.click()
@@ -71,11 +119,13 @@ const Root = (() => {
   }
 
   const s = reactive({
-    model: {} as any,
+    model: {} as UserInfo,
     avatarUpdateTime: 0,
     logout,
     onSelectAvatar,
     handleUpload,
+    handleUpdateUsername,
+    handleUpdatePassword,
   })
 
   return s
@@ -90,22 +140,38 @@ const Root = (() => {
 @text-color: #8a5d6f;
 
 .profile-page {
-  padding: 24px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 100vh;
-  background: transparent;
+  gap: 18px;
+  padding: 6px;
+
+  background:
+    radial-gradient(120% 120% at 20% 0%, rgba(255, 183, 213, 0.12), transparent 40%),
+    radial-gradient(120% 120% at 100% 100%, rgba(255, 133, 178, 0.1), transparent 40%);
 }
 
 .card {
-  background: transparent;
-  border: 1px solid @soft-pink;
-  border-radius: 20px; // 更圆润的设计，像你一样温柔
-  padding: 16px 20px;
-  box-shadow: 0 8px 20px rgba(255, 183, 213, 0.15);
-  transition: transform 0.3s ease;
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 183, 213, 0.6);
+  border-radius: 22px;
+  padding: 18px 22px;
+
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 24px rgba(255, 183, 213, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 12px 32px rgba(255, 183, 213, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
 
   &.avatar-card {
     display: flex;
@@ -113,8 +179,6 @@ const Root = (() => {
     justify-content: center;
     padding: 30px;
     background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
-
-
   }
 
   &.item {
@@ -123,9 +187,9 @@ const Root = (() => {
     align-items: center;
     position: relative;
     overflow: hidden;
+    font-size: 14px;
 
     .label {
-      font-size: 14px;
       color: @text-color;
       font-weight: 600;
       margin-left: 10px;
@@ -133,26 +197,31 @@ const Root = (() => {
     }
 
     .value {
-      font-size: 14px;
       color: @dark-pink;
+    }
+
+    .btn {
+    }
+  }
+}
+
+.avatar-card {
+  padding: 36px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
+
+  .avatar-wrapper {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.04);
     }
   }
 }
 
 .action-area {
-  margin-top: 20px;
-  .logout {
-    border-radius: 12px;
-  }
-}
-
-// 旋转动画，象征着轮回... 不，没什么
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+  & > div {
+    border-radius: 22px;
   }
 }
 </style>

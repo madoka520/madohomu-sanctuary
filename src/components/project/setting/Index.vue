@@ -3,18 +3,14 @@
     <login v-if="!tokenStore.token" />
 
     <div v-else class="content">
-      <madoka-slidebar :list="Setting.list.map(item => item.title)" v-model="Setting.current">
+      <madoka-slidebar :list="Setting.list.map((item) => item.title)" v-model="Setting.current">
         <template #title> <i class="mdi mdi-cog"></i> 设置中心 </template>
       </madoka-slidebar>
 
       <div class="main">
-        <div class="main__body">
-          <transition name="fade" mode="out-in">
-            <div :key="Setting.current" class="content-wrapper">
-              <component :is="Setting.list[Setting.current].component"/>
-            </div>
-          </transition>
-        </div>
+        <transition name="fade" mode="out-in">
+          <component :is="Setting.list[Setting.current].component" />
+        </transition>
       </div>
     </div>
   </madoka-dialog>
@@ -28,7 +24,7 @@ import useToken from "@/hooks/useToken.ts"
 import MadokaSlidebar from "@/components/MadokaSlidebar.vue"
 
 const tokenStore = useToken()
-const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp));
+const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
 
 defineOptions({
   name: "Setting",
@@ -48,7 +44,7 @@ const Setting = (() => {
       },
       {
         title: "关于系统",
-        component: toAsyncComponent(() => import("@/components/project/setting/PreThemeSetting.vue")),
+        component: toAsyncComponent(() => import("@/components/project/setting/PreAbout.vue")),
       },
     ],
   })
@@ -86,6 +82,7 @@ defineExpose({
 
   .main {
     flex: 1;
+    width: 100%;
   }
 }
 
@@ -106,11 +103,6 @@ defineExpose({
     padding: 40px;
     display: flex;
     flex-direction: column;
-
-    &__body {
-      flex: 1;
-      position: relative;
-    }
   }
 }
 

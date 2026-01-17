@@ -15,7 +15,7 @@
 
     <!-- 歌单 -->
     <span class="mdi mdi-playlist-play control-btn"></span>
-    <madoka-dialog v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px">
+    <madoka-dialog v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px" :footer="false">
       <pre-audio-player-ui />
     </madoka-dialog>
   </div>

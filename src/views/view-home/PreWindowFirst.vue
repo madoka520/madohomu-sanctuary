@@ -39,7 +39,7 @@ const PictureAlbumVideo = (() => {
   };
   const init = () => {
     setTimeout(async () => {
-      s.hiddenVideo = true;
+      // s.hiddenVideo = true;
     }, 3000);
   };
   const s = reactive({

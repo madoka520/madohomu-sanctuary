@@ -8,6 +8,7 @@ export type UserInfo = {
   username: string;
   password: string;
   token?: string;
+  email?: string;
 }
 export default defineStore("user", () => {
   const login = async (data: UserInfo) => {

@@ -10,7 +10,7 @@
       v-model="modelValue"
       @focus="emit('focus')"
       @blur="emit('blur')"
-      autocomplete="off"
+      autocomplete="new-password"
       autocapitalize="off"
       spellcheck="false"
       :placeholder
@@ -80,7 +80,7 @@ const resolvedType = computed(() => {
 
 input {
   flex: 1;
-  padding: 36px 0 30px 0;
+  padding: 36px 0 30px 10px;
   border: none;
   background: transparent;
   font-size: 16px;

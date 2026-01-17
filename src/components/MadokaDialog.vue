@@ -2,7 +2,7 @@
   <madoka-mask v-model="modelValue" v-if="!unuseModel">
     <div class="dialog__overlay" :style="{ minWidth: width, minHeight: height, background }" @click.stop ref="overlayRef">
       <!--      <madoka-meteor-shower/>-->
-      <header>
+      <header v-if="title || $slots.header">
         <slot name="header">
           {{ title }}
         </slot>
@@ -10,12 +10,10 @@
       <main style="overflow: hidden">
         <slot />
       </main>
-      <footer>
+      <footer v-if="footer">
         <slot name="footer">
-          <template v-if="footer">
-            <madoka-btn type="1" @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
-            <madoka-btn type="1" @click="Root.ok" :text="okText" variant="outlined" color="pink" />
-          </template>
+          <madoka-btn type="1" @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
+          <madoka-btn type="1" @click="Root.ok" :text="okText" variant="outlined" color="pink" />
         </slot>
       </footer>
     </div>
@@ -120,7 +118,6 @@ const Root = (() => {
     emits("cancel", e)
   }
   const ok = async (e: Event) => {
-    modelValue.value = false
     emits("ok", e)
   }
   const s = reactive({
@@ -162,6 +159,10 @@ const Root = (() => {
     flex: 1;
     overflow: auto;
     padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
   }
 
   footer {

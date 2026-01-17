@@ -17,7 +17,6 @@ const setting = useSetting()
   display: flex;
   gap: 30px;
   .theme-option {
-    border: 1px solid pink;
     width: 150px;
     height: 150px;
     display: flex;
@@ -26,9 +25,6 @@ const setting = useSetting()
     flex-direction: column;
     user-select: none;
 
-    &:hover {
-      box-shadow: 0 4px 12px rgba(255, 192, 203, 100);
-    }
 
     img {
       width: auto;

@@ -8,4 +8,5 @@ export type IThemeType = {
   src?: string;
   cover: string;
   component?: ShallowRef
+  song?: string
 };

@@ -25,19 +25,29 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (res) => {
+    switch (res.config.method) {
+      case "put":
+      case "post": {
+        if (res.status === 200) {
+          console.log(233)
+          message.success(res.data.message ?? "操作成功")
+        }
+      }
+    }
+
     return Promise.resolve(res.data)
   },
   (err) => {
     const cfg = err.config as MyAxiosRequestConfig
     const res = err.response?.data ?? {}
-    const { message: msg } = res
+    const { error } = res
 
     // 根据配置决定是否显示错误提示
     if (cfg?.showErrorMessage ?? true) {
-      message.error(msg || "出错啦~")
+      message.error(error || "出错啦~")
     }
 
-    return Promise.reject(msg || err)
+    return Promise.reject(error || err)
   },
 )
 //参数类型

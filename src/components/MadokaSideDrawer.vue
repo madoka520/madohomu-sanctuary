@@ -7,18 +7,17 @@
     <div class="content">
       <slot />
     </div>
-    <pre-dialog ref="dialogRef" @cancel="Root.cancel" />
+    <pre-message-dialog ref="dialogRef" @cancel="Root.cancel" @ok="(e) => emits('ok', e)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import PreDialog from "@/views/SoulRippleSlot/PreDialog.vue"
+import PreMessageDialog from "@/views/SoulRippleSlot/PreMessageDialog.vue"
 import { useDrag } from "@vueuse/gesture"
 import MadokaBtn from "@/components/button/Index.vue"
 
 const peekPanelRef = useTemplateRef("peekPanelRef")
 const dialogRef = useTemplateRef("dialogRef")
-
 const Root = (() => {
   const cancel = () => {
     setTimeout(() => {
@@ -40,7 +39,7 @@ const Root = (() => {
   })
   return s
 })()
-const emits = defineEmits(["madokaScroll"])
+const emits = defineEmits(["madokaScroll", "ok"])
 useDrag(
   (state) => {
     const swipeX = state.swipe[0] // 横向滑动

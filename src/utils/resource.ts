@@ -5,6 +5,6 @@ export const getAudioUrl = (path:string) => `${import.meta.env.VITE_CDN_URL}musi
 //获取图片链接
 export const getImgUrl = (path: string) => `${import.meta.env.VITE_CDN_URL}images/${path}`
 
-export const getAvatarUrl = (path: string) => `http://cdn.rain.madokami.cn/madokami/avatars/${path}.webp`
+export const getAvatarUrl = (uid: number) => `http://cdn.rain.madokami.cn/madokami/avatars/${uid}.webp`
 
 export const getAssetUrl = (path:string) => `${import.meta.env.VITE_CDN_URL}/${path}`

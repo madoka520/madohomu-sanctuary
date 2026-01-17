@@ -28,7 +28,7 @@ const createMessage = (options: MessageOptions) => {
   container.style.top = "20px"
   container.style.left = "50%"
   container.style.transform = "translateX(-50%)"
-  container.style.zIndex = "999999"
+  container.style.zIndex = "999999999"
   document.body.appendChild(container)
 
   const visible: Ref<boolean> = ref(true)

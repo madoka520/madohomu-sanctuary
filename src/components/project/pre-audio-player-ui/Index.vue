@@ -28,6 +28,8 @@ const audioPlayer = useAudioPlayer()
 
 <style scoped>
 .container {
+  padding-top: 20px;
+  padding-bottom: 20px;
   .song {
   }
   .song__active {

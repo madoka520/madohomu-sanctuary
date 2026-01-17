@@ -3,12 +3,12 @@
     <div class="card">
       <div class="card__header">
         <div class="avatar">
-          <img draggable="false" :src="`https://kami.im/getavatar.php?uid=${uid}`" loading="lazy"  alt=""/>
+          <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
         </div>
         <div class="user">
           <div class="name">{{ username }}</div>
         </div>
-        <div style="margin-left: auto;">#{{ externalId }}</div>
+        <div style="margin-left: auto">#{{ externalId }}</div>
       </div>
 
       <div class="card__content">
@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs"
+import { getAvatarUrl } from "@/utils/resource.ts"
 
 const props = withDefaults(
   defineProps<{
@@ -32,9 +33,12 @@ const props = withDefaults(
     createTime: number
     username: string
     externalId: number
+    origin?: "madokami" | "kami" | string
   }>(),
   {},
 )
+
+const avatarSrc = computed(() => (props.origin === "madokami" ? getAvatarUrl(props.uid) : `https://kami.im/getavatar.php?uid=${props.uid}`))
 </script>
 
 <style scoped>

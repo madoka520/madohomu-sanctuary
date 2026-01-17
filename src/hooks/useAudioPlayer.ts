@@ -286,7 +286,8 @@ export default defineStore("madokaAudioPlayer", () => {
     }
   }
 
-  const playByName = (name: string) => {
+  const playByName = (name?: string) => {
+    if (!name) return
     const songIndex = songList.findIndex((item) => item.title === name)
     play(songIndex)
   }

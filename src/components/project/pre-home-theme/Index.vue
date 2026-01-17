@@ -14,15 +14,26 @@
 <script setup lang="ts">
 import emitter from "@/utils/emitter.ts"
 import useSetting from "@/hooks/useSetting.ts"
+import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
 
 defineOptions({
   name: "pre-home-theme",
 })
 const setting = useSetting()
 const Root = (() => {
+  const setWatcher = () => {
+    watch(
+      () => setting.theme,
+      (val) => {
+        const song = setting.themeList[val].song
+        useAudioPlayer().playByName(song)
+      },
+    )
+  }
   const s = reactive({
-    currentTheme: computed(() => setting.themeList[useSetting().theme]),
+    currentTheme: computed(() => setting.themeList[setting.theme]),
   })
+  setWatcher()
   return s
 })()
 

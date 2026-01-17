@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import { getAvatarUrl } from "@/utils/resource.ts"
 import useToken from "@/hooks/useToken.ts"
+import dayjs from "dayjs"
 const props = withDefaults(
   defineProps<{
     width?: number
@@ -13,7 +14,7 @@ const props = withDefaults(
     uploadadble?: boolean
   }>(),
   {
-    avatarUpdateTime: 0,
+    avatarUpdateTime: dayjs().month(),
     uploadadble: false,
   },
 )
