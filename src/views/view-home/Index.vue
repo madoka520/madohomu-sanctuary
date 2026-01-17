@@ -5,7 +5,7 @@
       <pre-window-first @change-current="() => Tab.current = 1" />
     </view-scene>
   </div>
-  <pre-window-second v-show="Tab.current === 1" />
+  <pre-window-second v-if="Tab.current === 1" />
   <view-player />
   <view-particle />
 </template>
