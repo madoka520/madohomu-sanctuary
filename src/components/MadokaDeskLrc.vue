@@ -1,5 +1,5 @@
 <template>
-  <div class="lyric-container">
+  <div class="lyric-container" v-show="!(setting.theme === 0 && audioPlayer.currentSong.title === 'コネクト')">
     <div class="cyber-pink-lyric" :data-text="LyricState.currentLineText" :style="LyricState.lyricStyle">
       {{ LyricState.currentLineText }}
     </div>
@@ -10,10 +10,10 @@
 import { reactive, onUnmounted, watch } from "vue"
 import useAudioPlayer from "@/hooks/useAudioPlayer"
 import { getAssetUrl } from "@/utils/resource"
-
+import useSetting from "@/hooks/useSetting.ts"
+const audioPlayer = useAudioPlayer()
+const setting = useSetting()
 const LyricState = (() => {
-  const audioPlayer = useAudioPlayer()
-
   interface Word {
     text: string
     start: number
@@ -227,7 +227,6 @@ const LyricState = (() => {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
 
     // 闪烁动画
     animation: stars-twinkle 2s infinite ease-in-out;

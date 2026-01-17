@@ -11,7 +11,7 @@
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <div class="avatar-frame" @click="settingRef?.open()">
-        <madoka-avatar :width="46"/>
+        <madoka-avatar :width="46" />
       </div>
     </div>
     <setting ref="settingRef" />
@@ -26,7 +26,7 @@ import MadokaAvatar from "@/components/MadokaAvatar.vue"
 const settingRef = useTemplateRef("settingRef")
 </script>
 
-<style scoped>
+<style scoped lang="less">
 /* 导航 */
 .show-with-hover {
   opacity: 0;
@@ -60,6 +60,9 @@ const settingRef = useTemplateRef("settingRef")
   padding-left: 20px;
   padding-right: 10px;
   align-items: center;
+
+  user-select: none;
+  font-family: "cute", "Helvetica Rounded", Arial, sans-serif;
   .mado {
     background: linear-gradient(135deg, #ff85a2, #ffb6c1);
     -webkit-background-clip: text;

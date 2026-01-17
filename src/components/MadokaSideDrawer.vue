@@ -62,7 +62,7 @@ useDrag(
 
   /* 动画关键点：blur + 透明度 + 阴影都可以 transition */
   transition:
-    transform 0.25s,
+    transform 0.55s,
     background 0.35s ease,
     backdrop-filter 0.35s ease,
     box-shadow 0.35s ease;

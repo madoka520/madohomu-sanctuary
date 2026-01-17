@@ -12,7 +12,14 @@
         </div>
       </div>
     </div>
-    <div v-show="DateCard.visible" :style="DateCard.style" class="date-card" @mouseenter="DateCard.keepDateCard" @mouseleave="DateCard.hideDateCard">
+    <div
+      v-show="DateCard.visible"
+      :style="DateCard.style"
+      class="date-card"
+      @mouseenter="DateCard.keepDateCard"
+      @mouseleave="DateCard.hideDateCard"
+      ref="dateCardRef"
+    >
       <div v-for="day in DateCard.days" class="day" @click="TimeLine.dayClick(day)">
         {{ day }}
       </div>
@@ -24,6 +31,7 @@
 import dayjs from "dayjs"
 const scrollRef = useTemplateRef("scrollRef")
 const wrapperRef = useTemplateRef("wrapperRef")
+const dateCardRef = useTemplateRef("dateCardRef") // 新增：用来获取卡片宽度
 const emits = defineEmits(["change"])
 
 const TimeLine = (() => {
@@ -41,32 +49,50 @@ const TimeLine = (() => {
   return s
 })()
 const DateCard = (() => {
-  const showDateCard = (year: number, month: number, e: MouseEvent) => {
+  const showDateCard = async (year: number, month: number, e: MouseEvent) => {
     const daysInMonth = dayjs()
       .year(year)
       .month(month - 1)
       .date(1)
       .daysInMonth()
     s.days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
-
     s.hoverYear = year
     s.hoverMonth = month
-    const monthEl = e.target as HTMLElement
-    const wrapperEl = wrapperRef.value!
-
-    const monthRect = monthEl.getBoundingClientRect()
-    const wrapperRect = wrapperEl.getBoundingClientRect()
-
-    s.style.left = `${monthRect.left - wrapperRect.left + monthRect.width / 2}px`
-    s.style.top = `${monthRect.top - wrapperRect.top - 12}px`
-
     s.visible = true
 
-    // 进入显示时清理隐藏定时器
     if (s.timer) {
       clearTimeout(s.timer)
       s.timer = null
     }
+
+    // 等待 DOM 渲染后计算位置
+    await nextTick()
+
+    const monthEl = e.target as HTMLElement
+    const wrapperEl = wrapperRef.value!
+    const cardEl = dateCardRef.value!
+
+    const monthRect = monthEl.getBoundingClientRect()
+    const wrapperRect = wrapperEl.getBoundingClientRect()
+    const cardRect = cardEl.getBoundingClientRect()
+
+    // 初始目标位置（月份正上方中心）
+    let targetLeft = monthRect.left - wrapperRect.left + monthRect.width / 2
+
+    // 边界检查逻辑
+    const cardHalfWidth = cardRect.width / 2
+    const minLeft = cardHalfWidth + 10 // 留 10px 边距
+    const maxLeft = wrapperRect.width - cardHalfWidth - 10
+
+    // 如果太靠左或太靠右，强制修正
+    if (targetLeft < minLeft) {
+      targetLeft = minLeft
+    } else if (targetLeft > maxLeft) {
+      targetLeft = maxLeft
+    }
+
+    s.style.left = `${targetLeft}px`
+    s.style.top = `${monthRect.top - wrapperRect.top - 12}px`
   }
 
   const hideDateCard = () => {
@@ -92,6 +118,7 @@ const DateCard = (() => {
     style: {
       left: "-10000px",
       top: "-10000px",
+      transform: "translate(-50%, -100%)", // 默认居中
     },
     days: [] as number[],
     hoverYear: -1,
@@ -188,7 +215,6 @@ const Scroll = (() => {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  transform: translate(-50%, -100%);
   padding: 8px 10px;
   border-radius: 12px;
 

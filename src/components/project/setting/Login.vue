@@ -2,7 +2,7 @@
   <div class="form-container flex-center">
     <div class="form-body">
       <div class="form-item">
-        <madoka-input v-model="Form.model.username" left-icon="mdi mdi-account-outline" placeholder="请输入昵称" />
+        <madoka-input v-model="Form.model.username" left-icon="mdi mdi-account-outline" placeholder="请输入昵称" @keyup.enter="Form.login" />
       </div>
 
       <Transition name="slide-fade">
@@ -15,6 +15,7 @@
             :right-icon="`mdi-${Form.showPassword ? 'eye' : 'eye-off'}-outline`"
             placeholder="请输入密码"
             @toggle="Form.showOrHiddenPsd"
+            @keyup.enter="Form.login"
           />
         </div>
       </Transition>
@@ -56,8 +57,8 @@ const Form = (() => {
 
   const s = reactive({
     model: {
-      username: "",
-      password: "",
+      username: useLocalStorage("username", ''),
+      password: useLocalStorage("password", ''),
       usePassword: false,
     },
     error: "",

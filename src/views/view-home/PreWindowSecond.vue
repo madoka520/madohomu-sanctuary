@@ -37,7 +37,7 @@ type IParams = {
 }
 const Msg = (() => {
   const pushOne = (e) => {
-    console.log(e)
+    s.list.unshift(e)
   }
   const changeDate = async (time: number) => {
     // 1. 状态初始化

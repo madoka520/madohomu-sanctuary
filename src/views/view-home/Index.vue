@@ -1,5 +1,5 @@
 <template>
-  <home-header/>
+  <home-header v-if="Tab.current === 1"/>
   <div v-show="Tab.current === 0">
     <view-scene>
       <pre-window-first @change-current="() => Tab.current = 1" />

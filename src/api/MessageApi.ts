@@ -5,4 +5,5 @@ export default {
   list: (params) => madokaGet("/message", params),
   getMaxId: () => madokaGet("/message/get-max-id", {}),
   getMaxTime: () => madokaGet("/message/get-max-time", {}),
+  random: () => madokaGet("/message/random", {}),
 }

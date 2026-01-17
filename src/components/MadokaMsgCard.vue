@@ -1,6 +1,6 @@
 <template>
   <div class="card__wrapper">
-    <div class="card">
+    <div class="card" :style="cardStyle">
       <div class="card__header">
         <div class="avatar">
           <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
@@ -8,7 +8,7 @@
         <div class="user">
           <div class="name">{{ username }}</div>
         </div>
-        <div style="margin-left: auto">#{{ externalId }}</div>
+        <div class="uid" style="margin-left: auto">#{{ externalId }}</div>
       </div>
 
       <div class="card__content">
@@ -24,7 +24,8 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs"
-import { getAvatarUrl } from "@/utils/resource.ts"
+import { getAssetUrl, getAvatarUrl, getImgUrl } from "@/utils/resource.ts"
+import { computed } from "vue"
 
 const props = withDefaults(
   defineProps<{
@@ -39,33 +40,71 @@ const props = withDefaults(
 )
 
 const avatarSrc = computed(() => (props.origin === "madokami" ? getAvatarUrl(props.uid) : `https://kami.im/getavatar.php?uid=${props.uid}`))
+
+const cardStyle = computed(() => {
+  const randomNum = Math.floor(Math.random() * 22 + 1)
+  const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${randomNum}`)
+  return {
+    "--bg-image": `url(${bgUrl}.webp)`,
+  }
+})
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .card__wrapper {
   padding: 20px 5px 5px;
+  opacity: 0.7;
 
   &:hover {
+    opacity: 1;
+
     .name {
       text-decoration: underline;
     }
+
+    .card::before {
+      // 悬浮时触发毛玻璃效果
+      filter: blur(8px) brightness(0.8);
+    }
   }
   .card {
-    width: 370px;
-    height: 500px;
+    width: 590px;
+    height: 680px;
     padding: 14px;
     overflow: auto;
+    position: relative; // 必须是 relative 才能让伪元素定位
+    isolation: isolate; // 确保内容层级在伪元素之上
 
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(8px);
     border-radius: 14px;
 
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    color: #333;
+    color: white;
 
     display: flex;
     flex-direction: column;
     gap: 12px;
+
+    // 使用伪元素处理背景，这样 blur 滤镜才不会影响到文字
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+
+      // 叠加线性渐变和动态背景
+      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), var(--bg-image);
+
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      // 过渡动画
+      transition:
+        filter 0.3s ease,
+        transform 0.3s ease;
+    }
   }
 
   .card__header {

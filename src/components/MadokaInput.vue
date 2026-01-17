@@ -6,17 +6,14 @@
     </span>
     <input
       :type="resolvedType"
-      v-bind="$attrs"
       v-model="modelValue"
-      @focus="emit('focus')"
-      @blur="emit('blur')"
-      autocomplete="new-password"
+      autocomplete="on"
       autocapitalize="off"
       spellcheck="false"
       :placeholder
     />
     <span class="icon" v-if="rightIcon">
-      <i :class="`mdi ${rightIcon}`" @click="emit('toggle')" class="show-or-hidden-psd" />
+      <i :class="`mdi ${rightIcon}`" class="show-or-hidden-psd" />
     </span>
   </div>
 </template>
@@ -35,12 +32,6 @@ const props = defineProps<{
 const modelValue = defineModel({
   default: "",
 })
-const emit = defineEmits<{
-  (e: "update:modelValue", value: string): void
-  (e: "toggle"): void
-  (e: "focus"): void
-  (e: "blur"): void
-}>()
 
 // 自动处理 password 显示/隐藏
 const resolvedType = computed(() => {

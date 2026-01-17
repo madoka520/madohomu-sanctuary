@@ -27,7 +27,7 @@ const Root = (() => {
       (val) => {
         const song = setting.themeList[val].song
         useAudioPlayer().playByName(song)
-      },
+      }, { immediate: true }
     )
   }
   const s = reactive({

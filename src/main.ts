@@ -4,6 +4,7 @@ import "@/assets/styles/layout.less"
 import { createPinia } from "pinia";
 import "@mdi/font/css/materialdesignicons.css"
 import "swiper/css"
+import "@/assets/styles/font.less"
 
 const app = createApp(App)
 import { GesturePlugin } from "@vueuse/gesture"
