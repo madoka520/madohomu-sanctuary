@@ -1,6 +1,5 @@
-import type { OssDriverManager, OssDriver, SignedPath } from "@/typings/upload.ts";
-
 import QiniuDriver from "@/utils/oss/drivers/Qiniu.ts";
+import type { OssDriver } from "@/types/upload.ts"
 const DriverManager = {
   getDriver : (driver :string) : OssDriver =>  {
     switch(driver) {
