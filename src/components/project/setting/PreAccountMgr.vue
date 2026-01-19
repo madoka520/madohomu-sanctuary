@@ -44,6 +44,8 @@ import { message } from "@/components/message.tsx"
 import MadokaAvatar from "@/components/MadokaAvatar.vue"
 import useModal from "@/components/useModal.tsx"
 import MadokaInput from "@/components/MadokaInput.vue"
+import { fileToSHA1 } from "@/utils/shaUtils.ts"
+import SHA1 from "crypto-js/sha1"
 
 const uploadRef = useTemplateRef("uploadRef")
 const tokenHook = useToken()
@@ -104,16 +106,23 @@ const Root = (() => {
     const file = input.files?.[0]
     if (!file) return
 
+    const { name, size } = file
+
     if (!file.type.startsWith("image/")) {
       message.error("请选择图片文件")
       input.value = ""
       return
     }
 
-    const form = new FormData()
-    form.append("file", file)
+    if (size > 10 * 1024 * 1024) {
+      message.error("文件大小不能超过10MB！")
+      input.value = ""
+      return
+    }
 
-    await AuthApi.upload(form)
+    const hash = await fileToSHA1(file)
+
+    await AuthApi.upload({ filename: name, size, hash: SHA1(hash).toString() }, file)
     s.avatarUpdateTime = Date.now()
     message.success("头像上传成功!")
   }
