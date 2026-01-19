@@ -46,6 +46,7 @@ import useModal from "@/components/useModal.tsx"
 import MadokaInput from "@/components/MadokaInput.vue"
 import { fileToSHA1 } from "@/utils/shaUtils.ts"
 import SHA1 from "crypto-js/sha1"
+import { imageToWebp } from "@/utils/imageUtils.ts"
 
 const uploadRef = useTemplateRef("uploadRef")
 const tokenHook = useToken()
@@ -106,7 +107,7 @@ const Root = (() => {
     const file = input.files?.[0]
     if (!file) return
 
-    const { name, size } = file
+    const { size } = file
 
     if (!file.type.startsWith("image/")) {
       message.error("请选择图片文件")
@@ -119,10 +120,11 @@ const Root = (() => {
       input.value = ""
       return
     }
+    const newFile = await imageToWebp(file)
 
-    const hash = await fileToSHA1(file)
+    const hash = await fileToSHA1(newFile)
 
-    await AuthApi.upload({ filename: name, size, hash: SHA1(hash).toString() }, file)
+    await AuthApi.upload({ filename: `${useToken().userInfo.id}.webp`, size: newFile.size, hash }, newFile)
     s.avatarUpdateTime = Date.now()
     message.success("头像上传成功!")
   }
