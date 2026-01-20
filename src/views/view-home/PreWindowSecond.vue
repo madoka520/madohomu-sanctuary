@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <madoka-live2d />
+<!--    <madoka-live2d />-->
     <pre-home-theme />
     <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne">
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
@@ -13,6 +13,7 @@
           :username="item.username ?? item.externalUsername"
           :external-id="item.externalId"
           :origin="item.origin"
+          :update-time="item.updateTime"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" />
@@ -134,6 +135,7 @@ const Msg = (() => {
     maxId: 0,
     maxTime: 0,
     list: [] as {
+      id: number
       content: string
       createTime: number
       userId: number
@@ -142,6 +144,7 @@ const Msg = (() => {
       username: string
       externalId: number
       origin: string
+      updateTime: number
     }[],
     changeDate,
     getList,
