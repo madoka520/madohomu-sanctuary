@@ -13,7 +13,7 @@
           :username="item.username ?? item.externalUsername"
           :external-id="item.externalId"
           :origin="item.origin"
-          :update-time="item.updateTime"
+          :update-time="item.userUpdateTime ?? 0"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" />
@@ -145,6 +145,7 @@ const Msg = (() => {
       externalId: number
       origin: string
       updateTime: number
+      userUpdateTime: number
     }[],
     changeDate,
     getList,
