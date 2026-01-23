@@ -19,7 +19,6 @@
 
 <style scoped>
 .bg {
-  background: url("@/assets/images/selfbg.jpg") no-repeat center;
   background-size: cover;
   font-size: 12px;
   color: white;

@@ -8,7 +8,6 @@
   ></audio>
 </template>
 <script setup lang="ts">
-import music from "@/assets/music/君の銀の庭.mp3"
 import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
 const audioPlayer = useAudioPlayer()
 const play = () => {
