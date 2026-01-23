@@ -3,7 +3,7 @@
     <div class="card" :style="cardStyle">
       <div class="card__header">
         <div class="avatar">
-          <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
+          <img draggable="false" :src="`${avatarSrc}?t=${updateTime}`" loading="lazy" alt="" />
         </div>
         <div class="user">
           <div class="name">{{ username }}</div>
@@ -34,6 +34,7 @@ const props = withDefaults(
     createTime: number
     username: string
     externalId: number
+    updateTime: number
     origin?: "madokami" | "kami" | string
   }>(),
   {},

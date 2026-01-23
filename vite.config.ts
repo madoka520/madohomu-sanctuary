@@ -38,6 +38,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/madoka-api/, ""),
         },
+        "/oss-api": {
+          target: env.VITE_OSS_URL,
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/oss-api/, ""),
+        },
         "/haojiezhe-api": {
           target: "https://haojiezhe12345.top:82",
           changeOrigin: true,
