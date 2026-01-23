@@ -13,6 +13,11 @@ export default defineConfig(({ mode }) => {
         script: {
           propsDestructure: true,
         },
+        template: {
+          compilerOptions: {
+            hoistStatic: false,
+          }
+        }
       }),
       vueJsxVapor({
         macros: true,

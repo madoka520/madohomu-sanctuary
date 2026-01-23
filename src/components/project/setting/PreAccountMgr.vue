@@ -45,7 +45,6 @@ import MadokaAvatar from "@/components/MadokaAvatar.vue"
 import useModal from "@/components/useModal.tsx"
 import MadokaInput from "@/components/MadokaInput.vue"
 import { fileToSHA1 } from "@/utils/shaUtils.ts"
-import SHA1 from "crypto-js/sha1"
 import { imageToWebp } from "@/utils/imageUtils.ts"
 
 const uploadRef = useTemplateRef("uploadRef")
