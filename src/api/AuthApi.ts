@@ -7,7 +7,7 @@ export default {
     // 重新请求 token
     const formData = new FormData();
     formData.append("file", file);
-    const res = await madokaPost("/avatar", formData)
+    return await madokaPost("/avatar", formData) as any
     /*    // const res = await axios.post("/oss-api", data)
     const d = res as unknown as SignedPath
     console.log(d)

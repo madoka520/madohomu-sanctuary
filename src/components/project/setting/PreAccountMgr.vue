@@ -125,8 +125,8 @@ const Root = (() => {
 
     const hash = await fileToSHA1(newFile)
 
-    await AuthApi.upload({ filename: `${useToken().userInfo.id}.webp`, size: newFile.size, hash }, newFile)
-    s.avatarUpdateTime = Date.now()
+    const res = await AuthApi.upload({ filename: `${useToken().userInfo.id}.webp`, size: newFile.size, hash }, newFile)
+    useToken().userInfo.updateTime = res.updateTime
     message.success("头像上传成功!")
   }
 

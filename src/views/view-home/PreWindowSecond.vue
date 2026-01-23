@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-<!--    <madoka-live2d />-->
+    <madoka-live2d />
     <pre-home-theme />
     <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne">
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
@@ -28,7 +28,6 @@ import MadokaMsgCard from "@/components/MadokaMsgCard.vue"
 import MadokaTimeline from "@/components/MadokaTimeline.vue"
 import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
 import MessageApi from "@/api/MessageApi.ts"
-import emitter from "@/utils/emitter.ts"
 import MadokaLive2d from "@/components/MadokaLive2d.vue"
 
 const scrollRef = useTemplateRef("scrollRef")
