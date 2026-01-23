@@ -5,6 +5,7 @@ import AuthApi from "@/api/AuthApi.ts"
 
 export type UserInfo = {
   id: number;
+  updateTime: number;
   username: string;
   password: string;
   token?: string;

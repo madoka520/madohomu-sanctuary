@@ -1,6 +1,6 @@
 <template>
   <div class="avatar-wrapper" :class="{ upload: uploadadble }">
-    <img class="avatar" :src="`${getAvatarUrl(userId)}?t=${avatarUpdateTime}`" alt="" @error="onAvatarError" :style />
+    <img class="avatar" :src="`${getAvatarUrl(userId)}?t=${avatarUpdateTime ?? tokenHook.userInfo.updateTime}`" alt="" @error="onAvatarError" :style />
   </div>
 </template>
 <script setup lang="ts">
@@ -14,7 +14,6 @@ const props = withDefaults(
     uploadadble?: boolean
   }>(),
   {
-    avatarUpdateTime: dayjs().month(),
     uploadadble: false,
   },
 )
