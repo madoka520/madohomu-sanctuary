@@ -1,5 +1,5 @@
 {
-  "name": "vite-vue-template",
+  "name": "madohomu-sanctuary",
   "installCommand": "pnpm install",
   "assets": {
     "directory": "./dist",
