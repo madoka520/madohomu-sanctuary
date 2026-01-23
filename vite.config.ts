@@ -23,12 +23,17 @@ export default defineConfig(({ mode }) => {
       }),
       VueDevTools(),
     ],
-    base: "",
+    build: {
+      emptyOutDir: true
+    },
+    optimizeDeps: {
+      exclude: []
+    },
     server: {
       mimeTypes: {
         "audio/webm": ["weba"],
       },
-      allowedHosts: ["nas.madokami.cn"],
+      allowedHosts: ["*.madokami.cn"],
       proxy: {
         "/madoka-api": {
           target: env.VITE_API_URL,
