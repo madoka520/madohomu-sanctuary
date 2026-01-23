@@ -25,35 +25,6 @@
 <script type="module" src="/src/main.ts"></script>
 <!--<script src="http://cdn.rain.madokami.cn/js/live2d/live2dcubismcore.min.js" crossorigin="anonymous"></script>-->
 <!--<script src="http://cdn.rain.madokami.cn/js/live2d/live2d.min.js" crossorigin="anonymous"></script>-->
-<script>
-    (() => {
-        const scripts = [
-            "http://cdn.rain.madokami.cn/js/live2d/live2dcubismcore.min.js",
-            "http://cdn.rain.madokami.cn/js/live2d/live2d.min.js"
-        ];
 
-        const loadScript = (index) => {
-            if (!scripts[index]) return
-            const script = document.createElement('script');
-            script.src = scripts[index];
-            script.crossOrigin = "anonymous";
-
-            // 必须确保顺序：Core 加载完后再加载库文件
-            script.onload = () => {
-                console.log(`[晓美焰] 成功契约脚本: ${scripts[index]}`);
-                loadScript(index + 1);
-            };
-
-            script.onerror = () => {
-                console.error(`[晓美焰] 脚本加载绝望了: ${scripts[index]}`);
-            };
-
-            document.head.appendChild(script);
-        };
-
-        // 开始加载第一个脚本
-        loadScript(0);
-    })();
-</script>
 </body>
 </html>
