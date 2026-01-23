@@ -23,12 +23,6 @@ export default defineConfig(({ mode }) => {
       }),
       VueDevTools(),
     ],
-    build: {
-      emptyOutDir: true
-    },
-    optimizeDeps: {
-      exclude: []
-    },
     server: {
       mimeTypes: {
         "audio/webm": ["weba"],
