@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
 import AutoImport from "unplugin-auto-import/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
-import vueJsxVapor from "vue-jsx-vapor/vite"
+import vueJsx from '@vitejs/plugin-vue-jsx'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
@@ -13,16 +13,8 @@ export default defineConfig(({ mode }) => {
         script: {
           propsDestructure: true,
         },
-        template: {
-          compilerOptions: {
-            hoistStatic: false,
-          }
-        }
       }),
-      vueJsxVapor({
-        macros: true,
-        interop: true,
-      }),
+      vueJsx(),
       AutoImport({
         imports: ["vue", "vue-router", "@vueuse/core", "vue/macros"],
         dts: "auto-imports.d.ts",

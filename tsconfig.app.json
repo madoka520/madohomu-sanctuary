@@ -13,7 +13,7 @@
       "@/*": ["./src/*"]
     },
     "jsx": "preserve",
-    "jsxImportSource": "vue-jsx-vapor"
+    "jsxImportSource": "vue"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "auto-imports.d.ts"]
 }

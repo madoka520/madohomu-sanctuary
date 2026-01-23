@@ -82,15 +82,17 @@ const Root = (() => {
         <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
           <MadokaInput type="password" placeholder="请输入新密码" v-model={value.value} />
           <MadokaInput type="password" placeholder="请再次输入新密码" v-model={valueAgain.value} />
-          <div v-if={!equal.value} style="color: red;font-size: 13px">
-            两次输入密码不一致!
-          </div>
+          {!equal.value && (
+            <div style="color: red;font-size: 13px">
+              两次输入密码不一致!
+            </div>
+          )}
         </div>
       ),
       onOk: async () => {
         if (value.value !== valueAgain.value) {
           equal.value = false
-          throw new Error("密码输入不一致!")
+          return
         }
         await AuthApi.updatePassword(value.value)
       },
