@@ -10,7 +10,7 @@
   <view-particle />
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
 import ViewScene from "../ViewScene.vue";
 import ViewPlayer from "@/views/ViewPlayer.vue";
 import ViewParticle from "@/views/ViewParticle.vue";
