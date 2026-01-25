@@ -11,10 +11,9 @@ import { capitalize } from "lodash-unified"
 const props = withDefaults(
   defineProps<{
     type: string
+    disabled?: boolean
   }>(),
-  {
-
-  },
+  {},
 )
 defineOptions({
   name: "madoka-btn",

@@ -1,5 +1,5 @@
 <template>
-  <div class="lyric-container" v-show="!(setting.theme === 0 && audioPlayer.currentSong.title === 'コネクト')">
+  <div class="lyric-container" v-show="!(setting.theme === 1 && audioPlayer.currentSong.title === 'コネクト')">
     <div class="cyber-pink-lyric" :data-text="LyricState.currentLineText" :style="LyricState.lyricStyle">
       {{ LyricState.currentLineText }}
     </div>

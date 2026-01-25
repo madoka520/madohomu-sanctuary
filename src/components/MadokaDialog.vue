@@ -12,7 +12,7 @@
       </main>
       <footer v-if="footer">
         <slot name="footer">
-          <madoka-btn type="1" @click="Root.cancel" :text="cancelText" variant="outlined" color="pink" />
+          <madoka-btn type="1" @click="Root.cancel" v-if="!hiddenCancel" :text="cancelText" variant="outlined" color="pink" />
           <madoka-btn type="1" @click="Root.ok" :text="okText" variant="outlined" color="pink" />
         </slot>
       </footer>
@@ -35,6 +35,7 @@ const props = withDefaults(
     cancelText?: string
     unuseModel?: boolean
     background?: string
+    hiddenCancel?: boolean
   }>(),
   {
     title: "",
@@ -45,6 +46,7 @@ const props = withDefaults(
     cancelText: "取 消",
     unuseMode: false,
     background: "rgba(255, 240, 245, 0.7)",
+    hiddenCancel: false,
   },
 )
 

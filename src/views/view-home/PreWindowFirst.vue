@@ -1,9 +1,6 @@
 <template>
   <div class="page" @click="PictureAlbumVideo.nextPage">
     <div style="position: relative; height: 100%">
-      <!--      <madoka-picture-album-card :left="SelfMsg.left" :top="SelfMsg.top">
-        <pre-self-msg-slot />
-      </madoka-picture-album-card>-->
       <template v-for="(item, index) in PictureAlbumVideo.items">
         <madoka-picture-album-card
           :ref="(v) => PictureAlbumVideo.ref.set(v, index)"
@@ -34,12 +31,15 @@ const emits = defineEmits(["changeCurrent"])
 
 const PictureAlbumVideo = (() => {
   const nextPage = async () => {
+    if (s.locked) return
+    s.locked = true
     await Promise.all(Object.values(s.ref.value).map((v) => v.jump()))
     await sleep(1500)
     emits("changeCurrent")
+    s.locked = false
   }
   const init = () => {
-/*    setTimeout(async () => {
+    /*    setTimeout(async () => {
       const res = (await messageApi.random()) as any
       s.items.forEach((item, index) => {
         item.msg = res.list[index].content
@@ -47,11 +47,15 @@ const PictureAlbumVideo = (() => {
       s.hiddenVideo = true
     }, 5000)*/
   }
+  const reduction = async () => {
+    await Promise.all(Object.values(s.ref.value).map((v) => v.reduction()))
+  }
   const s = reactive({
+    locked: false,
     hiddenVideo: false,
     ref: {
       value: {} as Record<number, InstanceType<typeof MadokaPictureAlbumCard>>,
-      set: (v, index) => (s.ref.value[index] = v),
+      set: (v: any, index: number) => (s.ref.value[index] = v),
     },
     items: [
       { x: 0, y: 10, width: 17, zIndex: 1 },
@@ -69,11 +73,15 @@ const PictureAlbumVideo = (() => {
       { x: 46, y: 43, width: 14, height: 25 },
       { x: 57, y: 35, height: 25, zIndex: 2 },
     ] as { x: number; y: number; width?: number; height?: number; zIndex?: number; msg?: string; component?: number }[],
+    reduction,
     nextPage,
   })
   init()
   return s
 })()
+defineExpose({
+  reduction: PictureAlbumVideo.reduction,
+})
 </script>
 
 <style scoped>

@@ -6,9 +6,11 @@ import { message } from "@/components/message.tsx"
 
 type ConfirmOptions = {
   title?: string
-  content?: JSX.Element
+  content?: JSX.Element | string
   onOk?: () => void
   onCancel?: () => void
+  hiddenCancel?: boolean
+  okText?: string
 }
 
 export default (() => {
@@ -36,7 +38,9 @@ export default (() => {
       <MadokaDialog
         v-model={state.visible}
         title={state.title}
-        onOk={async (e) => {
+        okText={options.okText}
+        hiddenCancel={options.hiddenCancel}
+        onOk={async () => {
           try {
             await state.onOk?.()
             close()
@@ -44,7 +48,7 @@ export default (() => {
             if (error.message) message.error(error.message)
           }
         }}
-        onCancel={(e) => {
+        onCancel={() => {
           state.onCancel?.()
           close()
         }}
@@ -61,7 +65,16 @@ export default (() => {
     })
   }
 
+  const info = (options: Omit<ConfirmOptions, "onCancel">) => {
+    confirm({
+      ...options,
+      hiddenCancel: true,
+      okText: "知道了",
+    })
+  }
+
   return {
     confirm,
+    info
   }
 })()

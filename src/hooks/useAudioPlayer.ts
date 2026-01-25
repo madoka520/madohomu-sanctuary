@@ -321,7 +321,7 @@ export default defineStore("madokaAudioPlayer", () => {
       value: null as HTMLAudioElement | null,
     },
     songList,
-    current: 26,
+    current: 28,
     currentTime: 0,
     volume: 0.5,
     currentSong,
