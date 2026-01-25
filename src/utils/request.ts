@@ -39,14 +39,14 @@ service.interceptors.response.use(
   (err) => {
     const cfg = err.config as MyAxiosRequestConfig
     const res = err.response?.data ?? {}
-    const { error, message } = res
+    const { error, message: msg } = res
 
     // 根据配置决定是否显示错误提示
-    if (cfg?.showErrorMessage ?? true) {
+    if (cfg?.showErrorMessage !== false && !["get", "GET"].includes(cfg.method!)) {
       message.error(error ?? "出错啦~")
     }
 
-    return Promise.reject(message ?? error ?? err)
+    return Promise.reject(msg ?? error ?? err)
   },
 )
 //参数类型
@@ -58,7 +58,7 @@ export type RequestParams = { params?: any; data?: any };
  * @param params
  * @param config
  */
-export const madokaGet = (url: string, params: any, config?: InternalAxiosRequestConfig) => {
+export const madokaGet = (url: string, params: any = {}, config?: InternalAxiosRequestConfig) => {
   return service.get(url, { params, ...config });
 };
 /**

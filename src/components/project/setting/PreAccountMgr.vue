@@ -2,14 +2,7 @@
   <div class="profile-page">
     <div class="card avatar-card">
       <div class="avatar-wrapper">
-        <madoka-avatar
-          v-if="Root.model.id"
-          :user-id="Root.model.id"
-          @click="Root.handleUpload"
-          :avatar-update-time="Root.avatarUpdateTime"
-          :width="120"
-          uploadadble
-        />
+        <madoka-avatar v-if="Root.model.id" :user-id="Root.model.id" @click="Root.handleUpload" :width="120" uploadadble />
         <input type="file" accept="image/jpeg,image/png,image/webp" @change="Root.onSelectAvatar" style="display: none" ref="uploadRef" />
       </div>
     </div>
@@ -24,7 +17,7 @@
       <span class="value">••••••••</span>
     </div>
 
-    <div class="card item">
+    <div class="card item" @click="Root.handleUpdateEmail">
       <span class="label">邮箱</span>
       <span class="value">{{ Root.model.email }}</span>
     </div>
@@ -82,11 +75,7 @@ const Root = (() => {
         <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
           <MadokaInput type="password" placeholder="请输入新密码" v-model={value.value} />
           <MadokaInput type="password" placeholder="请再次输入新密码" v-model={valueAgain.value} />
-          {!equal.value && (
-            <div style="color: red;font-size: 13px">
-              两次输入密码不一致!
-            </div>
-          )}
+          {!equal.value && <div style="color: red;font-size: 13px">两次输入密码不一致!</div>}
         </div>
       ),
       onOk: async () => {
@@ -99,6 +88,9 @@ const Root = (() => {
     })
   }
 
+  const handleUpdateEmail = () => {
+    message.info("还没做此功能~ ✘﹏✘")
+  }
   const handleUpload = () => {
     uploadRef.value?.click()
   }
@@ -132,12 +124,12 @@ const Root = (() => {
 
   const s = reactive({
     model: {} as UserInfo,
-    avatarUpdateTime: 0,
     logout,
     onSelectAvatar,
     handleUpload,
     handleUpdateUsername,
     handleUpdatePassword,
+    handleUpdateEmail,
   })
 
   return s

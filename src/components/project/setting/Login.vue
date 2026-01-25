@@ -59,7 +59,7 @@ const Form = (() => {
     model: {
       username: useLocalStorage("username", ''),
       password: useLocalStorage("password", ''),
-      usePassword: false,
+      usePassword: useLocalStorage("usePassword", false),
     },
     error: "",
     showPassword: false,

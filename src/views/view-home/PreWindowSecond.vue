@@ -2,21 +2,22 @@
   <div class="app-container">
     <madoka-live2d />
     <pre-home-theme />
-    <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne">
+    <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne" @back="emits('back')">
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card
           v-for="item in Msg.list"
-          :key="item.userId ?? item.externalUserId"
+          :key="`${item.createTime}${item.id}`"
           :content="item.content"
           :create-time="item.createTime"
-          :uid="item.userId ?? item.externalUserId"
+          :uid="item.userId ?? item.externalUserId ?? -1"
           :username="item.username ?? item.externalUsername"
           :external-id="item.externalId"
           :origin="item.origin"
           :update-time="item.userUpdateTime ?? 0"
+          :avatar="item.avatar"
         />
       </div>
-      <madoka-timeline @change="Msg.changeDate" />
+      <madoka-timeline @change="Msg.changeDate" v-model="Msg.currentDay" />
     </madoka-side-drawer>
   </div>
 </template>
@@ -29,14 +30,31 @@ import MadokaTimeline from "@/components/MadokaTimeline.vue"
 import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
 import MessageApi from "@/api/MessageApi.ts"
 import MadokaLive2d from "@/components/MadokaLive2d.vue"
+import axios from "axios"
+import dayjs from "dayjs"
+import { debounce, maxBy, minBy, uniqBy } from "lodash-unified"
 
 const scrollRef = useTemplateRef("scrollRef")
 type IParams = {
   from?: number
-  page: number
-  pageSize: number
-  createTime?: number
+  time?: number
+  toward?: "next" | "prev"
 }
+type IList = {
+  id: number
+  content: string
+  createTime: number
+  userId: number
+  externalUsername: string
+  externalUserId: number
+  username: string
+  externalId: number
+  origin: string
+  updateTime: number
+  userUpdateTime: number
+  avatar?: string
+}
+const emits = defineEmits(["back"])
 const Msg = (() => {
   const pushOne = (e) => {
     s.list.unshift(e)
@@ -45,14 +63,16 @@ const Msg = (() => {
     // 1. 状态初始化
     s.noMore = false
     s.list = []
+    s.madohomuList = []
     pageReset()
     delete s.params.from
-    s.params.createTime = time
+    s.params.time = time
 
     // 2. 执行加载 (确保 getList 内部没有因为 loading 锁被挡住)
     // 注意：getList 内部执行时会自动设置 s.loading = true
     await getList()
-
+    await getMadohomuMsg({ time: Math.floor(dayjs(time).startOf("day").valueOf() / 1000) })
+    combine()
     // 3. 此时数据已经回到 s.list，等待 Vue 将 DOM 渲染出来
     await nextTick()
 
@@ -72,12 +92,23 @@ const Msg = (() => {
   }
 
   const next = async () => {
-    if (s.params.page <= 0) {
-      s.params.page = 1
-    } else {
-      s.params.page++
-    }
+    s.params.toward = "next"
+    s.params.from = minBy(s.list, 'id')?.id! -1
     await getList()
+    if (s.madohomuList.length) {
+      await getMadohomuMsg({
+        from: minBy(s.madohomuList, "id")?.id! - 1,
+      })
+    }
+    combine()
+  }
+
+  const combine = () => {
+/*    s.combineList.length = 0 // 清空原数组
+    const merged = [...s.list, ...s.madohomuList] as IList[]
+    merged.sort((a, b) => b.createTime - a.createTime)
+    s.combineList = uniqBy(merged, (item) => `${item.id}_${item.origin}`)*/
+    s.combineList = uniqBy(s.list, (item) => `${item.id}_${item.origin}`)
   }
 
   const getList = async (next: boolean = true) => {
@@ -93,10 +124,39 @@ const Msg = (() => {
         s.list.push(...res.list)
         return
       }
-      s.list.unshift(...res.list.reverse())
+      s.list.unshift(...res.list)
     } finally {
       s.loading = false
     }
+  }
+
+  const getMadohomuMsg = async (params: any = {}) => {
+/*    block: {
+      /!**
+       * 如果小于这个时间就不要去查询madohomu.love的数据了 因为之前不存在数据
+       *!/
+      if (
+        params.time &&
+        dayjs.unix(params.time).startOf("day").valueOf() < dayjs("2023-06-22").startOf("day").valueOf() &&
+        params.time !== 1684651800
+      ) {
+        break block
+      }
+      const url = "https://haojiezhe12345.top:82/madohomu/api/comments"
+      const res = await axios.get(url, { params })
+      const set = params.count ? "unshift" : "push"
+      s.madohomuList[set](
+        ...res.data.map((item) => ({
+          ...item,
+          userId: item.uid,
+          externalId: item.id,
+          content: item.comment,
+          createTime: item.time * 1000,
+          username: item.sender,
+          origin: "madohomu.love",
+        })),
+      )
+    }*/
   }
 
   const getMsgMaxId = async () => {
@@ -108,56 +168,80 @@ const Msg = (() => {
   }
 
   const pageReset = () => {
-    s.params.page = 1
-    s.params.pageSize = 10
+    s.params.toward = "next"
   }
 
   const prev = async () => {
-    if (s.leftLoading) return
-    s.leftLoading = true
-    if (s.list[0].createTime === s.maxTime) {
-      s.leftLoading = false
+    s.params.toward = "prev"
+    if (!s.list.length) {
+      s.params.time = s.currentDay
+      s.loading = false
+
       return
     }
-    s.params.from = s.list[0].id
-    s.params.page--
-    if (s.params.page === 0) {
-      s.params.page--
+    if (s.list[0].createTime === s.maxTime) {
+      return
     }
+    s.params.from = maxBy(s.list, "id")?.id
     await getList(false)
+
+    if (s.madohomuList.length) {
+      await getMadohomuMsg({
+        from: maxBy(s.madohomuList, "id")!.id! + 1,
+        count: -10,
+      })
+    }
+
+    if (s.list.find((item) => dayjs(item.createTime).startOf("day").valueOf() === dayjs("2023-05-21").startOf("day").valueOf())) {
+      await getMadohomuMsg({
+        time: 1684651800,
+      })
+    }
+    combine()
     await sleep(500)
-    s.leftLoading = false
   }
 
   const s = reactive({
-    params: { pageSize: 10, page: 1 } as IParams,
+    params: { toward: "next" } as IParams,
+    currentDay: 0,
     maxId: 0,
     maxTime: 0,
-    list: [] as {
-      id: number
-      content: string
-      createTime: number
-      userId: number
-      externalUsername: string
-      externalUserId: number
-      username: string
-      externalId: number
-      origin: string
-      updateTime: number
-      userUpdateTime: number
-    }[],
+    list: [] as IList[],
+    madohomuList: [] as IList[],
+    combineList: [] as IList[],
     changeDate,
     getList,
     next,
     prev,
     noMore: false,
     loading: false,
-    leftLoading: false,
     pushOne,
   })
 
-  getList() // 初始化加载
   getMaxTime()
+
+  const init = async () => {
+    await getList() // 初始化加载
+    await getMadohomuMsg()
+    combine()
+  }
+
+  init()
+  /**
+   * 待机返回首页
+   */
+  onMounted(() => {
+    const idle = useIdle(300000, {
+      events: ["click", "keydown", "mousemove"],
+    })
+
+    watch(idle.idle, (isIdle) => {
+      if (isIdle) {
+        emits("back")
+      }
+    })
+  })
+
   return s
 })()
 
@@ -180,11 +264,10 @@ const Scroll = (() => {
 
     e.preventDefault()
     el.scrollLeft += e.deltaY * 8.08
-    await checkLoad(el)
+    await checkLoadDebounce(el)
   }
-
   const checkLoad = async (el: HTMLElement) => {
-    if (Msg.loading || Msg.leftLoading) return // 必须同时检查两个锁
+    if (Msg.loading) return // 必须同时检查两个锁
 
     const scrollLeft = el.scrollLeft
     const maxScrollLeft = el.scrollWidth - el.clientWidth
@@ -211,6 +294,7 @@ const Scroll = (() => {
       }
     }
   }
+  const checkLoadDebounce = debounce(checkLoad, 100) // 防抖检查加载
 
   // 1. 状态对象必须放在函数外面，确保它是持久的
   const ScrollState = {

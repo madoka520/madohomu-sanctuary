@@ -33,13 +33,16 @@ const scrollRef = useTemplateRef("scrollRef")
 const wrapperRef = useTemplateRef("wrapperRef")
 const dateCardRef = useTemplateRef("dateCardRef") // 新增：用来获取卡片宽度
 const emits = defineEmits(["change"])
-
+const currentDay = defineModel({
+  default: 0,
+})
 const TimeLine = (() => {
   // 返回从 startYear 到 endYear 的年份数组
   const getYears = () => Array.from({ length: s.currentYear - 2019 + 1 }, (_, i) => 2019 + i).reverse()
   const dayClick = (day: number) => {
     emits("change", dayjs(`${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`, "YYYY-MM-DD").endOf("day").valueOf())
     DateCard.hideDateCard()
+    currentDay.value = dayjs(`${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`).valueOf()
   }
   const s = reactive({
     currentYear: dayjs().year(),

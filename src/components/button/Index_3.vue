@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
-    text: string;
+    text?: string;
   }>(),
   {
 

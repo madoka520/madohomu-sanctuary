@@ -3,7 +3,7 @@
     <div class="card" :style="cardStyle">
       <div class="card__header">
         <div class="avatar">
-          <img draggable="false" :src="`${avatarSrc}?t=${updateTime}`" loading="lazy" alt="" />
+          <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
         </div>
         <div class="user">
           <div class="name">{{ username }}</div>
@@ -16,7 +16,15 @@
       </div>
 
       <div class="card__footer">
-        {{ dayjs(createTime).format("YYYY/MM/DD HH:mm:ss") }}
+        <span v-if="origin !== 'madokami'">
+          <a v-if="origin === 'kami'" href="https://kami.im" target="_blank"> kami.im </a>
+          <a v-else :href="`https://${origin}`" target="_blank">
+            {{ origin }}
+          </a>
+        </span>
+        <div style="display: flex; margin-left: auto">
+          {{ dayjs(createTime).format("YYYY/MM/DD HH:mm:ss") }}
+        </div>
       </div>
     </div>
   </div>
@@ -36,11 +44,18 @@ const props = withDefaults(
     externalId: number
     updateTime: number
     origin?: "madokami" | "kami" | string
+    avatar?: string
   }>(),
   {},
 )
 
-const avatarSrc = computed(() => (props.origin === "madokami" ? getAvatarUrl(props.uid) : `https://kami.im/getavatar.php?uid=${props.uid}`))
+const avatarSrc = computed(() => {
+  if (props.avatar) {
+    return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${props.avatar}`
+  }
+
+  return props.origin === "madokami" ? `${getAvatarUrl(props.uid)}?t=${props.updateTime}` : `https://kami.im/getavatar.php?uid=${props.uid}`
+})
 
 const cardStyle = computed(() => {
   const randomNum = Math.floor(Math.random() * 22 + 1)
@@ -69,8 +84,8 @@ const cardStyle = computed(() => {
     }
   }
   .card {
-    width: 590px;
-    height: 680px;
+    width: 22vw;
+    height: 55vh;
     padding: 14px;
     overflow: auto;
     position: relative; // 必须是 relative 才能让伪元素定位
@@ -147,10 +162,47 @@ const cardStyle = computed(() => {
   }
 
   .card__footer {
+    display: flex;
     margin-top: auto;
     font-size: 12px;
     opacity: 0.6;
     text-align: right;
+
+    a {
+      // 基础样式重置
+      text-decoration: none;
+      color: white; // 稍微带点神秘的紫色
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+      padding: 4px 0;
+
+      // 使用伪元素制作下划线动画
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: white;
+        transition: width 0.3s ease-in-out;
+      }
+
+      // 悬浮状态
+      &:hover {
+        color: white;
+
+        &::after {
+          width: 100%;
+        }
+      }
+
+      // 点击后的反馈
+      &:active {
+        opacity: 0.7;
+      }
+    }
   }
 }
 </style>

@@ -1,16 +1,15 @@
 <template>
   <div class="avatar-wrapper" :class="{ upload: uploadadble }">
-    <img class="avatar" :src="`${getAvatarUrl(userId)}?t=${avatarUpdateTime ?? tokenHook.userInfo.updateTime}`" alt="" @error="onAvatarError" :style />
+    <img class="avatar" :src alt="" @error="onAvatarError" :style :key="src" />
   </div>
 </template>
 <script setup lang="ts">
 import { getAvatarUrl } from "@/utils/resource.ts"
 import useToken from "@/hooks/useToken.ts"
-import dayjs from "dayjs"
+
 const props = withDefaults(
   defineProps<{
     width?: number
-    avatarUpdateTime?: number
     uploadadble?: boolean
   }>(),
   {
@@ -18,7 +17,18 @@ const props = withDefaults(
   },
 )
 const tokenHook = useToken()
-const userId = computed(() => tokenHook.userInfo.id)
+/**
+ * 根据updateTime来决定是否更新用户头像
+ */
+const src = computed(() => {
+  const userInfo = tokenHook.userInfo
+  const userId = tokenHook.userInfo.id ?? "default"
+  let url = getAvatarUrl(userId)
+  if (userInfo.updateTime) {
+    url += `?t=${userInfo.updateTime}`
+  }
+  return url
+})
 
 const onAvatarError = (e: Event) => {
   const img = e.target as HTMLImageElement
@@ -33,7 +43,7 @@ const style = computed(() => ({
 .avatar-wrapper {
   position: relative;
 
-  user-select:none;
+  user-select: none;
   .avatar {
     border-radius: 50%;
     border: 3px solid #fff;

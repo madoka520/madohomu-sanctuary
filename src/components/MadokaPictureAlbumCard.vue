@@ -53,10 +53,10 @@ const Root = (() => {
     if (!el) return
 
     //先保存位置属性
-    s.oldPos.transition = el.style.transition
-    s.oldPos.top = el.style.top
-    s.oldPos.left = el.style.left
-
+    s.oldProperty.transition = el.style.transition
+    s.oldProperty.top = el.style.top
+    s.oldProperty.left = el.style.left
+    s.oldProperty.display = el.style.display
     el.style.transition = "none"
 
     const startY = el.offsetTop
@@ -98,6 +98,14 @@ const Root = (() => {
     requestAnimationFrame(frame)
   }
 
+  const reduction = () => {
+    const el = wrapperRef.value
+    if (!el) return
+    el.style.display = s.oldProperty.display
+    el.style.transition = s.oldProperty.transition
+    el.style.top = s.oldProperty.top
+    el.style.left = s.oldProperty.left
+  }
   const init = () => {
     /**
      * 初始化动画 决定摆动方向
@@ -158,18 +166,21 @@ const Root = (() => {
       backgroundPosition: "center",
       imageRendering: "crisp-edges",
     })),
-    oldPos: {
+    oldProperty: {
       left: "0",
       top: "0",
       transition: "none",
+      display: "",
     },
     jump,
+    reduction,
   })
   init()
   return s
 })()
 defineExpose({
   jump: Root.jump,
+  reduction: Root.reduction,
 })
 </script>
 <style scoped lang="less">
