@@ -197,7 +197,6 @@ const Msg = (() => {
       })
     }
     combine()
-    await sleep(500)
   }
 
   const s = reactive({
@@ -314,10 +313,10 @@ const Scroll = (() => {
     // 👉 向左加载
     if (scrollLeft <= threshold) {
       const oldScrollWidth = el.scrollWidth
+      el.style.scrollBehavior = "auto"
 
       await Msg.prev()
 
-      await nextTick()
       const newScrollWidth = el.scrollWidth
       const diff = newScrollWidth - oldScrollWidth
 
@@ -325,6 +324,8 @@ const Scroll = (() => {
         // 这里的 +5 是关键，确保加载完后不在触发区，用户可以顺利向右滑
         el.scrollLeft = diff + 5
       }
+      el.style.scrollBehavior = "smooth"
+
     }
     await sleep(1000)
     const { left, right } = getVisibleCards(el)
