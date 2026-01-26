@@ -15,6 +15,7 @@
           :origin="item.origin"
           :update-time="item.userUpdateTime ?? 0"
           :avatar="item.avatar"
+          :image="item.image"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" v-model="Msg.currentDay" />
@@ -52,6 +53,7 @@ type IList = {
   updateTime: number
   userUpdateTime: number
   avatar?: string
+  image?: string
 }
 const emits = defineEmits(["back"])
 const Msg = (() => {
@@ -325,7 +327,6 @@ const Scroll = (() => {
         el.scrollLeft = diff + 5
       }
       el.style.scrollBehavior = "smooth"
-
     }
     await sleep(1000)
     const { left, right } = getVisibleCards(el)
@@ -404,19 +405,8 @@ const Scroll = (() => {
   flex-wrap: nowrap;
   white-space: nowrap;
   scroll-behavior: smooth;
-
   user-select: none;
-  scrollbar-width: thin; /* Firefox */
-}
-.scroll-row::-webkit-scrollbar {
-  height: 6px;
-}
-.scroll-row::-webkit-scrollbar-thumb {
-  background: #ffb7c5;
-  border-radius: 3px;
-}
-.scroll-row::-webkit-scrollbar-track {
-  background: #fff5f7;
+
 }
 
 .loading-tip {

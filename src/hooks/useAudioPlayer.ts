@@ -302,6 +302,11 @@ export default defineStore("madokaAudioPlayer", () => {
     s.playing = true
   }
 
+  const seek = (number: number) => {
+    s.currentTime = number
+    s.ref.value.currentTime = number
+  }
+
   /** 获取当前歌曲播放链接（供 <audio> 使用） */
   const currentUrl = computed(() => {
     const song = currentSong.value
@@ -328,6 +333,7 @@ export default defineStore("madokaAudioPlayer", () => {
     currentUrl,
     /** 状态 */
     playing: false,
+    seek,
     next,
     play,
     prev,
