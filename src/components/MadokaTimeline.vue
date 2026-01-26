@@ -2,11 +2,16 @@
   <div class="timeline-wrapper" ref="wrapperRef">
     <div class="timeline" ref="scrollRef" @wheel="Scroll.wheel">
       <div v-for="year in TimeLine.getYears()" :key="year" class="year">
-        <div class="number">
+        <div class="number" :class="{ selected: year === dayjs(currentDay).year() }">
           {{ year }}
         </div>
         <div v-for="month in Array.from({ length: 12 }, (_, i) => 12 - i)" class="month-wrapper">
-          <div class="month number" @mouseenter="DateCard.showDateCard(year, month, $event)" @mouseleave="DateCard.hideDateCard">
+          <div
+            class="month number"
+            @mouseenter="DateCard.showDateCard(year, month, $event)"
+            @mouseleave="DateCard.hideDateCard"
+            :class="{ selected: month === dayjs(currentDay).month() + 1 && dayjs(currentDay).year() === year }"
+          >
             {{ month }}
           </div>
         </div>
@@ -20,7 +25,13 @@
       @mouseleave="DateCard.hideDateCard"
       ref="dateCardRef"
     >
-      <div v-for="day in DateCard.days" class="day" @click="TimeLine.dayClick(day)">
+      <div
+        v-for="day in DateCard.days"
+        class="day"
+        @click="TimeLine.dayClick(day)"
+        :class="{ selected: day === dayjs(currentDay).date() }"
+        :style="{ pointerEvents: DateCard.now.isBefore(dayjs(`${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`)) ? 'none' : 'auto' }"
+      >
         {{ day }}
       </div>
     </div>
@@ -34,7 +45,7 @@ const wrapperRef = useTemplateRef("wrapperRef")
 const dateCardRef = useTemplateRef("dateCardRef") // 新增：用来获取卡片宽度
 const emits = defineEmits(["change"])
 const currentDay = defineModel({
-  default: 0,
+  default: dayjs().valueOf(),
 })
 const TimeLine = (() => {
   // 返回从 startYear 到 endYear 的年份数组
@@ -124,6 +135,7 @@ const DateCard = (() => {
       transform: "translate(-50%, -100%)", // 默认居中
     },
     days: [] as number[],
+    now: dayjs(),
     hoverYear: -1,
     hoverMonth: -1,
     timer: null as number | null,
@@ -265,5 +277,8 @@ const Scroll = (() => {
   .day:hover {
     background: rgba(255, 187, 221, 0.35);
   }
+}
+.selected {
+  color: #ffbbdd;
 }
 </style>
