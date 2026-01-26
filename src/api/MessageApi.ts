@@ -1,4 +1,4 @@
-import { madokaGet, madokaPost } from "@/utils/request.ts";
+import { madokaGet, madokaPost, madokaPut } from "@/utils/request.ts"
 
 export default {
   send: (data) => madokaPost("/message", data),
@@ -7,4 +7,5 @@ export default {
   getMaxTime: () => madokaGet("/message/get-max-time"),
   random: () => madokaGet("/message/random"),
   count: () => madokaGet("/message/count"),
+  like: (messageId: number) => madokaPut("/message/like", { messageId }, { showSuccessMessage: false }),
 }

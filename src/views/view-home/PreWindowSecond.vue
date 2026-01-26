@@ -5,6 +5,7 @@
     <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne" @back="emits('back')">
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card
+          :message-id="item.id"
           v-for="item in Msg.list"
           :key="`${item.createTime}${item.id}`"
           :content="item.content"
@@ -16,6 +17,9 @@
           :update-time="item.userUpdateTime ?? 0"
           :avatar="item.avatar"
           :image="item.image"
+          :likes="item.likes ?? 0"
+          :liked="item.liked"
+          @like="Msg.like(item)"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" v-model="Msg.currentDay" />
@@ -42,6 +46,8 @@ type IParams = {
 }
 type IList = {
   id: number
+  likes: number
+  liked: number
   content: string
   createTime: number
   userId: number
@@ -201,6 +207,12 @@ const Msg = (() => {
     combine()
   }
 
+  const like = (item: IList) => {
+    item.liked = +item.liked ? 0 : 1
+    const add = item.liked ? 1 : -1
+    item.likes += add
+  }
+
   const s = reactive({
     params: { toward: "next" } as IParams,
     currentDay: dayjs().valueOf(),
@@ -216,6 +228,7 @@ const Msg = (() => {
     noMore: false,
     loading: false,
     pushOne,
+    like
   })
 
   getMaxTime()
@@ -406,7 +419,6 @@ const Scroll = (() => {
   white-space: nowrap;
   scroll-behavior: smooth;
   user-select: none;
-
 }
 
 .loading-tip {
