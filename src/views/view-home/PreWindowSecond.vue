@@ -93,7 +93,7 @@ const Msg = (() => {
 
   const next = async () => {
     s.params.toward = "next"
-    s.params.from = minBy(s.list, 'id')?.id! -1
+    s.params.from = minBy(s.list, "id")?.id! - 1
     await getList()
     if (s.madohomuList.length) {
       await getMadohomuMsg({
@@ -104,11 +104,11 @@ const Msg = (() => {
   }
 
   const combine = () => {
-/*    s.combineList.length = 0 // 清空原数组
+    /*    s.combineList.length = 0 // 清空原数组
     const merged = [...s.list, ...s.madohomuList] as IList[]
     merged.sort((a, b) => b.createTime - a.createTime)
     s.combineList = uniqBy(merged, (item) => `${item.id}_${item.origin}`)*/
-    s.combineList = uniqBy(s.list, (item) => `${item.id}_${item.origin}`)
+    s.combineList = uniqBy(s.list, (item) => `${item.externalId}_${item.origin}`)
   }
 
   const getList = async (next: boolean = true) => {
@@ -131,7 +131,7 @@ const Msg = (() => {
   }
 
   const getMadohomuMsg = async (params: any = {}) => {
-/*    block: {
+    /*    block: {
       /!**
        * 如果小于这个时间就不要去查询madohomu.love的数据了 因为之前不存在数据
        *!/
@@ -203,7 +203,7 @@ const Msg = (() => {
 
   const s = reactive({
     params: { toward: "next" } as IParams,
-    currentDay: 0,
+    currentDay: dayjs().valueOf(),
     maxId: 0,
     maxTime: 0,
     list: [] as IList[],
@@ -266,6 +266,40 @@ const Scroll = (() => {
     el.scrollLeft += e.deltaY * 8.08
     await checkLoadDebounce(el)
   }
+  /**
+   * 获取可见元素
+   * @param container
+   */
+  const getVisibleCards = (container: HTMLElement) => {
+    const containerRect = container.getBoundingClientRect()
+    const cards = Array.from(container.querySelectorAll<HTMLElement>(".card"))
+
+    let leftMost: HTMLElement | null = null
+    let rightMost: HTMLElement | null = null
+
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect()
+
+      // 判断是否横向可见
+      const isVisible = rect.right > containerRect.left && rect.left < containerRect.right
+
+      if (!isVisible) continue
+
+      if (!leftMost || rect.left < leftMost.getBoundingClientRect().left) {
+        leftMost = card
+      }
+
+      if (!rightMost || rect.right > rightMost.getBoundingClientRect().right) {
+        rightMost = card
+      }
+    }
+
+    return {
+      left: leftMost,
+      right: rightMost,
+    }
+  }
+
   const checkLoad = async (el: HTMLElement) => {
     if (Msg.loading) return // 必须同时检查两个锁
 
@@ -292,6 +326,13 @@ const Scroll = (() => {
         // 这里的 +5 是关键，确保加载完后不在触发区，用户可以顺利向右滑
         el.scrollLeft = diff + 5
       }
+    }
+    await sleep(1000)
+    const { left, right } = getVisibleCards(el)
+    if (scrollLeft <= threshold) {
+      Msg.currentDay = +left!.dataset!.time!
+    } else {
+      Msg.currentDay = +right!.dataset!.time!
     }
   }
   const checkLoadDebounce = debounce(checkLoad, 100) // 防抖检查加载

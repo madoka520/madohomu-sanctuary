@@ -1,6 +1,6 @@
 <template>
   <div class="card__wrapper">
-    <div class="card" :style="cardStyle">
+    <div class="card" :style="cardStyle" :data-time="createTime">
       <div class="card__header">
         <div class="avatar">
           <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
@@ -34,6 +34,7 @@
 import dayjs from "dayjs"
 import { getAssetUrl, getAvatarUrl, getImgUrl } from "@/utils/resource.ts"
 import { computed } from "vue"
+import axios from "axios"
 
 const props = withDefaults(
   defineProps<{
@@ -49,11 +50,11 @@ const props = withDefaults(
   {},
 )
 
-const avatarSrc = computed(() => {
-  if (props.avatar) {
-    return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${props.avatar}`
+const avatarSrc = computedAsync(async () => {
+  if (props.origin === "madohomu.love") {
+    const res = await axios.get("https://haojiezhe12345.top:82/madohomu/api/user/find", { params: { id: props.uid } })
+    return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${res.data[0]?.avatar ?? -1}`
   }
-
   return props.origin === "madokami" ? `${getAvatarUrl(props.uid)}?t=${props.updateTime}` : `https://kami.im/getavatar.php?uid=${props.uid}`
 })
 
