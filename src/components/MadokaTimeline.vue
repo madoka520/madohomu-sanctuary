@@ -29,7 +29,7 @@
         v-for="day in DateCard.days"
         class="day"
         @click="TimeLine.dayClick(day)"
-        :class="{ selected: day === dayjs(currentDay).date() }"
+        :class="{ selected: day === dayjs(currentDay).date() && DateCard.hoverMonth === dayjs(currentDay).month() + 1 && DateCard.hoverYear === dayjs(currentDay).year() }"
         :style="{ pointerEvents: DateCard.now.isBefore(dayjs(`${DateCard.hoverYear}-${DateCard.hoverMonth}-${day}`)) ? 'none' : 'auto' }"
       >
         {{ day }}

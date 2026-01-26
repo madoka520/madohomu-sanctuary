@@ -59,8 +59,9 @@ const avatarSrc = computedAsync(async () => {
 })
 
 const cardStyle = computed(() => {
-  const randomNum = Math.floor(Math.random() * 22 + 1)
-  const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${randomNum}`)
+  // 使用 externalId 取模，确保同一个 ID 的卡片背景永远固定
+  const fixedNum = (props.externalId % 22) + 1
+  const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${fixedNum}`)
   return {
     "--bg-image": `url(${bgUrl}.webp)`,
   }

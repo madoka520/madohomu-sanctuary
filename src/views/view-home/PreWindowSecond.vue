@@ -30,7 +30,6 @@ import MadokaTimeline from "@/components/MadokaTimeline.vue"
 import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
 import MessageApi from "@/api/MessageApi.ts"
 import MadokaLive2d from "@/components/MadokaLive2d.vue"
-import axios from "axios"
 import dayjs from "dayjs"
 import { debounce, maxBy, minBy, uniqBy } from "lodash-unified"
 
