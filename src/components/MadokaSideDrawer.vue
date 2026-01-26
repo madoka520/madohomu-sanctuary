@@ -103,6 +103,7 @@ useDrag(
 
     .send__button {
       display: none;
+      user-select: none;
     }
 
     .today__count {

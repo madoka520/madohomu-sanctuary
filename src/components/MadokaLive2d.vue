@@ -68,7 +68,7 @@ const Madoka = (() => {
   height: v-bind("Madoka.cssHeight");
   pointer-events: none;
   transition: 0.2s;
-  z-index: 99999999999;
+  z-index: 2;
   //
   bottom: 0;
   right: 0;

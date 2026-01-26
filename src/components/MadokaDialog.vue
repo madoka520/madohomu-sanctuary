@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import MadokaMask from "@/components/MadokaMask.vue"
 import MadokaBtn from "@/components/button/Index.vue"
-import MadokaMeteorShower from "@/components/MadokaMeteorShower.vue"
 
 const props = withDefaults(
   defineProps<{

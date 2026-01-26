@@ -15,6 +15,9 @@
         {{ content }}
       </div>
 
+      <div v-if="image">
+        <madoka-img :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${image}.jpg`" />
+      </div>
       <div class="card__footer">
         <span v-if="origin !== 'madokami'">
           <a v-if="origin === 'kami'" href="https://kami.im" target="_blank"> kami.im </a>
@@ -35,6 +38,7 @@ import dayjs from "dayjs"
 import { getAssetUrl, getAvatarUrl, getImgUrl } from "@/utils/resource.ts"
 import { computed } from "vue"
 import axios from "axios"
+import MadokaImg from "@/components/MadokaImg.vue"
 
 const props = withDefaults(
   defineProps<{
@@ -46,6 +50,7 @@ const props = withDefaults(
     updateTime: number
     origin?: "madokami" | "kami" | string
     avatar?: string
+    image?: string
   }>(),
   {},
 )

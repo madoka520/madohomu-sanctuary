@@ -18,6 +18,33 @@
             box-sizing: border-box;
         }
 
+        * {
+            &::-webkit-scrollbar {
+                height: 5px;
+                display: block;
+                width: 5px;
+            }
+
+
+            &::-webkit-scrollbar-track {
+                background: rgba(255, 245, 247, 0.3);
+                border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: linear-gradient(90deg, #ffdae2, #ffb7c5, #ffdae2);
+                border-radius: 10px;
+                box-shadow:
+                        0 0 6px 1px rgba(255, 183, 197, 0.8),
+                        inset 0 0 4px rgba(255, 255, 255, 0.9);
+            }
+
+            &::-webkit-scrollbar-button {
+                display: none;
+                width: 0;
+                height: 0;
+            }
+        }
     </style>
 </head>
 <body>

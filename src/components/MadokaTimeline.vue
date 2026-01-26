@@ -181,16 +181,18 @@ const Scroll = (() => {
 <style scoped>
 .timeline-wrapper {
   position: relative;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 .timeline {
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
-  height: 20px;
   display: flex;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  height: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: drop-shadow(0 0) blur(1vh);
   box-shadow: 0 0 0.25rem 0.125rem rgba(0, 0, 0, 0.2);
