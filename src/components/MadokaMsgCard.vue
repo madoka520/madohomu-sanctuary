@@ -18,17 +18,20 @@
       <div v-if="image">
         <madoka-img :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${image}.jpg`" />
       </div>
-      <div class="card__footer">
-        <span v-if="origin !== 'madokami'">
-          <a v-if="origin === 'kami'" href="https://kami.im" target="_blank"> kami.im </a>
-          <a v-else :href="`https://${origin}`" target="_blank">
-            {{ origin }}
-          </a>
-        </span>
-        <div style="display: flex; margin-left: auto">
-          {{ dayjs(createTime).format("YYYY/MM/DD HH:mm:ss") }}
+      <footer>
+        <div class="card__bar"><i class="mdi mdi-heart" :class="{ liked: +liked }" @click="Root.like"/> {{ likes }}</div>
+        <div class="card__footer">
+          <span v-if="origin !== 'madokami'">
+            <a v-if="origin === 'kami'" href="https://kami.im" target="_blank"> kami.im </a>
+            <a v-else :href="`https://${origin}`" target="_blank">
+              {{ origin }}
+            </a>
+          </span>
+          <div style="display: flex; margin-left: auto">
+            {{ dayjs(createTime).format("YYYY/MM/DD HH:mm:ss") }}
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   </div>
 </template>
@@ -39,9 +42,11 @@ import { getAssetUrl, getAvatarUrl, getImgUrl } from "@/utils/resource.ts"
 import { computed } from "vue"
 import axios from "axios"
 import MadokaImg from "@/components/MadokaImg.vue"
+import messageApi from "@/api/MessageApi.ts"
 
 const props = withDefaults(
   defineProps<{
+    messageId: number
     content: string
     uid: number
     createTime: number
@@ -51,10 +56,12 @@ const props = withDefaults(
     origin?: "madokami" | "kami" | string
     avatar?: string
     image?: string
+    likes: number
+    liked: number
   }>(),
   {},
 )
-
+const emits = defineEmits(["like"])
 const avatarSrc = computedAsync(async () => {
   if (props.origin === "madohomu.love") {
     const res = await axios.get("https://haojiezhe12345.top:82/madohomu/api/user/find", { params: { id: props.uid } })
@@ -71,6 +78,17 @@ const cardStyle = computed(() => {
     "--bg-image": `url(${bgUrl}.webp)`,
   }
 })
+
+const Root = (() => {
+  const like = async () => {
+    await messageApi.like(props.messageId)
+    emits('like')
+  }
+  const s = reactive({
+    like
+  })
+  return s
+})()
 </script>
 
 <style scoped lang="less">
@@ -168,12 +186,23 @@ const cardStyle = computed(() => {
     word-break: break-word;
   }
 
+  footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .card__bar {
+    font-size: 20px;
+    margin-left: auto;
+    .liked {
+      color: red;
+    }
+  }
   .card__footer {
     display: flex;
-    margin-top: auto;
     font-size: 12px;
     opacity: 0.6;
-    text-align: right;
+    width: 100%;
 
     a {
       // 基础样式重置

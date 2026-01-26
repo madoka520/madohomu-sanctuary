@@ -28,7 +28,7 @@ service.interceptors.response.use(
     switch (res.config.method) {
       case "put":
       case "post": {
-        if (res.status === 200) {
+        if (res.status === 200 && res.config.showSuccessMessage) {
           message.success(res.data.message ?? "操作成功")
         }
       }
@@ -76,9 +76,9 @@ export const madokaPost = <T>(url: string, data: any, config?: MyAxiosRequestCon
  * @param data
  * @param config
  */
-export const madokaPut = (url: string, data: any, config?: InternalAxiosRequestConfig) => {
-  return service.put(url, data, config);
-};
+export const madokaPut = (url: string, data: any, config?: MyAxiosRequestConfig) => {
+  return service.put(url, data, config)
+}
 /**
  * DELETE请求
  @param url
