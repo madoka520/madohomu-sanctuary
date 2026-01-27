@@ -32,7 +32,14 @@ import MessageApi from '@/api/MessageApi.ts'
 import MadokaLive2d from '@/components/MadokaLive2d.vue'
 import dayjs from 'dayjs'
 import { debounce, maxBy, minBy, uniqBy } from 'lodash-unified'
-
+const fn = (num) => {
+  block: {
+    if (num < 0) {
+      break block
+    }
+    console.log(num)
+  }
+}
 const scrollRef = useTemplateRef('scrollRef')
 type IParams = {
   from?: number
