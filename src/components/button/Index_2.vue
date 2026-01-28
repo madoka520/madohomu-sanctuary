@@ -31,7 +31,7 @@ const loading = defineModel("loading", {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff8eb2;
+  color: white;
   font-family: "Cinzel", serif;
   font-weight: bold;
   font-size: 1.1rem;

@@ -14,7 +14,7 @@
     <span class="mdi control-btn play-btn" :class="audioPlayer.playing ? 'mdi-pause-circle' : 'mdi-play-circle'" @click.stop="onToggle"></span>
 
     <!-- 歌单 -->
-    <span class="mdi mdi-playlist-play control-btn"></span>
+<!--    <span class="mdi mdi-playlist-play control-btn"></span>-->
     <madoka-dialog class="dialog" v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px" :footer="false">
       <pre-audio-player-ui />
     </madoka-dialog>
