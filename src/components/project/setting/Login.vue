@@ -119,6 +119,7 @@ const Form = (() => {
 }
 
 .form-actions {
+  color: white;
   margin-top: 10px;
   :deep(.madoka-btn) {
     width: 100%; // 让按钮充满宽度

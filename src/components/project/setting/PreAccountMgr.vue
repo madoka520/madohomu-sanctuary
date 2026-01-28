@@ -226,6 +226,7 @@ const Root = (() => {
 .action-area {
   & > div {
     border-radius: 22px;
+    color: white;
   }
 }
 </style>

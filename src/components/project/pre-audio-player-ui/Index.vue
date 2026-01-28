@@ -24,7 +24,14 @@
         <div class="album-cover" :class="{ 'album-cover--playing': audioPlayer.playing }">
           <img :src="currentCover" alt="cover" draggable="false" />
         </div>
-
+        <div class="controls-info">
+          <div>
+            {{ audioPlayer.currentSong.title }}
+          </div>
+          <div class="artist">
+            {{ audioPlayer.currentSong.artist }}
+          </div>
+        </div>
         <div class="progress-section">
           <div class="time-info">
             <span>{{ formatTime(audioPlayer.currentTime) }}</span>
@@ -149,7 +156,7 @@ const handleProgressInput = (e: Event) => {
   .controls-content {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
   }
 
   .album-cover {
@@ -168,10 +175,16 @@ const handleProgressInput = (e: Event) => {
     }
 
     &--playing {
-      animation: rotate-album 8s linear infinite;
+      //animation: rotate-album 8s linear infinite;
     }
   }
 
+  .controls-info {
+    font-size: 12px;
+    .artist {
+      color: #888;
+    }
+  }
   .progress-section {
     flex: 1;
     display: flex;

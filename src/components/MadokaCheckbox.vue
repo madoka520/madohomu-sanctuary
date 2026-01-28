@@ -3,9 +3,9 @@
     <input type="checkbox" v-model="modelValue" class="checkbox-input" />
 
     <div class="checkbox-visual">
-      <div class="checkbox-inner">
+      <span class="checkbox-inner">
         <span class="mdi mdi-check" v-if="modelValue"></span>
-      </div>
+      </span>
       <span class="checkbox-label">
         <slot>{{ label }}</slot>
       </span>
@@ -46,7 +46,6 @@ const modelValue = defineModel({
   }
 
   .checkbox-visual {
-
     display: flex;
     align-items: center;
     gap: 8px;
@@ -72,7 +71,8 @@ const modelValue = defineModel({
   }
 
   .checkbox-label {
-    color: pink;
+    color: @pink-dark;
+    transform: translateY(-1.5px);
   }
 
   // 选中状态
