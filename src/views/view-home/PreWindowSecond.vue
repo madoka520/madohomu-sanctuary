@@ -28,21 +28,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue"
-import MadokaSideDrawer from "@/components/MadokaSideDrawer.vue"
-import MadokaMsgCard from "@/components/MadokaMsgCard.vue"
-import MadokaTimeline from "@/components/MadokaTimeline.vue"
-import PreHomeTheme from "@/components/project/pre-home-theme/Index.vue"
-import MessageApi from "@/api/MessageApi.ts"
-import MadokaLive2d from "@/components/MadokaLive2d.vue"
-import dayjs from "dayjs"
-import { debounce, maxBy, minBy, uniqBy } from "lodash-unified"
+import { reactive } from 'vue'
+import MadokaSideDrawer from '@/components/MadokaSideDrawer.vue'
+import MadokaMsgCard from '@/components/MadokaMsgCard.vue'
+import MadokaTimeline from '@/components/MadokaTimeline.vue'
+import PreHomeTheme from '@/components/project/pre-home-theme/Index.vue'
+import MessageApi from '@/api/MessageApi.ts'
+import MadokaLive2d from '@/components/MadokaLive2d.vue'
+import dayjs from 'dayjs'
+import { debounce, maxBy, minBy, uniqBy } from 'lodash-unified'
 
-const scrollRef = useTemplateRef("scrollRef")
+const scrollRef = useTemplateRef('scrollRef')
 type IParams = {
   from?: number
   time?: number
-  toward?: "next" | "prev"
+  toward?: 'next' | 'prev'
 }
 type IList = {
   id: number
@@ -61,7 +61,7 @@ type IList = {
   avatar?: string
   image?: string
 }
-const emits = defineEmits(["back"])
+const emits = defineEmits(['back'])
 const Msg = (() => {
   const pushOne = (e) => {
     s.list.unshift(e)
@@ -78,7 +78,7 @@ const Msg = (() => {
     // 2. 执行加载 (确保 getList 内部没有因为 loading 锁被挡住)
     // 注意：getList 内部执行时会自动设置 s.loading = true
     await getList()
-    await getMadohomuMsg({ time: Math.floor(dayjs(time).startOf("day").valueOf() / 1000) })
+    await getMadohomuMsg({ time: Math.floor(dayjs(time).startOf('day').valueOf() / 1000) })
     combine()
     // 3. 此时数据已经回到 s.list，等待 Vue 将 DOM 渲染出来
     await nextTick()
@@ -99,12 +99,12 @@ const Msg = (() => {
   }
 
   const next = async () => {
-    s.params.toward = "next"
-    s.params.from = minBy(s.list, "id")?.id! - 1
+    s.params.toward = 'next'
+    s.params.from = minBy(s.list, 'id')?.id! - 1
     await getList()
     if (s.madohomuList.length) {
       await getMadohomuMsg({
-        from: minBy(s.madohomuList, "id")?.id! - 1,
+        from: minBy(s.madohomuList, 'id')?.id! - 1,
       })
     }
     combine()
@@ -175,11 +175,11 @@ const Msg = (() => {
   }
 
   const pageReset = () => {
-    s.params.toward = "next"
+    s.params.toward = 'next'
   }
 
   const prev = async () => {
-    s.params.toward = "prev"
+    s.params.toward = 'prev'
     if (!s.list.length) {
       s.params.time = s.currentDay
       s.loading = false
@@ -189,17 +189,17 @@ const Msg = (() => {
     if (s.list[0].createTime === s.maxTime) {
       return
     }
-    s.params.from = maxBy(s.list, "id")?.id
+    s.params.from = maxBy(s.list, 'id')?.id
     await getList(false)
 
     if (s.madohomuList.length) {
       await getMadohomuMsg({
-        from: maxBy(s.madohomuList, "id")!.id! + 1,
+        from: maxBy(s.madohomuList, 'id')!.id! + 1,
         count: -10,
       })
     }
 
-    if (s.list.find((item) => dayjs(item.createTime).startOf("day").valueOf() === dayjs("2023-05-21").startOf("day").valueOf())) {
+    if (s.list.find((item) => dayjs(item.createTime).startOf('day').valueOf() === dayjs('2023-05-21').startOf('day').valueOf())) {
       await getMadohomuMsg({
         time: 1684651800,
       })
@@ -214,7 +214,7 @@ const Msg = (() => {
   }
 
   const s = reactive({
-    params: { toward: "next" } as IParams,
+    params: { toward: 'next' } as IParams,
     currentDay: dayjs().valueOf(),
     maxId: 0,
     maxTime: 0,
@@ -245,12 +245,12 @@ const Msg = (() => {
    */
   onMounted(() => {
     const idle = useIdle(300000, {
-      events: ["click", "keydown", "mousemove"],
+      events: ['click', 'keydown', 'mousemove'],
     })
 
     watch(idle.idle, (isIdle) => {
       if (isIdle) {
-        emits("back")
+        emits('back')
       }
     })
   })
@@ -266,7 +266,7 @@ const Scroll = (() => {
     if (!el) return
 
     const target = e.target as HTMLElement
-    const scrollable = target.closest(".card") as HTMLElement | null
+    const scrollable = target.closest('.card') as HTMLElement | null
 
     if (scrollable) {
       const { scrollTop, scrollHeight, clientHeight } = scrollable
@@ -285,7 +285,7 @@ const Scroll = (() => {
    */
   const getVisibleCards = (container: HTMLElement) => {
     const containerRect = container.getBoundingClientRect()
-    const cards = Array.from(container.querySelectorAll<HTMLElement>(".card"))
+    const cards = Array.from(container.querySelectorAll<HTMLElement>('.card'))
 
     let leftMost: HTMLElement | null = null
     let rightMost: HTMLElement | null = null
@@ -328,7 +328,7 @@ const Scroll = (() => {
     // 👉 向左加载
     if (scrollLeft <= threshold) {
       const oldScrollWidth = el.scrollWidth
-      el.style.scrollBehavior = "auto"
+      el.style.scrollBehavior = 'auto'
 
       await Msg.prev()
 
@@ -363,7 +363,7 @@ const Scroll = (() => {
     if (!el) return
 
     // 2. 核心修复：强制关闭 CSS 平滑滚动，否则 JS 动画会失效
-    el.style.scrollBehavior = "auto"
+    el.style.scrollBehavior = 'auto'
 
     // 3. 设置初始冲力 (delta 可以是鼠标滚轮的 deltaY 或固定值)
     // 如果你想向右滑，初始速度设为正数
@@ -394,7 +394,7 @@ const Scroll = (() => {
         ScrollState.rafId = requestAnimationFrame(step)
       } else {
         ScrollState.v = 0
-        el.style.scrollBehavior = "smooth"
+        el.style.scrollBehavior = 'smooth'
       }
     }
 
