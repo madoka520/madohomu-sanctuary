@@ -178,7 +178,7 @@ const Scroll = (() => {
 })()
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .timeline-wrapper {
   position: relative;
 }
@@ -231,6 +231,9 @@ const Scroll = (() => {
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   padding: 8px 10px;
+  --smooth-level: 16;
+  -webkit-mask-image: paint(smooth-corners);
+  mask-image: paint(smooth-corners);
   border-radius: 12px;
 
   background: rgba(0, 0, 0, 0.8);
