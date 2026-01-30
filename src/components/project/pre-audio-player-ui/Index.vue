@@ -94,7 +94,7 @@ const handleProgressInput = (e: Event) => {
   flex: 1;
   overflow-y: auto;
   padding: 10px;
-
+  min-width: 25vw;
   .song-item {
     padding: 12px;
     margin-bottom: 8px;
