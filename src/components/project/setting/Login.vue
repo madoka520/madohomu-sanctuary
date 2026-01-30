@@ -10,11 +10,11 @@
           <madoka-input
             v-model="Form.model.password"
             left-icon="mdi mdi-lock-outline"
-            type="password"
+            :type="Form.showPassword ? 'text' : `password`"
             :show-password="Form.showPassword"
             :right-icon="`mdi-${Form.showPassword ? 'eye' : 'eye-off'}-outline`"
             placeholder="请输入密码"
-            @toggle="Form.showOrHiddenPsd"
+            @right-icon-click="Form.showOrHiddenPsd"
             @keyup.enter="Form.login"
           />
         </div>

@@ -13,7 +13,7 @@
       :placeholder
     />
     <span class="icon" v-if="rightIcon">
-      <i :class="`mdi ${rightIcon}`" class="show-or-hidden-psd" />
+      <i :class="`mdi ${rightIcon}`" class="show-or-hidden-psd" @click="emits('rightIconClick')"/>
     </span>
   </div>
 </template>
@@ -32,7 +32,7 @@ const props = defineProps<{
 const modelValue = defineModel({
   default: "",
 })
-
+const emits = defineEmits(["rightIconClick"])
 // 自动处理 password 显示/隐藏
 const resolvedType = computed(() => {
   if (props.type === "password" && props.showPassword) {
@@ -163,7 +163,6 @@ input::placeholder {
 }
 
 .show-or-hidden-psd {
-  cursor: pointer;
   transition: all 0.25s ease;
 
   &:hover {
