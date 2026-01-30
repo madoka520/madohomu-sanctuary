@@ -15,7 +15,7 @@
 
     <!-- 歌单 -->
 <!--    <span class="mdi mdi-playlist-play control-btn"></span>-->
-    <madoka-dialog class="dialog" v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px" :footer="false">
+    <madoka-dialog v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px" :footer="false">
       <pre-audio-player-ui />
     </madoka-dialog>
   </div>
@@ -76,9 +76,6 @@ useDrag(dragHandler, {
 </script>
 
 <style scoped>
-.dialog {
-
-}
 .mini-player {
   display: flex;
   align-items: center;
