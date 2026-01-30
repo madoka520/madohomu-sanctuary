@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onUnmounted, watch } from "vue"
-import useAudioPlayer from "@/hooks/useAudioPlayer"
-import { getAssetUrl } from "@/utils/resource"
-import useSetting from "@/hooks/useSetting.ts"
+import { reactive, onUnmounted, watch } from 'vue'
+import useAudioPlayer from '@/hooks/useAudioPlayer'
+import { getAssetUrl } from '@/utils/resource'
+import useSetting from '@/hooks/useSetting.ts'
 const audioPlayer = useAudioPlayer()
 const setting = useSetting()
 const LyricState = (() => {
@@ -49,7 +49,7 @@ const LyricState = (() => {
         start: lineStart,
         end: words.length ? words[words.length - 1].end : lineStart + lineDuration,
         words,
-        text: words.map((w) => w.text).join(""),
+        text: words.map((w) => w.text).join(''),
       })
     }
     return lines
@@ -59,8 +59,8 @@ const LyricState = (() => {
     lines: [] as Line[],
     currentLineIndex: -1,
     currentLine: null as Line | null,
-    currentLineText: " ",
-    lyricStyle: { "--p": "0%" } as Record<string, string>,
+    currentLineText: ' ',
+    lyricStyle: { '--p': '0%' } as Record<string, string>,
   })
 
   let rafId: number | null = null
@@ -70,24 +70,29 @@ const LyricState = (() => {
     s.currentLineIndex = -1
     s.currentLine = null
     lastProgress = 0
-    s.lyricStyle["--p"] = "0%"
+    s.lyricStyle['--p'] = '0%'
 
     if (!name) {
-      s.currentLineText = "纯音乐，请欣赏"
+      s.currentLineText = '纯音乐，请欣赏'
       s.lines = []
       return
     }
 
     try {
+      if (audioPlayer.currentSong.isInstrumental) {
+        s.lines = []
+        s.currentLineText = '纯音乐，请欣赏'
+        return
+      }
       const res = await fetch(getAssetUrl(`lrc/${name}.lrc`))
       if (!res.ok) throw new Error()
       const text = await res.text()
       const newLines = parseLrc(text)
       s.lines = newLines.length ? newLines : []
-      if (!s.lines.length) s.currentLineText = "纯音乐，请欣赏"
+      if (!s.lines.length) s.currentLineText = '纯音乐，请欣赏'
     } catch {
       s.lines = []
-      s.currentLineText = "纯音乐，请欣赏"
+      s.currentLineText = '纯音乐，请欣赏'
     }
   }
 
@@ -95,8 +100,8 @@ const LyricState = (() => {
     const nowMs = audioPlayer.currentTime * 1000
 
     if (!s.lines.length) {
-      s.currentLineText = "纯音乐，请欣赏"
-      s.lyricStyle["--p"] = "0%"
+      s.currentLineText = '纯音乐，请欣赏'
+      s.lyricStyle['--p'] = '0%'
       lastProgress = 0
     } else {
       let index = s.lines.findIndex((l) => nowMs >= l.start && nowMs <= l.end)
@@ -134,7 +139,7 @@ const LyricState = (() => {
 
       // 平滑过渡
       lastProgress += (targetProgress - lastProgress) * 0.2
-      s.lyricStyle["--p"] = `${Math.min(Math.max(lastProgress, 0), 100)}%`
+      s.lyricStyle['--p'] = `${Math.min(Math.max(lastProgress, 0), 100)}%`
     }
 
     rafId = requestAnimationFrame(updateLyric)
@@ -149,9 +154,9 @@ const LyricState = (() => {
       // 保留旧歌词显示
       s.currentLineIndex = -1
       s.currentLine = null
-      s.currentLineText = s.lines[s.currentLineIndex]?.text ?? " "
+      s.currentLineText = s.lines[s.currentLineIndex]?.text ?? ' '
       lastProgress = 0
-      s.lyricStyle["--p"] = "0%"
+      s.lyricStyle['--p'] = '0%'
 
       await loadLyrics(title)
       rafId = requestAnimationFrame(updateLyric)
@@ -164,8 +169,8 @@ const LyricState = (() => {
     s.lines = []
     s.currentLine = null
     s.currentLineIndex = -1
-    s.currentLineText = " "
-    s.lyricStyle = { "--p": "0%" }
+    s.currentLineText = ' '
+    s.lyricStyle = { '--p': '0%' }
   })
 
   return s
@@ -193,7 +198,7 @@ const LyricState = (() => {
   font-weight: 900;
   color: @text-dim;
   text-align: center;
-  font-family: "PingFang SC", sans-serif;
+  font-family: 'PingFang SC', sans-serif;
 
   // 1. 核心粉色填充层
   &::before {
