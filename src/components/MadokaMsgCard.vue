@@ -126,7 +126,7 @@ const Root = (() => {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    --smooth-level: 24;
+    --smooth-level: 32;
     -webkit-mask-image: paint(smooth-corners);
     mask-image: paint(smooth-corners);
     // 使用伪元素处理背景，这样 blur 滤镜才不会影响到文字
