@@ -1,11 +1,18 @@
 <template>
   <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }">
     <div class="header">
-      <madoka-btn class="send__button" type="3" @click="Root.openDialog" style="height: 40px"> <i class="mdi mdi-send" /> 发送留言 </madoka-btn>
-      <madoka-btn class="today__count" type="3" @click="Root.openDialog" style="height: 40px">
-        <i class="mdi mdi-counter" /> 今日留言{{Root.todayCount}}
+      <madoka-btn class="send__button" type="3" @click="Root.openDialog" style="height: 40px">
+        <i class="mdi mdi-send" />
+        发送留言
       </madoka-btn>
-      <madoka-btn type="3" @click="Root.goback" style="height: 40px"> <i class="mdi mdi-chevron-left" /> 返回 </madoka-btn>
+      <madoka-btn class="today__count" type="3" @click="Root.openDialog" style="height: 40px">
+        <i class="mdi mdi-counter" />
+        今日留言{{ Root.todayCount }}
+      </madoka-btn>
+      <madoka-btn type="3" @click="Root.goback" style="height: 40px">
+        <i class="mdi mdi-chevron-left" />
+        返回
+      </madoka-btn>
     </div>
     <div class="content">
       <slot />
@@ -15,31 +22,33 @@
 </template>
 
 <script setup lang="ts">
-import PreMessageDialog from "@/views/SoulRippleSlot/PreMessageDialog.vue"
-import { useDrag } from "@vueuse/gesture"
-import MadokaBtn from "@/components/button/Index.vue"
-import messageApi from "@/api/MessageApi.ts"
+import PreMessageDialog from '@/views/SoulRippleSlot/PreMessageDialog.vue'
+import { useDrag } from '@vueuse/gesture'
+import MadokaBtn from '@/components/button/Index.vue'
+import messageApi from '@/api/MessageApi.ts'
 
-const peekPanelRef = useTemplateRef("peekPanelRef")
-const dialogRef = useTemplateRef("dialogRef")
+const peekPanelRef = useTemplateRef('peekPanelRef')
+const dialogRef = useTemplateRef('dialogRef')
 
-const emits = defineEmits(["madokaScroll", "ok", "back"])
+const emits = defineEmits(['madokaScroll', 'ok', 'back'])
 
 const Root = (() => {
   const ok = (e) => {
     s.todayCount++
     emits('ok', e)
   }
+  const unActive = () => {
+    s.active = false
+    removeEventListener('click', unActive)
+  }
+
   const cancel = () => {
     setTimeout(() => {
-      const listener = () => {
-        s.active = false
-        removeEventListener("click", listener)
-      }
-      addEventListener("click", listener)
+      addEventListener('click', unActive)
     }, 500)
   }
   const openDialog = () => {
+    removeEventListener('click', unActive)
     dialogRef.value?.open()
     s.active = true
   }
@@ -51,7 +60,7 @@ const Root = (() => {
    * 返回上个场景
    */
   const goback = () => {
-    emits("back")
+    emits('back')
   }
   const s = reactive({
     todayCount: 0,
@@ -59,7 +68,7 @@ const Root = (() => {
     cancel,
     openDialog,
     goback,
-    ok
+    ok,
   })
   getCount()
   return s
@@ -68,7 +77,7 @@ useDrag(
   (state) => {
     const swipeX = state.swipe[0] // 横向滑动
     const el = state.event!.target as HTMLElement
-    emits("madokaScroll", { el, delta: -swipeX })
+    emits('madokaScroll', { el, delta: -swipeX })
   },
   {
     domTarget: peekPanelRef,
