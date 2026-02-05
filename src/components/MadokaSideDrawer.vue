@@ -1,4 +1,5 @@
 <template>
+  <div v-if="Root.active" class="peek-panel__mask" @click="Root.close" />
   <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }">
     <div class="header">
       <madoka-btn class="send__button" type="3" @click="Root.openDialog" style="height: 40px">
@@ -22,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import PreMessageDialog from '@/views/SoulRippleSlot/PreMessageDialog.vue'
+import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
 import { useDrag } from '@vueuse/gesture'
 import MadokaBtn from '@/components/button/Index.vue'
 import messageApi from '@/api/MessageApi.ts'
@@ -37,18 +38,13 @@ const Root = (() => {
     s.todayCount++
     emits('ok', e)
   }
-  const unActive = () => {
+
+  const close = () => {
     s.active = false
-    removeEventListener('click', unActive)
   }
 
-  const cancel = () => {
-    setTimeout(() => {
-      addEventListener('click', unActive)
-    }, 500)
-  }
+  const cancel = () => {}
   const openDialog = () => {
-    removeEventListener('click', unActive)
     dialogRef.value?.open()
     s.active = true
   }
@@ -68,6 +64,7 @@ const Root = (() => {
     cancel,
     openDialog,
     goback,
+    close,
     ok,
   })
   getCount()
@@ -86,13 +83,20 @@ useDrag(
 </script>
 
 <style scoped>
+.peek-panel__mask {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 0;
+}
+
 .peek-panel {
   position: absolute;
   width: 100%;
   left: 50%;
   bottom: 0;
   transform: translateX(-50%) translateY(50%);
-
+  z-index: 1;
   /* 动画关键点：blur + 透明度 + 阴影都可以 transition */
   transition:
     transform 0.55s,

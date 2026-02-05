@@ -54,6 +54,7 @@ import { computed } from 'vue'
 import axios from 'axios'
 import MadokaImg from '@/components/MadokaImg.vue'
 import messageApi from '@/api/MessageApi.ts'
+import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
 
 const props = withDefaults(
   defineProps<{
