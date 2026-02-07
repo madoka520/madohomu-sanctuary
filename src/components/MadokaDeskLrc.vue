@@ -161,7 +161,6 @@ const LyricState = (() => {
       await loadLyrics(title)
       rafId = requestAnimationFrame(updateLyric)
     },
-    { immediate: true },
   )
 
   onUnmounted(() => {

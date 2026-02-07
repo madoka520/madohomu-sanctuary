@@ -2,13 +2,13 @@
   <div v-if="Root.active" class="peek-panel__mask" @click="Root.close" />
   <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }" @click.capture="Root.lockActive">
     <div class="header">
-      <madoka-btn class="send__button" type="3" @click="Root.openDialog" style="height: 40px">
+      <madoka-btn class="send__button" type="3" @click="emits('handleSent')" style="height: 40px">
         <i class="mdi mdi-send" />
         发送留言
       </madoka-btn>
-      <madoka-btn class="today__count" type="3" @click="Root.openDialog" style="height: 40px">
+      <madoka-btn class="today__count" type="3" style="height: 40px">
         <i class="mdi mdi-counter" />
-        今日留言{{ Root.todayCount }}
+        今日留言{{ todayCount }}
       </madoka-btn>
       <madoka-btn type="3" @click="Root.goback" style="height: 40px" v-if="Root.active">
         <i class="mdi mdi-chevron-left" />
@@ -18,42 +18,29 @@
     <div class="content">
       <slot />
     </div>
-    <pre-message-dialog ref="dialogRef" @cancel="Root.cancel" @ok="Root.ok($event)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
 import { useDrag } from '@vueuse/gesture'
 import MadokaBtn from '@/components/button/Index.vue'
-import messageApi from '@/api/MessageApi.ts'
 
 const peekPanelRef = useTemplateRef('peekPanelRef')
-const dialogRef = useTemplateRef('dialogRef')
 
-const emits = defineEmits(['madokaScroll', 'ok', 'back'])
-
+const emits = defineEmits(['madokaScroll', 'ok', 'back', 'handleSent'])
+const props = withDefaults(
+  defineProps<{
+    todayCount?: number
+  }>(),
+  {},
+)
 const Root = (() => {
-  const ok = (e) => {
-    s.todayCount++
-    emits('ok', e)
-  }
-
   const close = () => {
     s.active = false
   }
 
-  const cancel = () => {}
-  const openDialog = () => {
-    dialogRef.value?.open()
-  }
-
   const lockActive = () => {
     s.active = true
-  }
-
-  const getCount = async () => {
-    s.todayCount = (await messageApi.count()) as unknown as number
   }
 
   /**
@@ -63,16 +50,11 @@ const Root = (() => {
     emits('back')
   }
   const s = reactive({
-    todayCount: 0,
     active: false,
-    cancel,
-    openDialog,
     lockActive,
     goback,
     close,
-    ok,
   })
-  getCount()
   return s
 })()
 useDrag(

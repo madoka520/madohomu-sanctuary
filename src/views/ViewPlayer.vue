@@ -9,34 +9,34 @@
   ></audio>
 </template>
 <script setup lang="ts">
-import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
+import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
 const audioPlayer = useAudioPlayer()
 const play = () => {
-  removeEventListener("click", play)
+  removeEventListener('click', play)
   if (!audioPlayer.playing) {
     audioPlayer.play()
   }
 }
-addEventListener("click", play)
+addEventListener('click', play)
 const onPlay = () => {
   audioPlayer.playing = true
 }
 onMounted(() => {
-  if (!("mediaSession" in navigator)) return
+  if (!('mediaSession' in navigator)) return
 
-  navigator.mediaSession.setActionHandler("play", () => {
+  navigator.mediaSession.setActionHandler('play', () => {
     audioPlayer.play()
   })
 
-  navigator.mediaSession.setActionHandler("pause", () => {
+  navigator.mediaSession.setActionHandler('pause', () => {
     audioPlayer.pause?.()
   })
 
-  navigator.mediaSession.setActionHandler("nexttrack", () => {
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
     audioPlayer.next()
   })
 
-  navigator.mediaSession.setActionHandler("previoustrack", () => {
+  navigator.mediaSession.setActionHandler('previoustrack', () => {
     audioPlayer.prev()
   })
 })
@@ -44,15 +44,24 @@ onMounted(() => {
 watch(
   () => audioPlayer.playing,
   (playing) => {
-    if ("mediaSession" in navigator) {
-      navigator.mediaSession.playbackState = playing ? "playing" : "paused"
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = playing ? 'playing' : 'paused'
     }
   },
 )
+const isEditing = (e: KeyboardEvent) => {
+  const t = e.target as HTMLElement | null
+  if (!t) return false
 
-addEventListener("keydown", (e) => {
+  return (
+    t.isContentEditable || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA'
+  )
+}
+
+addEventListener('keydown', (e) => {
+  if (isEditing(e)) return
   switch (e.code) {
-    case "Space": {
+    case 'Space': {
       if (audioPlayer.playing) {
         audioPlayer.pause()
         break
@@ -60,11 +69,11 @@ addEventListener("keydown", (e) => {
       audioPlayer.resume()
       break
     }
-    case "ArrowRight": {
+    case 'ArrowRight': {
       audioPlayer.next()
       break
     }
-    case "ArrowLeft": {
+    case 'ArrowLeft': {
       audioPlayer.prev()
     }
   }

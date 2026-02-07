@@ -93,7 +93,7 @@ const cardStyle = computed(() => {
 
 const Root = (() => {
   const handleReply = () => {
-    emits('handleReply', props.messageId, props.content)
+    emits('handleReply', { messageId: props.messageId, content: props.content, uid: props.uid, origin: props.origin, username: props.username, externalId: props.externalId })
   }
 
   /**
@@ -174,7 +174,6 @@ const Root = (() => {
       height: 42px;
       border-radius: 50%;
       overflow: hidden;
-      flex-shrink: 0;
       img {
         width: 100%;
         height: 100%;

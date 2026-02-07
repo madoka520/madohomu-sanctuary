@@ -2,7 +2,12 @@
   <div class="app-container">
     <madoka-live2d />
     <pre-home-theme />
-    <madoka-side-drawer @madoka-scroll="Scroll.madokaScroll" @ok="Msg.pushOne" @back="emits('back')">
+    <madoka-side-drawer
+      @madoka-scroll="Scroll.madokaScroll"
+      @handle-sent="() => dialogRef?.open()"
+      :today-count="Msg.todayCount"
+      @back="emits('back')"
+    >
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card
           :message-id="item.id"
@@ -20,10 +25,12 @@
           :likes="item.likes ?? 0"
           :liked="item.liked"
           @like="Msg.like(item)"
+          @handle-reply="(e) => dialogRef?.openReply(e)"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" v-model="Msg.currentDay" />
     </madoka-side-drawer>
+    <pre-message-dialog ref="dialogRef" @ok="Msg.pushOne" />
   </div>
 </template>
 
@@ -37,8 +44,11 @@ import MessageApi from '@/api/MessageApi.ts'
 import MadokaLive2d from '@/components/MadokaLive2d.vue'
 import dayjs from 'dayjs'
 import { debounce, maxBy, minBy, uniqBy } from 'lodash-unified'
+import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
+import messageApi from '@/api/MessageApi.ts'
 
 const scrollRef = useTemplateRef('scrollRef')
+const dialogRef = useTemplateRef('dialogRef')
 type IParams = {
   from?: number
   time?: number
@@ -70,7 +80,6 @@ const Msg = (() => {
     // 1. 状态初始化
     s.noMore = false
     s.list = []
-    s.madohomuList = []
     pageReset()
     delete s.params.from
     s.params.time = time
@@ -78,7 +87,6 @@ const Msg = (() => {
     // 2. 执行加载 (确保 getList 内部没有因为 loading 锁被挡住)
     // 注意：getList 内部执行时会自动设置 s.loading = true
     await getList()
-    await getMadohomuMsg({ time: Math.floor(dayjs(time).startOf('day').valueOf() / 1000) })
     combine()
     // 3. 此时数据已经回到 s.list，等待 Vue 将 DOM 渲染出来
     await nextTick()
@@ -102,20 +110,14 @@ const Msg = (() => {
     s.params.toward = 'next'
     s.params.from = minBy(s.list, 'id')?.id! - 1
     await getList()
-    if (s.madohomuList.length) {
-      await getMadohomuMsg({
-        from: minBy(s.madohomuList, 'id')?.id! - 1,
-      })
-    }
     combine()
   }
 
   const combine = () => {
-    /*    s.combineList.length = 0 // 清空原数组
-    const merged = [...s.list, ...s.madohomuList] as IList[]
-    merged.sort((a, b) => b.createTime - a.createTime)
-    s.combineList = uniqBy(merged, (item) => `${item.id}_${item.origin}`)*/
-    s.combineList = uniqBy(s.list, (item) => `${item.externalId}_${item.origin}`)
+    s.combineList = uniqBy(
+      s.list,
+      (item) => `${item.externalId}_${item.origin}`,
+    )
   }
 
   const getList = async (next: boolean = true) => {
@@ -135,35 +137,6 @@ const Msg = (() => {
     } finally {
       s.loading = false
     }
-  }
-
-  const getMadohomuMsg = async (params: any = {}) => {
-    /*    block: {
-      /!**
-       * 如果小于这个时间就不要去查询madohomu.love的数据了 因为之前不存在数据
-       *!/
-      if (
-        params.time &&
-        dayjs.unix(params.time).startOf("day").valueOf() < dayjs("2023-06-22").startOf("day").valueOf() &&
-        params.time !== 1684651800
-      ) {
-        break block
-      }
-      const url = "https://haojiezhe12345.top:82/madohomu/api/comments"
-      const res = await axios.get(url, { params })
-      const set = params.count ? "unshift" : "push"
-      s.madohomuList[set](
-        ...res.data.map((item) => ({
-          ...item,
-          userId: item.uid,
-          externalId: item.id,
-          content: item.comment,
-          createTime: item.time * 1000,
-          username: item.sender,
-          origin: "madohomu.love",
-        })),
-      )
-    }*/
   }
 
   const getMsgMaxId = async () => {
@@ -191,19 +164,6 @@ const Msg = (() => {
     }
     s.params.from = maxBy(s.list, 'id')?.id
     await getList(false)
-
-    if (s.madohomuList.length) {
-      await getMadohomuMsg({
-        from: maxBy(s.madohomuList, 'id')!.id! + 1,
-        count: -10,
-      })
-    }
-
-    if (s.list.find((item) => dayjs(item.createTime).startOf('day').valueOf() === dayjs('2023-05-21').startOf('day').valueOf())) {
-      await getMadohomuMsg({
-        time: 1684651800,
-      })
-    }
     combine()
   }
 
@@ -212,14 +172,16 @@ const Msg = (() => {
     const add = item.liked ? 1 : -1
     item.likes += add
   }
-
+  const getCount = async () => {
+    s.todayCount = (await messageApi.count()) as unknown as number
+  }
   const s = reactive({
     params: { toward: 'next' } as IParams,
     currentDay: dayjs().valueOf(),
     maxId: 0,
     maxTime: 0,
+    todayCount: 0,
     list: [] as IList[],
-    madohomuList: [] as IList[],
     combineList: [] as IList[],
     changeDate,
     getList,
@@ -228,14 +190,14 @@ const Msg = (() => {
     noMore: false,
     loading: false,
     pushOne,
-    like
+    like,
   })
 
   getMaxTime()
 
   const init = async () => {
+    await getCount()
     await getList() // 初始化加载
-    await getMadohomuMsg()
     combine()
   }
 
@@ -271,7 +233,8 @@ const Scroll = (() => {
     if (scrollable) {
       const { scrollTop, scrollHeight, clientHeight } = scrollable
       const isAtTop = scrollTop === 0 && e.deltaY < 0
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight && e.deltaY > 0
+      const isAtBottom =
+        scrollTop + clientHeight >= scrollHeight && e.deltaY > 0
       if (!isAtTop && !isAtBottom) return
     }
 
@@ -294,7 +257,8 @@ const Scroll = (() => {
       const rect = card.getBoundingClientRect()
 
       // 判断是否横向可见
-      const isVisible = rect.right > containerRect.left && rect.left < containerRect.right
+      const isVisible =
+        rect.right > containerRect.left && rect.left < containerRect.right
 
       if (!isVisible) continue
 
@@ -320,12 +284,12 @@ const Scroll = (() => {
     const maxScrollLeft = el.scrollWidth - el.clientWidth
     const threshold = 1 // 稍微加大一点点
 
-    // 👉 向右加载
+    //  向右加载
     if (scrollLeft >= maxScrollLeft - threshold && !Msg.noMore) {
       await Msg.next()
     }
 
-    // 👉 向左加载
+    //  向左加载
     if (scrollLeft <= threshold) {
       const oldScrollWidth = el.scrollWidth
       el.style.scrollBehavior = 'auto'
@@ -339,7 +303,7 @@ const Scroll = (() => {
         // 这里的 +5 是关键，确保加载完后不在触发区，用户可以顺利向右滑
         el.scrollLeft = diff + 5
       }
-      el.style.scrollBehavior = "smooth"
+      el.style.scrollBehavior = 'smooth'
     }
     await sleep(1000)
     const { left, right } = getVisibleCards(el)
