@@ -1,6 +1,6 @@
 <template>
   <div v-if="Root.active" class="peek-panel__mask" @click="Root.close" />
-  <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }">
+  <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }" @click.capture="Root.lockActive">
     <div class="header">
       <madoka-btn class="send__button" type="3" @click="Root.openDialog" style="height: 40px">
         <i class="mdi mdi-send" />
@@ -10,7 +10,7 @@
         <i class="mdi mdi-counter" />
         今日留言{{ Root.todayCount }}
       </madoka-btn>
-      <madoka-btn type="3" @click="Root.goback" style="height: 40px">
+      <madoka-btn type="3" @click="Root.goback" style="height: 40px" v-if="Root.active">
         <i class="mdi mdi-chevron-left" />
         返回
       </madoka-btn>
@@ -46,8 +46,12 @@ const Root = (() => {
   const cancel = () => {}
   const openDialog = () => {
     dialogRef.value?.open()
+  }
+
+  const lockActive = () => {
     s.active = true
   }
+
   const getCount = async () => {
     s.todayCount = (await messageApi.count()) as unknown as number
   }
@@ -63,6 +67,7 @@ const Root = (() => {
     active: false,
     cancel,
     openDialog,
+    lockActive,
     goback,
     close,
     ok,
