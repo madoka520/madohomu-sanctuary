@@ -191,8 +191,8 @@ const Scroll = (() => {
   display: flex;
   align-items: center;
   height: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: drop-shadow(0 0) blur(1vh);
   box-shadow: 0 0 0.25rem 0.125rem rgba(0, 0, 0, 0.2);
@@ -233,9 +233,6 @@ const Scroll = (() => {
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   padding: 8px 10px;
-  --smooth-level: 16;
-  -webkit-mask-image: paint(smooth-corners);
-  mask-image: paint(smooth-corners);
   border-radius: 12px;
 
   background: rgba(0, 0, 0, 0.8);

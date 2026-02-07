@@ -13,8 +13,8 @@
 
       <div class="card__content">
         {{ content }}
-        <div v-if="image">
-          <madoka-img :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${image}.jpg`" />
+        <div v-if="image" style="display: flex; gap: 10px">
+          <madoka-img v-for="item in image.split(',')" :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`" />
         </div>
       </div>
 
@@ -28,7 +28,7 @@
             </span>
           </span>
           <span>
-            <i class="mdi mdi-reply"></i>
+            <i class="mdi mdi-reply" @click="Root.handleReply"></i>
           </span>
         </div>
         <div class="flex card__operate">
@@ -73,7 +73,7 @@ const props = withDefaults(
   }>(),
   {},
 )
-const emits = defineEmits(['like'])
+const emits = defineEmits(['like', 'handleReply'])
 const avatarSrc = computedAsync(async () => {
   if (props.origin === 'madohomu.love') {
     const res = await axios.get('https://haojiezhe12345.top:82/madohomu/api/user/find', { params: { id: props.uid } })
@@ -92,6 +92,10 @@ const cardStyle = computed(() => {
 })
 
 const Root = (() => {
+  const handleReply = () => {
+    emits('handleReply', props.messageId, props.content)
+  }
+
   /**
    * 发送请求 改变该条留言的喜爱状态
    */
@@ -101,6 +105,7 @@ const Root = (() => {
   }
   const s = reactive({
     like,
+    handleReply,
   })
   return s
 })()
@@ -133,8 +138,7 @@ const Root = (() => {
 
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(8px);
-    border-radius: 26px;
-    corner-shape: superellipse(1.333);
+    border-radius: 18px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     color: white;
 
