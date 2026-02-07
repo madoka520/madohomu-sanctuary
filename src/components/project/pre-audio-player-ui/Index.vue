@@ -173,7 +173,6 @@ const handleProgressInput = (e: Event) => {
     border: 3px solid #ffb7c5;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(255, 183, 197, 0.5);
-    flex-shrink: 0;
 
     img {
       width: 100%;

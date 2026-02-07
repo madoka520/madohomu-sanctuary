@@ -98,7 +98,6 @@ useDrag(dragHandler, {
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
 }
 
 /* 歌曲信息 */
