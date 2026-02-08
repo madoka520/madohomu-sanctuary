@@ -1,8 +1,20 @@
 <template>
   <div v-if="Root.active" class="peek-panel__mask" @click="Root.close" />
-  <div class="peek-panel" id="peek-panel" ref="peekPanelRef" tabindex="-1" :class="{ active: Root.active }" @click.capture="Root.lockActive">
+  <div
+    class="peek-panel"
+    id="peek-panel"
+    ref="peekPanelRef"
+    tabindex="-1"
+    :class="{ active: Root.active }"
+    @click.capture="Root.lockActive"
+  >
     <div class="header">
-      <madoka-btn class="send__button" type="3" @click="emits('handleSent')" style="height: 40px">
+      <madoka-btn
+        class="send__button"
+        type="3"
+        @click="emits('handleSent')"
+        style="height: 40px"
+      >
         <i class="mdi mdi-send" />
         发送留言
       </madoka-btn>
@@ -10,7 +22,12 @@
         <i class="mdi mdi-counter" />
         今日留言{{ todayCount }}
       </madoka-btn>
-      <madoka-btn type="3" @click="Root.goback" style="height: 40px" v-if="Root.active">
+      <madoka-btn
+        type="3"
+        @click="Root.goback"
+        style="height: 40px"
+        class="return__button"
+      >
         <i class="mdi mdi-chevron-left" />
         返回
       </madoka-btn>
@@ -112,6 +129,10 @@ useDrag(
       border-left: none;
       border-right: none;
     }
+
+    .return__button {
+      display: none;
+    }
   }
   &:hover,
   &:focus-within {
@@ -132,6 +153,10 @@ useDrag(
     }
     .today__count {
       display: none;
+    }
+
+    .return__button {
+      display: flex;
     }
   }
 }

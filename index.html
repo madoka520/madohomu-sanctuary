@@ -45,6 +45,26 @@
                 height: 0;
             }
         }
+
+        @media screen and (max-width: 768px) {
+            #madoka {
+                position: relative;
+            }
+
+            #madoka::before {
+                content: "本网站仅支持PC端访问";
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #fff;
+                color: #333;
+                font-size: 14px;
+                z-index: 9999;
+            }
+        }
+
     </style>
 </head>
 <body>

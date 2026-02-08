@@ -124,18 +124,10 @@ const Root = (() => {
     s.avatarSrc = await getAvatar()
   }
 
-  const reply = async () => {
-    const text = getInputText()
-
-    const res = await MessageApi.send({
-      id: s.data.messageId,
-      content: text,
-    })
-  }
-
   const ok = async () => {
     const text = getInputText()
     const res = await MessageApi.send({
+      pid: s.data.messageId,
       content: text,
     })
     s.opened = false
