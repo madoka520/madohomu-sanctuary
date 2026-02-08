@@ -5,14 +5,12 @@ import { createPinia } from "pinia";
 import "@mdi/font/css/materialdesignicons.css"
 import "swiper/css"
 import "@/assets/styles/font.less"
-if ('paintWorklet' in CSS) {
-  CSS.paintWorklet.addModule(getAssetUrl('js/smooth-corners.js'))
-}
 
 const app = createApp(App)
 import { GesturePlugin } from "@vueuse/gesture"
-import { getAssetUrl } from '@/utils/resource.ts'
+import lazy from '@/directives/lazy.ts'
 app.use(GesturePlugin)
 
 app.use(createPinia())
+app.directive("lazy", lazy)
 app.mount('#madoka')

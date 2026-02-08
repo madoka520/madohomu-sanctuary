@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-lazy="Msg.init">
     <madoka-live2d />
     <pre-home-theme />
     <madoka-side-drawer
@@ -175,6 +175,14 @@ const Msg = (() => {
   const getCount = async () => {
     s.todayCount = (await messageApi.count()) as unknown as number
   }
+
+  const init = async () => {
+    await getMaxTime()
+    await getCount()
+    await getList() // 初始化加载
+    combine()
+  }
+
   const s = reactive({
     params: { toward: 'next' } as IParams,
     currentDay: dayjs().valueOf(),
@@ -191,17 +199,9 @@ const Msg = (() => {
     loading: false,
     pushOne,
     like,
+    init,
   })
 
-  getMaxTime()
-
-  const init = async () => {
-    await getCount()
-    await getList() // 初始化加载
-    combine()
-  }
-
-  init()
   /**
    * 待机返回首页
    */

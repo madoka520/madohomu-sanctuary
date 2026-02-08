@@ -20,6 +20,7 @@ defineOptions({
   name: "pre-home-theme",
 })
 const setting = useSetting()
+
 const Root = (() => {
   const setWatcher = () => {
     watch(
@@ -27,7 +28,7 @@ const Root = (() => {
       (val) => {
         const song = setting.themeList[val].song
         useAudioPlayer().playByName(song)
-      }, { immediate: true }
+      }
     )
   }
   const s = reactive({

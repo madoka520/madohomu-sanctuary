@@ -1,6 +1,6 @@
 <template>
   <div class="page" @click="PictureAlbumVideo.nextPage">
-    <div style="position: relative; height: 100%">
+    <div style="position: relative; height: 100%" v-once>
       <template v-for="(item, index) in PictureAlbumVideo.items">
         <madoka-picture-album-card
           :ref="(v) => PictureAlbumVideo.ref.set(v, index)"
