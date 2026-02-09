@@ -14,7 +14,10 @@
       <div class="card__content">
         {{ content }}
         <div v-if="image" style="display: flex; gap: 10px">
-          <madoka-img v-for="item in image.split(',')" :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`" />
+          <madoka-img
+            v-for="item in image.split(',')"
+            :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`"
+          />
         </div>
       </div>
 
@@ -33,7 +36,9 @@
         </div>
         <div class="flex card__operate">
           <span v-if="origin !== 'madokami'">
-            <a v-if="origin === 'kami'" href="https://kami.im" target="_blank">kami.im</a>
+            <a v-if="origin === 'kami'" href="https://kami.im" target="_blank">
+              kami.im
+            </a>
             <a v-else :href="`https://${origin}`" target="_blank">
               {{ origin }}
             </a>
@@ -76,10 +81,15 @@ const props = withDefaults(
 const emits = defineEmits(['like', 'handleReply'])
 const avatarSrc = computedAsync(async () => {
   if (props.origin === 'madohomu.love') {
-    const res = await axios.get('https://haojiezhe12345.top:82/madohomu/api/user/find', { params: { id: props.uid } })
+    const res = await axios.get(
+      'https://haojiezhe12345.top:82/madohomu/api/user/find',
+      { params: { id: props.uid } },
+    )
     return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${res.data[0]?.avatar ?? -1}`
   }
-  return props.origin === 'madokami' ? `${getAvatarUrl(props.uid)}?t=${props.updateTime}` : `https://kami.im/getavatar.php?uid=${props.uid}`
+  return props.origin === 'madokami'
+    ? `${getAvatarUrl(props.uid)}?t=${props.updateTime}`
+    : `https://kami.im/getavatar.php?uid=${props.uid}`
 })
 
 const cardStyle = computed(() => {
@@ -93,7 +103,15 @@ const cardStyle = computed(() => {
 
 const Root = (() => {
   const handleReply = () => {
-    emits('handleReply', { messageId: props.messageId, content: props.content, uid: props.uid, origin: props.origin, username: props.username, externalId: props.externalId })
+    emits('handleReply', {
+      messageId: props.messageId,
+      content: props.content,
+      uid: props.uid,
+      origin: props.origin,
+      username: props.username,
+      externalId: props.externalId,
+      avatar: avatarSrc,
+    })
   }
 
   /**
@@ -152,7 +170,9 @@ const Root = (() => {
       z-index: -1;
 
       // 叠加线性渐变和动态背景
-      background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), var(--bg-image);
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+        var(--bg-image);
 
       background-size: cover;
       background-position: center;

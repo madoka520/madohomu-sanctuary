@@ -22,12 +22,10 @@
 </template>
 
 <script setup lang="ts">
-import { getVideoUrl } from "@/utils/resource.ts"
-import PreSelfMsgSlot from "@/views/PreSelfMsgSlot.vue"
-import MadokaPictureAlbumCard from "@/components/MadokaPictureAlbumCard.vue"
-import messageApi from "@/api/MessageApi.ts"
+import { getVideoUrl } from '@/utils/resource.ts'
+import MadokaPictureAlbumCard from '@/components/MadokaPictureAlbumCard.vue'
 
-const emits = defineEmits(["changeCurrent"])
+const emits = defineEmits(['changeCurrent'])
 
 const PictureAlbumVideo = (() => {
   const nextPage = async () => {
@@ -35,7 +33,7 @@ const PictureAlbumVideo = (() => {
     s.locked = true
     await Promise.all(Object.values(s.ref.value).map((v) => v.jump()))
     await sleep(1500)
-    emits("changeCurrent")
+    emits('changeCurrent')
     s.locked = false
   }
   const init = () => {
@@ -72,7 +70,15 @@ const PictureAlbumVideo = (() => {
       { x: 30, y: 43, width: 13 },
       { x: 46, y: 43, width: 14, height: 25 },
       { x: 57, y: 35, height: 25, zIndex: 2 },
-    ] as { x: number; y: number; width?: number; height?: number; zIndex?: number; msg?: string; component?: number }[],
+    ] as {
+      x: number
+      y: number
+      width?: number
+      height?: number
+      zIndex?: number
+      msg?: string
+      component?: number
+    }[],
     reduction,
     nextPage,
   })
@@ -86,7 +92,7 @@ defineExpose({
 
 <style scoped>
 .page {
-  font-family: "Segoe UI", "Hiragino Sans", sans-serif;
+  font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
   color: #4b2e83;
   height: 100vh;
   overflow: hidden;

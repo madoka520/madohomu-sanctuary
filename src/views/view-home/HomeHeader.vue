@@ -40,6 +40,7 @@ const settingRef = useTemplateRef("settingRef")
   padding-top: 10px;
   padding-bottom: 10px;
   height: 60px;
+  z-index: 2;
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;

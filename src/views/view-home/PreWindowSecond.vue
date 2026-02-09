@@ -109,6 +109,7 @@ const Msg = (() => {
   const next = async () => {
     s.params.toward = 'next'
     s.params.from = minBy(s.list, 'id')?.id! - 1
+    console.log(s.list)
     await getList()
     combine()
   }

@@ -51,6 +51,7 @@ type IParam = {
   origin: string
   externalId: number
   username: string
+  avatar: string
 }
 const Root = (() => {
   const open = () => {
@@ -104,24 +105,12 @@ const Root = (() => {
     return getPlainText(clone)
   }
 
-  const getAvatar = async () => {
-    if (s.data.origin === 'madohomu.love') {
-      const res = await axios.get(
-        'https://haojiezhe12345.top:82/madohomu/api/user/find',
-        { params: { id: s.data.uid } },
-      )
-      return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${res.data[0]?.avatar ?? -1}`
-    }
-    return s.data.origin === 'madokami'
-      ? `${getAvatarUrl(s.data.uid)}?t=${s.data.updateTime}`
-      : `https://kami.im/getavatar.php?uid=${s.data.uid}`
-  }
 
   const openReply = async (data: IParam) => {
+    s.data = data
+    s.avatarSrc = data.avatar
     s.isReply = true
     s.opened = true
-    s.data = data
-    s.avatarSrc = await getAvatar()
   }
 
   const ok = async () => {
