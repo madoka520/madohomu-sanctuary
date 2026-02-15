@@ -38,20 +38,16 @@
 <script setup lang="ts">
 import MadokaDialog from '@/components/MadokaDialog.vue'
 import MessageApi from '@/api/MessageApi.ts'
-import axios from 'axios'
-import { getAvatarUrl } from '@/utils/resource.ts'
 
 const inputRef = useTemplateRef('inputRef')
 const emits = defineEmits(['ok'])
 type IParam = {
-  messageId: number
+  id: number
   content: string
-  uid: number
-  updateTime: number
-  origin: string
   externalId: number
   username: string
   avatar: string
+  replies: IParam[]
 }
 const Root = (() => {
   const open = () => {
@@ -105,7 +101,6 @@ const Root = (() => {
     return getPlainText(clone)
   }
 
-
   const openReply = async (data: IParam) => {
     s.data = data
     s.avatarSrc = data.avatar
@@ -116,10 +111,11 @@ const Root = (() => {
   const ok = async () => {
     const text = getInputText()
     const res = await MessageApi.send({
-      pid: s.data.messageId,
+      pid: s.data.id,
       content: text,
-    })
+    }) as any
     s.opened = false
+    s.data.replies.push(res)
     emits('ok', res)
   }
   const s = reactive({

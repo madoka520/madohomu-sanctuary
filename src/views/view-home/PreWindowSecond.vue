@@ -10,21 +10,17 @@
     >
       <div class="scroll-row" ref="scrollRef" @wheel="Scroll.wheel">
         <madoka-msg-card
-          :message-id="item.id"
           v-for="item in Msg.list"
+          :message="{
+            ...item,
+            userId: item.userId ?? item.externalUserId ?? -1,
+            username: item.username ?? item.externalUsername,
+            userUpdateTime: item.userUpdateTime ?? 0,
+            likes: item.likes ?? 0,
+            replies: item.replies ?? [],
+          }"
           :key="`${item.createTime}${item.id}`"
-          :content="item.content"
-          :create-time="item.createTime"
-          :uid="item.userId ?? item.externalUserId ?? -1"
-          :username="item.username ?? item.externalUsername"
-          :external-id="item.externalId"
-          :origin="item.origin"
-          :update-time="item.userUpdateTime ?? 0"
-          :avatar="item.avatar"
-          :image="item.image"
-          :likes="item.likes ?? 0"
-          :liked="item.liked"
-          @like="Msg.like(item)"
+          @like="Msg.like"
           @handle-reply="(e) => dialogRef?.openReply(e)"
         />
       </div>
@@ -46,6 +42,7 @@ import dayjs from 'dayjs'
 import { debounce, maxBy, minBy, uniqBy } from 'lodash-unified'
 import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
 import messageApi from '@/api/MessageApi.ts'
+import type { Message } from '@/types/Message.ts'
 
 const scrollRef = useTemplateRef('scrollRef')
 const dialogRef = useTemplateRef('dialogRef')
@@ -54,26 +51,13 @@ type IParams = {
   time?: number
   toward?: 'next' | 'prev'
 }
-type IList = {
-  id: number
-  likes: number
-  liked: number
-  content: string
-  createTime: number
-  userId: number
-  externalUsername: string
-  externalUserId: number
-  username: string
-  externalId: number
-  origin: string
-  updateTime: number
-  userUpdateTime: number
-  avatar?: string
-  image?: string
-}
+
 const emits = defineEmits(['back'])
 const Msg = (() => {
   const pushOne = (e) => {
+    if (e.pid !== 0) {
+      return
+    }
     s.list.unshift(e)
   }
   const changeDate = async (time: number) => {
@@ -167,7 +151,7 @@ const Msg = (() => {
     combine()
   }
 
-  const like = (item: IList) => {
+  const like = (item: Message) => {
     item.liked = +item.liked ? 0 : 1
     const add = item.liked ? 1 : -1
     item.likes += add
@@ -189,8 +173,8 @@ const Msg = (() => {
     maxId: 0,
     maxTime: 0,
     todayCount: 0,
-    list: [] as IList[],
-    combineList: [] as IList[],
+    list: [] as Message[],
+    combineList: [] as Message[],
     changeDate,
     getList,
     next,
