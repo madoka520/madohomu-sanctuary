@@ -76,9 +76,16 @@ const Root = (() => {
 })()
 useDrag(
   (state) => {
-    const swipeX = state.swipe[0] // 横向滑动
+    if (!state.dragging) return
+
     const el = state.event!.target as HTMLElement
-    emits('madokaScroll', { el, delta: -swipeX })
+    const liveX = state.delta[0]
+
+    emits('madokaScroll', {
+      el,
+      delta: -liveX,
+      dragging: true,
+    })
   },
   {
     domTarget: peekPanelRef,
@@ -91,7 +98,7 @@ useDrag(
   position: fixed;
   inset: 0;
   background: transparent;
-  z-index: 0;
+  z-index: 1;
 }
 
 .peek-panel {

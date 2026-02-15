@@ -38,7 +38,7 @@ const Root = (() => {
   return s
 })()
 
-;(() => {
+/*;(() => {
   let startX = 0
   let isDragging = false
 
@@ -79,7 +79,7 @@ const Root = (() => {
     window.removeEventListener("pointermove", onPointerMove)
     window.removeEventListener("pointerup", onPointerUp)
   })
-})()
+})()*/
 </script>
 
 <style scoped>
@@ -90,7 +90,6 @@ const Root = (() => {
     width: 100%;
     height: 100%;
     z-index: -1;
-    pointer-events: none;
   }
 }
 </style>

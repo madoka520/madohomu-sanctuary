@@ -59,6 +59,7 @@ const Msg = (() => {
       return
     }
     s.list.unshift(e)
+    s.todayCount++
   }
   const changeDate = async (time: number) => {
     // 1. 状态初始化
@@ -210,7 +211,7 @@ const Scroll = (() => {
     await nextTick()
     const el = scrollRef.value
     if (!el) return
-
+    el.style.scrollBehavior = 'smooth'
     const target = e.target as HTMLElement
     const scrollable = target.closest('.card') as HTMLElement | null
 
@@ -309,44 +310,51 @@ const Scroll = (() => {
   const madokaScroll = ({ delta, el: e }) => {
     const el = scrollRef.value
     if (!el) return
-
-    // 2. 核心修复：强制关闭 CSS 平滑滚动，否则 JS 动画会失效
+    if (ScrollState.rafId) {
+      cancelAnimationFrame(ScrollState.rafId)
+      ScrollState.rafId = 0
+    }
     el.style.scrollBehavior = 'auto'
 
-    // 3. 设置初始冲力 (delta 可以是鼠标滚轮的 deltaY 或固定值)
-    // 如果你想向右滑，初始速度设为正数
-    ScrollState.v = 30 * 8.08 * delta
-    // 停止之前的动画，防止多个动画叠加导致越来越快
-    cancelAnimationFrame(ScrollState.rafId)
+    // ✅ 跟手位移：严格 1:1
+    el.scrollLeft += delta
 
-    const step = () => {
-      // 只要速度绝对值大于 0.5 就继续跑
-      if (Math.abs(ScrollState.v) > 0.5) {
-        // 执行位移
-        el.scrollLeft += ScrollState.v
+    // 记录最后一次输入作为惯性初速度
+    ScrollState.v = delta
 
-        // 模拟摩擦力衰减
-        ScrollState.v *= ScrollState.friction
-
-        // 边缘检测：如果撞墙了就立刻停止，防止浪费性能
-        const isAtLeft = el.scrollLeft <= 0
-        const isAtRight = el.scrollLeft >= el.scrollWidth - el.clientWidth
-
-        if (isAtLeft || isAtRight) {
-          ScrollState.v = 0
-        }
-
-        // 触发加载更多逻辑
-        checkLoad(el)
-
-        ScrollState.rafId = requestAnimationFrame(step)
-      } else {
-        ScrollState.v = 0
-        el.style.scrollBehavior = 'smooth'
-      }
+    // --- 新增：延迟启动惯性 ---
+    if ((ScrollState as any)._startTimer) {
+      clearTimeout((ScrollState as any)._startTimer)
     }
 
-    ScrollState.rafId = requestAnimationFrame(step)
+    ;(ScrollState as any)._startTimer = setTimeout(() => {
+      // 如果已经有惯性在跑，不重复开
+      if (ScrollState.rafId) return
+
+      const step = () => {
+        if (Math.abs(ScrollState.v) > 0.5) {
+          el.scrollLeft += ScrollState.v
+
+          ScrollState.v *= ScrollState.friction
+
+          const isAtLeft = el.scrollLeft <= 0
+          const isAtRight = el.scrollLeft >= el.scrollWidth - el.clientWidth
+
+          if (isAtLeft || isAtRight) {
+            ScrollState.v = 0
+          }
+
+          checkLoad(el)
+
+          ScrollState.rafId = requestAnimationFrame(step)
+        } else {
+          ScrollState.v = 0
+          ScrollState.rafId = 0
+        }
+      }
+
+      ScrollState.rafId = requestAnimationFrame(step)
+    }, 16) // 一帧内没有新输入，认为已经松手
   }
 
   return reactive({ wheel, madokaScroll })
@@ -354,10 +362,6 @@ const Scroll = (() => {
 </script>
 
 <style scoped>
-.app-container {
-  width: 100vw;
-  height: 100vh;
-}
 
 .scroll-row {
   display: flex;

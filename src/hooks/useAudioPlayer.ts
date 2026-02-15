@@ -1,6 +1,6 @@
-import { defineStore } from "pinia"
-import { computed } from "vue"
-import { getAudioUrl } from "@/utils/resource.ts"
+import { defineStore } from 'pinia'
+import { computed } from 'vue'
+import { getAudioUrl } from '@/utils/resource.ts'
 
 type SongItem = {
   title: string
@@ -240,6 +240,18 @@ export default defineStore("madokaAudioPlayer", () => {
     },
   ]
 
+  const buildRandomList = () => {
+    const list = songList.map((_, i) => i)
+
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[list[i], list[j]] = [list[j], list[i]]
+    }
+
+    s.randomList = list
+  }
+
+
   /** 当前歌曲 */
   const currentSong = computed(() => {
     return songList[s.current] ?? null
@@ -248,7 +260,8 @@ export default defineStore("madokaAudioPlayer", () => {
   const next = async () => {
     if (!songList.length) return
 
-    s.current = (s.current + 1) % songList.length
+    s.randomIndex = (s.randomIndex + 1) % songList.length
+    s.current = s.randomList[s.randomIndex]
     s.playing = true
 
     const audio = s.ref.value
@@ -261,6 +274,9 @@ export default defineStore("madokaAudioPlayer", () => {
 
     try {
       await audio.play()
+      if (s.randomIndex === s.randomList.length - 1) {
+        buildRandomList()
+      }
     } catch (e) {
       if ((e as DOMException).name !== "AbortError") {
         console.error(e)
@@ -272,14 +288,14 @@ export default defineStore("madokaAudioPlayer", () => {
   /** 上一首 */
   const prev = () => {
     if (!songList.length) return
-    s.current = (s.current - 1 + songList.length) % songList.length
+    s.randomIndex = (s.randomIndex - 1 + songList.length) % songList.length
+    s.current = s.randomList[s.randomIndex]
     s.ref.value?.play()
     s.playing = true
   }
 
-  const play = async (index?: number) => {
-    let idx = index ?? 0
-    s.current = idx
+  const play = async (index: number = 0) => {
+    s.current = index
     s.playing = true
 
     const audio = s.ref.value
@@ -338,6 +354,8 @@ export default defineStore("madokaAudioPlayer", () => {
       value: null as HTMLAudioElement | null,
     },
     songList,
+    randomList: [] as number[],
+    randomIndex: 0,
     current: 28,
     currentTime: 0,
     volume: 0.5,
@@ -353,6 +371,7 @@ export default defineStore("madokaAudioPlayer", () => {
     resume,
     playByName,
     timeupdate,
+    buildRandomList,
   })
   return toRefs(s)
 })

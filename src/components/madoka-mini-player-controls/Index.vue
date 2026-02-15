@@ -1,41 +1,84 @@
 <template>
-  <div class="mini-player" ref="miniPlayerRef">
-    <!-- 封面 -->
-    <img class="cover" :src="getImgUrl(`/covers/${audioPlayer.currentSong.title}.webp`)" alt="" />
-
-    <!-- 歌曲信息 -->
-    <div class="info">
-      <span class="title">{{ audioPlayer.currentSong.title }}</span>
-      -
-      <span class="artist">{{ audioPlayer.currentSong.artist }}</span>
-    </div>
-
+  <div class="mini-player" style="">
+    <Swiper
+      :slides-per-view="1"
+      :initial-slide="audioPlayer.randomList[audioPlayer.current]"
+      @slideChange="onSlideChange"
+      prevent-clicks
+      prevent-clicks-propagation
+      @click="Dialog.open('preAudioPlayerUi')"
+      @swiper="onSwiper"
+    >
+      <!-- 歌单 -->
+      <!--    <span class="mdi mdi-playlist-play control-btn"></span>-->
+      <madoka-dialog
+        v-model="Dialog.preAudioPlayerUi.opened"
+        title=""
+        height="400px"
+        width="600px"
+        :footer="false"
+      >
+        <pre-audio-player-ui />
+      </madoka-dialog>
+      <SwiperSlide
+        v-for="(randomIndex, index) in audioPlayer.randomList"
+        :key="index"
+      >
+        <div class="mini-slide">
+          <img
+            :src="
+              getImgUrl(
+                `/covers/${audioPlayer.songList[randomIndex].title}.webp`,
+              )
+            "
+            class="cover"
+            alt=""
+          />
+          <div class="info">
+            <div class="title">
+              {{ audioPlayer.songList[randomIndex].title }}
+            </div>
+            <div class="artist">
+              {{ audioPlayer.songList[randomIndex].artist }}
+            </div>
+          </div>
+        </div>
+      </SwiperSlide>
+    </Swiper>
     <!-- 播放 / 暂停 -->
-    <span class="mdi control-btn play-btn" :class="audioPlayer.playing ? 'mdi-pause-circle' : 'mdi-play-circle'" @click.stop="onToggle"></span>
-
-    <!-- 歌单 -->
-<!--    <span class="mdi mdi-playlist-play control-btn"></span>-->
-    <madoka-dialog v-model="Dialog.preAudioPlayerUi.opened" title="" height="400px" width="600px" :footer="false">
-      <pre-audio-player-ui />
-    </madoka-dialog>
+    <span
+      class="mdi control-btn play-btn"
+      :class="audioPlayer.playing ? 'mdi-pause-circle' : 'mdi-play-circle'"
+      @click.stop="onToggle"
+    ></span>
   </div>
 </template>
 
 <script setup lang="ts">
-import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
-import { getImgUrl } from "@/utils/resource.ts"
-import MadokaDialog from "@/components/MadokaDialog.vue"
-import PreAudioPlayerUi from "@/components/project/pre-audio-player-ui/Index.vue"
-import { type FullGestureState, useDrag } from "@vueuse/gesture"
+import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
+import { getImgUrl } from '@/utils/resource.ts'
+import MadokaDialog from '@/components/MadokaDialog.vue'
+import PreAudioPlayerUi from '@/components/project/pre-audio-player-ui/Index.vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+const swiperRef = ref<any>(null)
+
+const onSwiper = (swiper: any) => {
+  swiperRef.value = swiper
+}
 defineOptions({
-  name: "MadokaMiniPlayer",
+  name: 'MadokaMiniPlayer',
 })
 const audioPlayer = useAudioPlayer()
-const miniPlayerRef = useTemplateRef("miniPlayerRef")
+const onSlideChange = (swiper: any) => {
+  const currentSlideIndex = audioPlayer.randomList.indexOf(audioPlayer.current)
+  if (swiper.activeIndex === currentSlideIndex) return
+  audioPlayer[swiper.swipeDirection]?.()
+}
+
 const Dialog = (() => {
   const open = (name: string, e?: Event) => {
     switch (name) {
-      case "preAudioPlayerUi": {
+      case 'preAudioPlayerUi': {
       }
     }
     s[name].opened = true
@@ -56,40 +99,41 @@ const onToggle = () => {
   }
   audioPlayer.resume()
 }
-
-const dragHandler = (state: FullGestureState<"drag">) => {
-  const swipeX = state.swipe[0] // 横向滑动
-  const tap = state.tap // 是否点击
-  const el = state.event!.target as HTMLElement
-  if (tap && !el.closest(".control-btn")) {
-    Dialog.open("preAudioPlayerUi")
-  } else if (swipeX === 1) {
-    audioPlayer.prev()
-  } else if (swipeX === -1) {
-    audioPlayer.next()
-  }
-}
-useDrag(dragHandler, {
-  domTarget: miniPlayerRef,
-  filterTaps: true, // 点击不会触发 swipe 逻辑
-})
+watch(
+  () => audioPlayer.current,
+  (v) => {
+    const index = audioPlayer.randomList.indexOf(v)
+    swiperRef.value.slideTo(index, 0)
+  },
+)
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .mini-player {
+  padding-right: 50px;
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 28px;
+  position: relative;
+  width: 300px;
+  margin-left: auto;
+  display: flex; // 使用 Flex 布局
+  align-items: center; // 垂直居中
+  overflow: hidden; // 确保内部滑动不会超出圆角
+}
+.swiper {
+  flex: 1; // 自动占据除去按钮以外的所有空间
+  min-width: 0; // 必须加这个，否则 flex 容器内的文字截断会失效
+  height: 60px;
+}
+.mini-slide {
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 0 16px;
-  background: rgba(255, 192, 203, 0.15);
-  border-radius: 28px;
-
   height: 60px;
-  justify-content: center;
-  margin-left: auto;
-
   user-select: none;
   cursor: default;
+  transition: transform 0.3s ease;
 }
 
 /* 封面 */
@@ -141,6 +185,21 @@ useDrag(dragHandler, {
 }
 
 .play-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
   font-size: 32px;
+  color: pink;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.1);
+    opacity: 0.85;
+  }
 }
 </style>

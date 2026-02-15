@@ -32,23 +32,9 @@ import axios from 'axios'
 import MadokaImg from '@/components/MadokaImg.vue'
 import messageApi from '@/api/MessageApi.ts'
 import { isEmpty } from 'lodash-unified'
-import type { origin } from '@/types/Message.ts'
+import type { Message, origin } from '@/types/Message.ts'
+import useCache from '@/hooks/useCache.ts'
 
-type Message = {
-  id: number
-  content: string
-  userId: number
-  createTime: number
-  username: string
-  externalId: number
-  userUpdateTime: number
-  origin: origin
-  avatar?: string
-  image?: string
-  likes: number
-  liked: number
-  replies: Message[]
-}
 const props = withDefaults(
   defineProps<{
     message: Message
@@ -63,11 +49,23 @@ const getAvatarSrc = async (
   updateTime: number,
 ) => {
   if (origin === 'madohomu.love') {
-    const res = await axios.get(
-      'https://haojiezhe12345.top:82/madohomu/api/user/find',
-      { params: { id: uid } },
-    )
-    return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${res.data[0]?.avatar ?? -1}`
+    if (uid === -1) return
+
+    const avatar =
+      useCache().madohomuUserAvatar[uid] ??
+      (
+        await axios.get(
+          'https://haojiezhe12345.top:82/madohomu/api/user/find',
+          {
+            params: { id: uid },
+          },
+        )
+      ).data[0]?.avatar
+    if (!avatar) {
+      return
+    }
+    useCache().madohomuUserAvatar[uid] = avatar
+    return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${avatar}`
   }
   return origin === 'madokami'
     ? `${getAvatarUrl(uid)}?t=${updateTime}`
@@ -128,12 +126,14 @@ const Root = (() => {
 
             {likes !== 0 && <span class="number">{likes}</span>}
           </span>
-          <span>
-            <i
-              class="mdi mdi-reply"
-              onClick={() => handleReply(obj, avatarSrc)}
-            ></i>
-          </span>
+          {origin?.includes('madokami') && (
+            <span>
+              <i
+                class="mdi mdi-reply"
+                onClick={() => handleReply(obj, avatarSrc)}
+              ></i>
+            </span>
+          )}
         </div>
         <div class="flex card__operate">
           {origin !== 'madokami' && (
@@ -296,6 +296,11 @@ const Root = (() => {
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-word;
+
+    .image-gallery {
+      display: flex;
+      gap: 12px;
+    }
   }
 
   footer {
