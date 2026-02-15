@@ -1,4 +1,4 @@
-type origin = 'madokami' | 'kami' | string
+type origin = 'madokami' | 'kami.im' | string
 type Message = {
   id: number
   likes: number

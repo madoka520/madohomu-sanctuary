@@ -5,7 +5,7 @@
       <span class="mado">Mado</span><span class="homu">Homu</span>
       <span class="sanctuary"> Sanctuary </span>
     </div>
-    <div class="center-entry">
+    <div class="flex-center center-entry">
       <madoka-desk-lrc />
     </div>
     <div class="right-entry">
@@ -94,9 +94,6 @@ const settingRef = useTemplateRef("settingRef")
 }
 
 .center-entry {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex: 1;
 }
 
