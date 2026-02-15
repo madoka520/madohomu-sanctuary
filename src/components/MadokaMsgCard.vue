@@ -1,100 +1,91 @@
 <template>
   <div class="card__wrapper">
-    <div class="flex card" :style="cardStyle" :data-time="createTime">
-      <div class="flex card__header">
-        <div class="avatar">
-          <img draggable="false" :src="avatarSrc" loading="lazy" alt="" />
-        </div>
-        <div class="user">
-          <div class="name">{{ username }}</div>
-        </div>
-        <div class="uid" style="margin-left: auto">#{{ externalId }}</div>
-      </div>
-
+    <div class="flex card" :style="cardStyle" :data-time="message.createTime">
+      <component
+        :is="Root.buildHeader(avatarSrc, message.username, message.externalId)"
+      />
       <div class="card__content">
-        {{ content }}
-        <div v-if="image" style="display: flex; gap: 10px">
+        <div class="main-text">{{ message.content }}</div>
+
+        <div v-if="message.image" class="image-gallery">
           <madoka-img
-            v-for="item in image.split(',')"
+            v-for="item in message.image.split(',')"
+            :key="item"
             :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`"
           />
         </div>
+
+        <div v-if="!isEmpty(message.replies)" class="replies-container">
+          <component :is="Root.buildReplies(message.replies)" />
+        </div>
       </div>
 
-      <footer>
-        <div class="card__bar">
-          <span>
-            <i class="mdi mdi-heart liked" v-if="+liked" @click="Root.like" />
-            <i class="mdi mdi-heart-outline" v-else @click="Root.like" />
-            <span class="number" v-show="likes !== 0">
-              {{ likes }}
-            </span>
-          </span>
-          <span>
-            <i class="mdi mdi-reply" @click="Root.handleReply"></i>
-          </span>
-        </div>
-        <div class="flex card__operate">
-          <span v-if="origin !== 'madokami'">
-            <a v-if="origin === 'kami'" href="https://kami.im" target="_blank">
-              kami.im
-            </a>
-            <a v-else :href="`https://${origin}`" target="_blank">
-              {{ origin }}
-            </a>
-          </span>
-          <div class="flex" style="margin-left: auto">
-            {{ dayjs(createTime).format('YYYY/MM/DD HH:mm:ss') }}
-          </div>
-        </div>
-      </footer>
+      <component :is="Root.buildFooter(message, avatarSrc)" />
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
+<script setup lang="tsx">
 import dayjs from 'dayjs'
-import { getAssetUrl, getAvatarUrl, getImgUrl } from '@/utils/resource.ts'
+import { getAssetUrl, getAvatarUrl } from '@/utils/resource.ts'
 import { computed } from 'vue'
 import axios from 'axios'
 import MadokaImg from '@/components/MadokaImg.vue'
 import messageApi from '@/api/MessageApi.ts'
-import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
+import { isEmpty } from 'lodash-unified'
+import type { origin } from '@/types/Message.ts'
 
+type Message = {
+  id: number
+  content: string
+  userId: number
+  createTime: number
+  username: string
+  externalId: number
+  userUpdateTime: number
+  origin: origin
+  avatar?: string
+  image?: string
+  likes: number
+  liked: number
+  replies: Message[]
+}
 const props = withDefaults(
   defineProps<{
-    messageId: number
-    content: string
-    uid: number
-    createTime: number
-    username: string
-    externalId: number
-    updateTime: number
-    origin?: 'madokami' | 'kami' | string
-    avatar?: string
-    image?: string
-    likes: number
-    liked: number
+    message: Message
   }>(),
   {},
 )
 const emits = defineEmits(['like', 'handleReply'])
-const avatarSrc = computedAsync(async () => {
-  if (props.origin === 'madohomu.love') {
+
+const getAvatarSrc = async (
+  origin: origin,
+  uid: number,
+  updateTime: number,
+) => {
+  if (origin === 'madohomu.love') {
     const res = await axios.get(
       'https://haojiezhe12345.top:82/madohomu/api/user/find',
-      { params: { id: props.uid } },
+      { params: { id: uid } },
     )
     return `https://haojiezhe12345.top:82/madohomu/api/data/images/avatars/${res.data[0]?.avatar ?? -1}`
   }
-  return props.origin === 'madokami'
-    ? `${getAvatarUrl(props.uid)}?t=${props.updateTime}`
-    : `https://kami.im/getavatar.php?uid=${props.uid}`
-})
+  return origin === 'madokami'
+    ? `${getAvatarUrl(uid)}?t=${updateTime}`
+    : `https://kami.im/getavatar.php?uid=${uid}`
+}
+
+const avatarSrc = computedAsync(
+  async () =>
+    await getAvatarSrc(
+      props.message.origin,
+      props.message.userId,
+      props.message.userUpdateTime,
+    ),
+)
 
 const cardStyle = computed(() => {
   // 使用 externalId 取模，确保同一个 ID 的卡片背景永远固定
-  const fixedNum = (props.externalId % 22) + 1
+  const fixedNum = (props.message.externalId % 22) + 1
   const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${fixedNum}`)
   return {
     '--bg-image': `url(${bgUrl}.webp)`,
@@ -102,14 +93,95 @@ const cardStyle = computed(() => {
 })
 
 const Root = (() => {
-  const handleReply = () => {
+  /**
+   * 构建留言头
+   * @param src
+   * @param username
+   * @param id
+   */
+  const buildHeader = (src: any, username: string, id?: number) => (
+    <header class="flex card__header">
+      <div class="avatar">
+        <img draggable="false" src={src} loading="lazy" alt="" />
+      </div>
+      <div class="user">
+        <div class="name">{username}</div>
+      </div>
+      {id && (
+        <div class="id" style="margin-left: auto">
+          #{id}
+        </div>
+      )}
+    </header>
+  )
+
+  const buildFooter = (obj: Message, avatarSrc: string) => {
+    const { id, likes, liked, origin, createTime } = obj
+    return (
+      <footer>
+        <div class="card__bar">
+          <span>
+            <i
+              class={['mdi', liked ? 'mdi-heart liked' : 'mdi-heart-outline']}
+              onClick={() => like(id, obj)}
+            />
+
+            {likes !== 0 && <span class="number">{likes}</span>}
+          </span>
+          <span>
+            <i
+              class="mdi mdi-reply"
+              onClick={() => handleReply(obj, avatarSrc)}
+            ></i>
+          </span>
+        </div>
+        <div class="flex card__operate">
+          {origin !== 'madokami' && (
+            <span>
+              <a href={`https://${origin}`} target="_blank">
+                {origin}
+              </a>
+            </span>
+          )}
+          <div class="flex" style="margin-left: auto">
+            {dayjs(createTime).format('YYYY/MM/DD HH:mm:ss')}
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
+  const buildReplies = (replies: Message[] = []) => {
+    return (
+      <div>
+        {replies.map((reply) => {
+          getAvatarSrc('madokami', reply.userId, reply.userUpdateTime).then(
+            (src) => (s.repliesAvatar[reply.userId] = src),
+          )
+          return (
+            <>
+              {buildHeader(
+                s.repliesAvatar[reply.userId],
+                reply.username,
+                undefined,
+              )}
+              <div>
+                {reply.content}
+                <div class="replies-container">
+                  {!isEmpty(reply.replies) && buildReplies(reply.replies)}
+                </div>
+              </div>
+              {buildFooter(reply, s.repliesAvatar[reply.userId])}
+            </>
+          )
+        })}
+      </div>
+    )
+  }
+
+  const handleReply = (obj, avatarSrc: string) => {
     emits('handleReply', {
-      messageId: props.messageId,
-      content: props.content,
-      uid: props.uid,
-      origin: props.origin,
-      username: props.username,
-      externalId: props.externalId,
+      ...obj,
       avatar: avatarSrc,
     })
   }
@@ -117,13 +189,17 @@ const Root = (() => {
   /**
    * 发送请求 改变该条留言的喜爱状态
    */
-  const like = async () => {
-    await messageApi.like(props.messageId)
-    emits('like')
+  const like = async (messageId: number, obj: Message) => {
+    await messageApi.like(messageId)
+    obj.liked = +!obj.liked
   }
   const s = reactive({
+    repliesAvatar: {},
     like,
     handleReply,
+    buildHeader,
+    buildReplies,
+    buildFooter,
   })
   return s
 })()
@@ -190,10 +266,11 @@ const Root = (() => {
     gap: 10px;
 
     .avatar {
-      width: 42px;
-      height: 42px;
+      width: 3rem;
+      height: 3rem;
       border-radius: 50%;
       overflow: hidden;
+      flex-shrink: 0;
       img {
         width: 100%;
         height: 100%;
@@ -207,7 +284,7 @@ const Root = (() => {
         font-weight: 600;
       }
 
-      .uid {
+      .id {
         font-size: 12px;
         opacity: 0.6;
       }
@@ -243,6 +320,37 @@ const Root = (() => {
     }
     .liked {
       color: red;
+    }
+  }
+  // 重点：回复列表的层次感设计
+  .replies-container {
+    margin-top: 16px;
+    padding-left: 12px;
+    border-left: 2px solid rgba(255, 255, 255, 0.2); // 左侧装饰线
+    display: flex;
+    flex-direction: column;
+    gap: 16px; // 每一条回复之间的间距
+
+    :deep(header) {
+      margin-top: 8px;
+      transform: scale(0.9); // 让回复者的头像稍小一点
+      transform-origin: left center;
+      opacity: 0.9;
+    }
+
+    :deep(div) {
+      // 针对 buildReplies 渲染出来的文字内容
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    :deep(footer) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1); // 回复间的分割线
+      padding-bottom: 8px;
+
+      .card__bar {
+        font-size: 16px; // 回复的互动按钮小一点
+      }
     }
   }
 
