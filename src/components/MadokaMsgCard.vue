@@ -20,7 +20,10 @@
         </div>
       </div>
 
-      <component :is="Root.buildFooter(message, avatarSrc)" />
+      <component
+        :is="Root.buildFooter(message, avatarSrc)"
+        :key="message.liked"
+      />
     </div>
   </div>
 </template>
@@ -188,10 +191,17 @@ const Root = (() => {
 
   /**
    * 发送请求 改变该条留言的喜爱状态
+   * 由于未知原因 如果是最外层的留言 需要emit到父组件修改数据才能响应式 回复则不需要
    */
   const like = async (messageId: number, obj: Message) => {
     await messageApi.like(messageId)
+    if (!obj.pid) {
+      emits('like', obj.liked)
+      return
+    }
     obj.liked = +!obj.liked
+    const add = !!obj.liked ? 1 : -1
+    obj.likes += add
   }
   const s = reactive({
     repliesAvatar: {},
