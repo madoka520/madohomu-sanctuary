@@ -85,29 +85,33 @@ const handleProgressInput = (e: Event) => {
   flex-direction: column;
   gap: 10px;
   height: 70vh;
-  border-radius: 16px;
-  padding-bottom: 10px;
+  width: 100%;
+  border-radius: 24px;
+  corner-shape: superellipse(1.333);
+  // padding-bottom: 10px;
   user-select: none;
 }
 
 .song-list-container {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  min-width: 25vw;
+  padding: 10px 5px;
+  scrollbar-gutter: stable both-edges;
   .song-item {
-    padding: 12px;
+    padding: 12px 20px;
     margin-bottom: 8px;
-    border-radius: 10px;
+    border-radius: 18px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     background: rgba(255, 255, 255, 0.5);
+    will-change: transform;
 
     font-size: 14px;
 
     &:hover {
       background: #ffe5eb;
       transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(255, 183, 197, 0.3);
     }
     .title {
       color: #555;
@@ -130,6 +134,11 @@ const handleProgressInput = (e: Event) => {
       .meta {
         color: pink;
         font-size: 11px;
+      }
+
+      &:hover {
+        background: linear-gradient(90deg, #ffcdd8, #ffffff);
+        transform: translateX(5px);
       }
     }
 
@@ -156,9 +165,12 @@ const handleProgressInput = (e: Event) => {
 }
 
 .player-controls {
+  margin: 0 10px 10px 10px;
   padding: 15px 20px;
   background: white;
-  border-top: 1px solid #ffdae2;
+  border-radius: 22px;
+  corner-shape: superellipse(1.333);
+  box-shadow: 0 4px 12px rgba(255, 183, 197, 0.3);
 
   .controls-content {
     display: flex;
