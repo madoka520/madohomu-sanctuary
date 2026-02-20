@@ -110,12 +110,13 @@ const Root = (() => {
 
   const ok = async () => {
     const text = getInputText()
-    const res = await MessageApi.send({
+    const res = (await MessageApi.send({
       pid: s.data.id,
       content: text,
-    }) as any
+    })) as any
     s.opened = false
-    s.data.replies.push(res)
+    res.pid && s.data.replies.push(res)
+    console.log(234)
     emits('ok', res)
   }
   const s = reactive({

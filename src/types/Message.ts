@@ -1,6 +1,7 @@
 type origin = 'madokami' | 'kami.im' | string
 type Message = {
   id: number
+  pid: number
   likes: number
   liked: number
   content: string

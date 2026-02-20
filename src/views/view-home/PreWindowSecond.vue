@@ -20,7 +20,7 @@
             replies: item.replies ?? [],
           }"
           :key="`${item.createTime}${item.id}`"
-          @like="Msg.like"
+          @like="(liked) => Msg.like(item, liked)"
           @handle-reply="(e) => dialogRef?.openReply(e)"
         />
       </div>
@@ -152,9 +152,9 @@ const Msg = (() => {
     combine()
   }
 
-  const like = (item: Message) => {
-    item.liked = +item.liked ? 0 : 1
-    const add = item.liked ? 1 : -1
+  const like = (item: Message, liked: number) => {
+    item.liked = !!liked ? 0 : 1
+    const add = !!liked ? -1 : 1
     item.likes += add
   }
   const getCount = async () => {
