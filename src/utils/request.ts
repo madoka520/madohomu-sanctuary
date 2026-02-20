@@ -13,7 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
   (cfg) => {
     const tokenRequired = (cfg.headers || {}).tokenRequired !== false
-    if (tokenRequired) {
+    if (tokenRequired && localStorage.getItem('token')) {
       cfg.headers.Authorization = `Bearer ${localStorage.getItem("token")}`
     }
     return cfg
