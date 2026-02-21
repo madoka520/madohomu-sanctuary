@@ -111,11 +111,14 @@ watch(
 <style scoped lang="less">
 .mini-player {
   padding-right: 50px;
-  background: rgba(0, 0, 0, 0.07);
-  border-radius: 28px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 24px; // LR_小さな狐の妖精: 统一大圆角设计
   position: relative;
   width: 300px;
   margin-left: auto;
+  /* LR_小さな狐の妖精: 添加上下间距 */
+  margin-top: 6px;
+  margin-bottom: 6px;
   display: flex; // 使用 Flex 布局
   align-items: center; // 垂直居中
   overflow: hidden; // 确保内部滑动不会超出圆角
@@ -123,14 +126,14 @@ watch(
 .swiper {
   flex: 1; // 自动占据除去按钮以外的所有空间
   min-width: 0; // 必须加这个，否则 flex 容器内的文字截断会失效
-  height: 60px;
+  height: 48px;
 }
 .mini-slide {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 0 16px;
-  height: 60px;
+  padding: 0 10px;
+  height: 48px;
   user-select: none;
   cursor: default;
   transition: transform 0.3s ease;

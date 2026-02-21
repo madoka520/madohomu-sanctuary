@@ -77,7 +77,7 @@ const Form = (() => {
 .form-container {
   width: 500px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 10px 10px;
 }
 
 .form-body {
@@ -89,7 +89,7 @@ const Form = (() => {
 .form-item {
   width: 100%;
   transition: all 0.3s ease;
-  padding: 10px;
+  padding: 5px;
 }
 
 .form__error {

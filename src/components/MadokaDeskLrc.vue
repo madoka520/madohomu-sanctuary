@@ -183,6 +183,13 @@ const LyricState = (() => {
 @glow-soft: rgba(255, 183, 206, 0.6);
 @text-dim: rgba(255, 183, 206, 0.15);
 
+// LR_小さな狐の妖精 让他支持从父组件覆盖
+.lyric-container {
+  --lyric-base-color: @madoka-pink;
+  --lyric-glow-color: @glow-soft;
+  --lyric-dim-color: @text-dim;
+}
+
 .lyric-container {
   padding: 40px;
   display: flex;
@@ -195,9 +202,10 @@ const LyricState = (() => {
   position: relative;
   font-size: 38px;
   font-weight: 900;
-  color: @text-dim;
+  color: var(--lyric-dim-color);
   text-align: center;
   font-family: 'PingFang SC', sans-serif;
+  transition: color 0.3s ease;
 
   // 1. 核心粉色填充层
   &::before {
@@ -205,13 +213,14 @@ const LyricState = (() => {
     position: absolute;
     inset: 0;
     // --p 是从 JS 传进来的百分比变量 (例如: 45%)
-    background: linear-gradient(to right, @madoka-pink var(--p), transparent var(--p));
+    background: linear-gradient(to right, var(--lyric-base-color) var(--p), transparent var(--p));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     z-index: 2;
     // 外发光效果
-    filter: drop-shadow(0 0 8px @glow-soft);
+    filter: drop-shadow(0 0 8px var(--lyric-glow-color));
+    transition: filter 0.3s ease;
   }
 
   // 2. 繁星闪烁层
@@ -240,13 +249,14 @@ const LyricState = (() => {
   .lyric-glow {
     position: absolute;
     inset: 0;
-    color: @madoka-pink;
+    color: var(--lyric-base-color);
     filter: blur(15px);
     opacity: 0.4;
     z-index: 1;
     // 同样跟随进度
     mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
     -webkit-mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
+    transition: color 0.3s ease;
   }
 }
 
