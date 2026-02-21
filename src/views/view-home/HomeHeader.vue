@@ -6,7 +6,7 @@
       <span class="sanctuary"> Sanctuary </span>
     </div>
     <div class="flex-center center-entry">
-      <madoka-desk-lrc />
+      <madoka-desk-lrc class="desk-lrc" />
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
@@ -46,11 +46,17 @@ const settingRef = useTemplateRef("settingRef")
     box-shadow 0.3s ease;
   &:hover,
   &:focus-within {
-    background: rgba(255, 200, 220, 0.5);
+    background: rgba(255, 200, 220, 0.8);
     box-shadow: 0 4px 12px rgba(255, 128, 180, 0.2);
     backdrop-filter: blur(6px);
     .show-with-hover {
       opacity: 1;
+    }
+    /* LR_小さな狐の妖精 导航栏悬浮时歌词加深 */
+    .desk-lrc {
+      --lyric-base-color: #ff6b8a;
+      --lyric-glow-color: rgba(255, 107, 138, 0.8);
+      --lyric-dim-color: rgba(200, 100, 120, 0.3);
     }
   }
 }
