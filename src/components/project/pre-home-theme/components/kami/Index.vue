@@ -43,7 +43,6 @@
 import { reactive } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import emitter from '@/utils/emitter'
-import { getImgUrl } from '@/utils/resource.ts'
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
 
 const swiperRef = useTemplateRef('swiperRef')
@@ -134,18 +133,6 @@ const onSwiper = (swiper: any) => {
   })
 }
 
-onMounted(() => {
-  // 2️⃣ 监听事件总线
-  emitter.on('bg-slide-next', () => {
-    swiperInstance.value?.slideNext()
-  })
-  emitter.on('bg-slide-prev', () => swiperInstance.value?.slidePrev())
-})
-
-onBeforeUnmount(() => {
-  emitter.off('bg-slide-next')
-  emitter.off('bg-slide-prev')
-})
 </script>
 
 <style lang="less" scoped>
