@@ -99,13 +99,25 @@ const onToggle = () => {
   }
   audioPlayer.resume()
 }
-watch(
-  () => audioPlayer.current,
-  (v) => {
-    const index = audioPlayer.randomList.indexOf(v)
-    swiperRef.value.slideTo(index, 0)
-  },
-)
+
+const Root = (() => {
+  const setWatcher = () => {
+    watch(
+      () => audioPlayer.current,
+      (v) => {
+        const index = audioPlayer.randomList.indexOf(v)
+        swiperRef.value.slideTo(index, 0)
+      },
+      { immediate: true },
+    )
+  }
+  const s = reactive({})
+
+  onMounted(() => {
+    setWatcher()
+  })
+  return s
+})()
 </script>
 
 <style scoped lang="less">

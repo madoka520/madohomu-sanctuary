@@ -6,18 +6,20 @@
           <source :src="Root.currentTheme.src" />
         </video>
       </div>
-      <component :is="Root.currentTheme.component as object" v-else-if="Root.currentTheme.type === 'customer'" />
+      <component
+        :is="Root.currentTheme.component as object"
+        v-else-if="Root.currentTheme.type === 'customer'"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import emitter from "@/utils/emitter.ts"
-import useSetting from "@/hooks/useSetting.ts"
-import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
+import useSetting from '@/hooks/useSetting.ts'
+import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
 
 defineOptions({
-  name: "pre-home-theme",
+  name: 'pre-home-theme',
 })
 const setting = useSetting()
 
@@ -27,8 +29,10 @@ const Root = (() => {
       () => setting.theme,
       (val) => {
         const song = setting.themeList[val].song
+        if (!song) return
         useAudioPlayer().playByName(song)
-      }
+      },
+      { immediate: true }
     )
   }
   const s = reactive({
