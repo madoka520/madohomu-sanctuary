@@ -95,12 +95,12 @@ const handleProgressInput = (e: Event) => {
 .song-list-container {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 5px;
+  padding: 10px 10px 10px 5px;
   scrollbar-gutter: stable both-edges;
   .song-item {
     padding: 12px 20px;
     margin-bottom: 8px;
-    border-radius: 18px;
+    border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     background: rgba(255, 255, 255, 0.5);

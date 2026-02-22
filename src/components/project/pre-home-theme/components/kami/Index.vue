@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import emitter from '@/utils/emitter'
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
+import { getImgUrl } from '@/utils/resource.ts'
 
 const swiperRef = useTemplateRef('swiperRef')
 const Root = (() => {
@@ -132,7 +132,6 @@ const onSwiper = (swiper: any) => {
     Root.current = swiper.realIndex + 1
   })
 }
-
 </script>
 
 <style lang="less" scoped>
