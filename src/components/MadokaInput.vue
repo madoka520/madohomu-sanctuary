@@ -49,6 +49,7 @@ const resolvedType = computed(() => {
   display: flex;
   align-items: center;
   width: 100%;
+  border-radius: 18px;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -95,8 +96,8 @@ input::placeholder {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 10px;
+  right: 10px;
   height: 1px;
   background-color: rgba(189, 189, 189, 0.7);
   transition: opacity 0.3s ease;
@@ -108,12 +109,12 @@ input::placeholder {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 0;
-  width: 100%; /* 使用 width 代替 right:0 有时更稳定 */
+  left: 10px;
+  right: 10px;
   height: 2px;
-  /* 使用更扎实的颜色过渡，避免 0% 处透明 */
   background: linear-gradient(90deg, pink 0%, #ff69b4 50%, pink 100%);
   box-shadow: 0 0 6px rgba(255, 105, 180, 0.5);
+  border-radius: 0 0 2px 2px;
 
   transform: scaleX(0);
   transform-origin: center;
@@ -144,7 +145,7 @@ input::placeholder {
 }
 
 .madoka__input:focus-within {
-  /* 魔法光晕 */
+  background: rgba(255, 240, 245, 0.5);
   box-shadow:
     0 4px 20px rgba(255, 105, 180, 0.3),
     0 0 0 1px rgba(255, 105, 180, 0.2);

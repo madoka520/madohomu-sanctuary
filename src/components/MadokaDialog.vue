@@ -137,7 +137,8 @@ const Root = (() => {
   flex-direction: column;
   position: fixed;
   transform: scale(0.1);
-  border-radius: 12px; // 稍微圆润一点更适合粉色主题
+  border-radius: 29px; // LR_小さな狐の妖精
+  corner-shape: superellipse(1.333);
 
   // ✨ 核心增强：只添加毛玻璃和微光边框，不改动布局逻辑
   backdrop-filter: blur(15px);
@@ -159,10 +160,9 @@ const Root = (() => {
   main {
     flex: 1;
     overflow: auto;
-    padding: 0 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    width: 100%;
     min-height: 0;
   }
 
