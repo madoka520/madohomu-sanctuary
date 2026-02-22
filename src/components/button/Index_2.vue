@@ -28,6 +28,8 @@ const loading = defineModel("loading", {
   padding: 15px;
   background: linear-gradient(90deg, rgba(255, 142, 178, 0.1), rgba(255, 142, 178, 0.3), rgba(255, 142, 178, 0.1));
   border: 1px solid #ff8eb2;
+  border-radius: 18px;
+  corner-shape: superellipse(1.333);
   display: flex;
   align-items: center;
   justify-content: center;

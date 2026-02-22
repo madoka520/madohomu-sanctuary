@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { getVideoUrl } from '@/utils/resource.ts'
+import { sleep } from '@/utils/global/global.ts'//LR_小さな狐の妖精:？
 import MadokaPictureAlbumCard from '@/components/MadokaPictureAlbumCard.vue'
 
 const emits = defineEmits(['changeCurrent'])
