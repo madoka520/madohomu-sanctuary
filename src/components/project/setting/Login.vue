@@ -139,6 +139,6 @@ const Form = (() => {
 .slide-fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
-  margin-bottom: -88px; // 抵消输入框的高度，防止下方元素瞬间跳动
+  margin-bottom: -73px; // 抵消输入框的高度，防止下方元素瞬间跳动
 }
 </style>

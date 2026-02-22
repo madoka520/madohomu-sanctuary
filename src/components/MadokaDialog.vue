@@ -1,6 +1,11 @@
 <template>
   <madoka-mask v-model="modelValue" v-if="!unuseModel">
-    <div class="dialog__overlay" :style="{ minWidth: width, minHeight: height, background }" @click.stop ref="overlayRef">
+    <div
+      class="dialog__overlay"
+      :style="{ minWidth: width, minHeight: height, background }"
+      @click.stop
+      ref="overlayRef"
+    >
       <!--      <madoka-meteor-shower/>-->
       <header v-if="title || $slots.header">
         <slot name="header">
@@ -12,8 +17,21 @@
       </main>
       <footer v-if="footer">
         <slot name="footer">
-          <madoka-btn type="1" @click="Root.cancel" v-if="!hiddenCancel" :text="cancelText" variant="outlined" color="pink" />
-          <madoka-btn type="1" @click="Root.ok" :text="okText" variant="outlined" color="pink" />
+          <madoka-btn
+            type="1"
+            @click="Root.cancel"
+            v-if="!hiddenCancel"
+            :text="cancelText"
+            variant="outlined"
+            color="pink"
+          />
+          <madoka-btn
+            type="1"
+            @click="Root.ok"
+            :text="okText"
+            variant="outlined"
+            color="pink"
+          />
         </slot>
       </footer>
     </div>
@@ -21,8 +39,8 @@
   <slot v-else />
 </template>
 <script setup lang="ts">
-import MadokaMask from "@/components/MadokaMask.vue"
-import MadokaBtn from "@/components/button/Index.vue"
+import MadokaMask from '@/components/MadokaMask.vue'
+import MadokaBtn from '@/components/button/Index.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -37,27 +55,27 @@ const props = withDefaults(
     hiddenCancel?: boolean
   }>(),
   {
-    title: "",
+    title: '',
     footer: true,
-    width: "400px",
-    height: "300px",
-    okText: "确 定",
-    cancelText: "取 消",
+    width: '400px',
+    height: '300px',
+    okText: '确 定',
+    cancelText: '取 消',
     unuseMode: false,
-    background: "rgba(255, 240, 245, 0.7)",
+    background: 'rgba(255, 240, 245, 0.7)',
     hiddenCancel: false,
   },
 )
 
-const overlayRef = useTemplateRef("overlayRef")
+const overlayRef = useTemplateRef('overlayRef')
 
 const mouse = useMouse()
 const modelValue = defineModel({
   default: false,
 })
 const emits = defineEmits<{
-  (e: "cancel", event?: Event): void
-  (e: "ok", event: Event): void
+  (e: 'cancel', event?: Event): void
+  (e: 'ok', event: Event): void
 }>()
 
 const Root = (() => {
@@ -77,49 +95,49 @@ const Root = (() => {
           s.lastY = top
           /* 初始状态：在鼠标中心缩小、透明 */
           Object.assign(el.style, {
-            left: left + "px",
-            top: top + "px",
+            left: left + 'px',
+            top: top + 'px',
           })
           /* 下一帧触发过渡到居中放大 */
-          requestAnimationFrame(() => el.classList.add("enter-active"))
+          requestAnimationFrame(() => el.classList.add('enter-active'))
         })
       } else {
         /* —— 关闭 —— */
 
         nextTick(() => {
           // 移除打开状态类
-          el.classList.remove("enter-active")
+          el.classList.remove('enter-active')
           // 添加关闭状态类，触发淡出动画
-          el.classList.add("leave-active")
+          el.classList.add('leave-active')
 
           // 监听动画结束事件
           const onEnd = (e: TransitionEvent) => {
             if (e.target === el) {
-              el.removeEventListener("transitionend", onEnd)
-              el.classList.remove("leave-active")
+              el.removeEventListener('transitionend', onEnd)
+              el.classList.remove('leave-active')
               Object.assign(el.style, {
                 // 还原初始内联样式
-                left: "",
-                top: "",
-                transform: "",
-                opacity: "",
+                left: '',
+                top: '',
+                transform: '',
+                opacity: '',
               })
             }
           }
-          el.addEventListener("transitionend", onEnd)
+          el.addEventListener('transitionend', onEnd)
         })
 
-        emits("cancel")
+        emits('cancel')
       }
     })
   }
 
   const cancel = async (e: Event) => {
     modelValue.value = false
-    emits("cancel", e)
+    emits('cancel', e)
   }
   const ok = async (e: Event) => {
-    emits("ok", e)
+    emits('ok', e)
   }
   const s = reactive({
     lastX: 0,
@@ -158,6 +176,7 @@ const Root = (() => {
   }
 
   main {
+    padding: 0 20px;
     flex: 1;
     overflow: auto;
     display: flex;
