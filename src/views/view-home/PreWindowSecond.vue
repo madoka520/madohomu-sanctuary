@@ -208,22 +208,34 @@ const Msg = (() => {
 // 滚动逻辑
 const Scroll = (() => {
   const wheel = async (e: WheelEvent) => {
-    await nextTick()
     const el = scrollRef.value
     if (!el) return
-    el.style.scrollBehavior = 'smooth'
+
+    // 1. 查找真正负责滚动的内部容器
     const target = e.target as HTMLElement
-    const scrollable = target.closest('.card') as HTMLElement | null
+    const scrollable = target.closest('.card__inner') as HTMLElement | null
 
     if (scrollable) {
       const { scrollTop, scrollHeight, clientHeight } = scrollable
-      const isAtTop = scrollTop === 0 && e.deltaY < 0
-      const isAtBottom =
-        scrollTop + clientHeight >= scrollHeight && e.deltaY > 0
-      if (!isAtTop && !isAtBottom) return
+
+      // 检查是否有垂直滚动的空间
+      const hasScrollSpace = scrollHeight > clientHeight
+
+      if (hasScrollSpace) {
+        const isAtTop = scrollTop <= 0 && e.deltaY < 0
+        const isAtBottom =
+          scrollTop + clientHeight >= scrollHeight - 1 && e.deltaY > 0
+
+        // 如果没到顶也没到底，说明正在垂直滚动，直接 return 让浏览器处理默认滚动
+        if (!isAtTop && !isAtBottom) {
+          return
+        }
+      }
     }
 
+    // 2. 只有当：1.没有内部滚动条 2.内部滚动到了尽头 时，才执行外层水平滚动
     e.preventDefault()
+    el.style.scrollBehavior = 'smooth'
     el.scrollLeft += e.deltaY * 8.08
     await checkLoadDebounce(el)
   }
@@ -362,7 +374,6 @@ const Scroll = (() => {
 </script>
 
 <style scoped>
-
 .scroll-row {
   display: flex;
   overflow-x: auto;
