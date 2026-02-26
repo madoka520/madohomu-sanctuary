@@ -1,29 +1,33 @@
 <template>
   <div class="card__wrapper">
     <div class="flex card" :style="cardStyle" :data-time="message.createTime">
-      <component
-        :is="Root.buildHeader(avatarSrc, message.username, message.externalId)"
-      />
-      <div class="card__content">
-        <div class="main-text">{{ message.content }}</div>
+      <div class="card__inner flex">
+        <component
+          :is="
+            Root.buildHeader(avatarSrc, message.username, message.externalId)
+          "
+        />
+        <div class="card__content">
+          <div class="main-text">{{ message.content }}</div>
 
-        <div v-if="message.image" class="image-gallery">
-          <madoka-img
-            v-for="item in message.image.split(',')"
-            :key="item"
-            :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`"
-          />
+          <div v-if="message.image" class="image-gallery">
+            <madoka-img
+              v-for="item in message.image.split(',')"
+              :key="item"
+              :src="`https://haojiezhe12345.top:82/madohomu/api/data/images/posts/${item}.jpg`"
+            />
+          </div>
+
+          <div v-if="!isEmpty(message.replies)" class="replies-container">
+            <component :is="Root.buildReplies(message.replies)" />
+          </div>
         </div>
 
-        <div v-if="!isEmpty(message.replies)" class="replies-container">
-          <component :is="Root.buildReplies(message.replies)" />
-        </div>
+        <component
+          :is="Root.buildFooter(message, avatarSrc)"
+          :key="message.liked"
+        />
       </div>
-
-      <component
-        :is="Root.buildFooter(message, avatarSrc)"
-        :key="message.liked"
-      />
     </div>
   </div>
 </template>
@@ -235,8 +239,7 @@ const Root = (() => {
   .card {
     width: 22vw;
     height: 55vh;
-    padding: 14px;
-    overflow: auto;
+    overflow: hidden;
     position: relative; // 必须是 relative 才能让伪元素定位
     isolation: isolate; // 确保内容层级在伪元素之上
 
@@ -246,8 +249,6 @@ const Root = (() => {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     color: white;
 
-    flex-direction: column;
-    gap: 12px;
     // 使用伪元素处理背景，这样 blur 滤镜才不会影响到文字
     &::before {
       content: '';
@@ -268,6 +269,18 @@ const Root = (() => {
       transition:
         filter 0.3s ease,
         transform 0.3s ease;
+    }
+    // 新增内部滚动容器
+    .card__inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto; // 只在垂直方向滚动
+      overflow-x: hidden;
+      padding: 14px; // 恢复原有的 padding
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
     }
   }
 
