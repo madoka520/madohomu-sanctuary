@@ -235,6 +235,7 @@ const Scroll = (() => {
   padding: 8px 10px;
   border-radius: 12px;
 
+  z-index: 100000;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);

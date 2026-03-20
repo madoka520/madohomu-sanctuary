@@ -2,8 +2,9 @@
   <!-- 顶部导航 -->
   <nav class="flex nav" tabindex="-1">
     <div class="flex left-entry">
-      <span class="mado">Mado</span><span class="homu">Homu</span>
-      <span class="sanctuary"> Sanctuary </span>
+      <span class="mado">Mado</span>
+      <span class="homu">Homu</span>
+      <span class="sanctuary">Sanctuary</span>
     </div>
     <div class="flex-center center-entry">
       <madoka-desk-lrc class="desk-lrc" />
@@ -19,11 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import MadokaPlayerControls from "@/components/madoka-mini-player-controls/Index.vue"
-import Setting from "@/components/project/setting/Index.vue"
-import MadokaDeskLrc from "@/components/MadokaDeskLrc.vue"
-import MadokaAvatar from "@/components/MadokaAvatar.vue"
-const settingRef = useTemplateRef("settingRef")
+import MadokaPlayerControls from '@/components/madoka-mini-player-controls/Index.vue'
+import Setting from '@/components/project/setting/Index.vue'
+import MadokaDeskLrc from '@/components/MadokaDeskLrc.vue'
+import MadokaAvatar from '@/components/MadokaAvatar.vue'
+const settingRef = useTemplateRef('settingRef')
 </script>
 
 <style scoped lang="less">
@@ -61,7 +62,8 @@ const settingRef = useTemplateRef("settingRef")
   }
 }
 .left-entry {
-  font-size: 1.8rem;
+  font-size: clamp(18px, 2.5vw, 1.8rem);
+
   font-weight: bold;
   height: 100%;
   padding-left: 20px;
@@ -69,7 +71,7 @@ const settingRef = useTemplateRef("settingRef")
   align-items: center;
 
   user-select: none;
-  font-family: "cute", "Helvetica Rounded", Arial, sans-serif;
+  font-family: 'cute', 'Helvetica Rounded', Arial, sans-serif;
   .mado {
     background: linear-gradient(135deg, #ff85a2, #ffb6c1);
     -webkit-background-clip: text;

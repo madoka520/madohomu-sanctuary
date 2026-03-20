@@ -1,5 +1,5 @@
 <template>
-  <div class="mini-player" style="">
+  <div class="mini-player">
     <Swiper
       :slides-per-view="1"
       :initial-slide="audioPlayer.randomList[audioPlayer.current]"
@@ -14,8 +14,8 @@
       <madoka-dialog
         v-model="Dialog.preAudioPlayerUi.opened"
         title=""
-        height="400px"
-        width="600px"
+        height="clamp(260px, 50vh, 500px)"
+        width="clamp(320px, 40vw, 700px)"
         :footer="false"
       >
         <pre-audio-player-ui />
@@ -126,7 +126,7 @@ const Root = (() => {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 24px; // LR_小さな狐の妖精: 统一大圆角设计
   position: relative;
-  width: 300px;
+  width: clamp(100px, 20vw, 320px);
   margin-left: auto;
   /* LR_小さな狐の妖精: 添加上下间距 */
   margin-top: 6px;

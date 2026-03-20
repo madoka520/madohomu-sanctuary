@@ -69,7 +69,7 @@ const Msg = (() => {
     delete s.params.from
     s.params.time = time
 
-    // 2. 执行加载 (确保 getList 内部没有因为 loading 锁被挡住)
+    //(确保 getList 内部没有因为 loading 锁被挡住)
     // 注意：getList 内部执行时会自动设置 s.loading = true
     await getList()
     combine()

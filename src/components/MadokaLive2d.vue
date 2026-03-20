@@ -39,11 +39,13 @@ const Madoka = (() => {
     s.isTransparency = x + s.width > window.innerWidth && y + s.height > window.innerHeight
   }
 
+  console.log(window.innerHeight)
+  console.log(window.innerWidth)
   const s = reactive({
     width: 600,
     height: 480,
-    cssWidth: computed((): string => `${s.width}px`),
-    cssHeight: computed((): string => `${s.height}px`),
+    cssWidth: computed((): string => '23.44%'),
+    cssHeight: computed((): string => 'auto'),
     isTransparency: false,
     ref: {
       value: undefined as HTMLCanvasElement | undefined,

@@ -237,8 +237,8 @@ const Root = (() => {
     }
   }
   .card {
-    width: 22vw;
-    height: 55vh;
+    width: clamp(260px, 22vw, 520px);
+    height: clamp(240px, 55vh, 700px);
     overflow: hidden;
     position: relative; // 必须是 relative 才能让伪元素定位
     isolation: isolate; // 确保内容层级在伪元素之上
@@ -280,7 +280,6 @@ const Root = (() => {
       display: flex;
       flex-direction: column;
       gap: 12px;
-
     }
   }
 
