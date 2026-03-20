@@ -1,6 +1,15 @@
 <template>
-  <div class="lyric-container" v-show="!(setting.theme === 1 && audioPlayer.currentSong.title === 'コネクト')">
-    <div class="cyber-pink-lyric" :data-text="LyricState.currentLineText" :style="LyricState.lyricStyle">
+  <div
+    class="lyric-container"
+    v-show="
+      !(setting.theme === 1 && audioPlayer.currentSong.title === 'コネクト')
+    "
+  >
+    <div
+      class="cyber-pink-lyric"
+      :data-text="LyricState.currentLineText"
+      :style="LyricState.lyricStyle"
+    >
       {{ LyricState.currentLineText }}
     </div>
   </div>
@@ -47,7 +56,9 @@ const LyricState = (() => {
 
       lines.push({
         start: lineStart,
-        end: words.length ? words[words.length - 1].end : lineStart + lineDuration,
+        end: words.length
+          ? words[words.length - 1].end
+          : lineStart + lineDuration,
         words,
         text: words.map((w) => w.text).join(''),
       })
@@ -107,7 +118,8 @@ const LyricState = (() => {
       let index = s.lines.findIndex((l) => nowMs >= l.start && nowMs <= l.end)
       if (index === -1) {
         if (nowMs < s.lines[0].start) index = 0
-        else if (nowMs > s.lines[s.lines.length - 1].end) index = s.lines.length - 1
+        else if (nowMs > s.lines[s.lines.length - 1].end)
+          index = s.lines.length - 1
       }
 
       if (index !== -1 && index !== s.currentLineIndex) {
@@ -128,7 +140,8 @@ const LyricState = (() => {
           if (nowMs >= w.end) {
             progress = (i + 1) / line.words.length
           } else if (nowMs >= w.start) {
-            progress = (i + (nowMs - w.start) / (w.end - w.start)) / line.words.length
+            progress =
+              (i + (nowMs - w.start) / (w.end - w.start)) / line.words.length
             break
           } else {
             break
@@ -200,7 +213,7 @@ const LyricState = (() => {
 
 .cyber-pink-lyric {
   position: relative;
-  font-size: 38px;
+  font-size: clamp(18px, 2.5vw, 38px);
   font-weight: 900;
   color: var(--lyric-dim-color);
   text-align: center;
@@ -213,7 +226,11 @@ const LyricState = (() => {
     position: absolute;
     inset: 0;
     // --p 是从 JS 传进来的百分比变量 (例如: 45%)
-    background: linear-gradient(to right, var(--lyric-base-color) var(--p), transparent var(--p));
+    background: linear-gradient(
+      to right,
+      var(--lyric-base-color) var(--p),
+      transparent var(--p)
+    );
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -232,8 +249,10 @@ const LyricState = (() => {
 
     // 用径向渐变模拟细小的星点
     background-image:
-      radial-gradient(circle at 20% 30%, @star-white 1px, transparent 1px), radial-gradient(circle at 50% 70%, @star-white 1.5px, transparent 1.5px),
-      radial-gradient(circle at 80% 40%, @star-white 1px, transparent 1px), radial-gradient(circle at 30% 80%, @star-white 1.2px, transparent 1.2px),
+      radial-gradient(circle at 20% 30%, @star-white 1px, transparent 1px),
+      radial-gradient(circle at 50% 70%, @star-white 1.5px, transparent 1.5px),
+      radial-gradient(circle at 80% 40%, @star-white 1px, transparent 1px),
+      radial-gradient(circle at 30% 80%, @star-white 1.2px, transparent 1.2px),
       radial-gradient(circle at 70% 20%, @star-white 1px, transparent 1px);
     background-size: 100px 100%; // 星点分布周期
 
@@ -255,7 +274,11 @@ const LyricState = (() => {
     z-index: 1;
     // 同样跟随进度
     mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
-    -webkit-mask-image: linear-gradient(to right, black var(--p), transparent var(--p));
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black var(--p),
+      transparent var(--p)
+    );
     transition: color 0.3s ease;
   }
 }

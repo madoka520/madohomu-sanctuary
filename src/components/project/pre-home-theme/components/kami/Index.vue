@@ -172,7 +172,7 @@ const onSwiper = (swiper: any) => {
 
       .char {
         display: inline-block;
-        font-size: 2.2rem;
+        font-size: clamp(16px, 2.2vw, 32px);
         color: #ffffff;
         text-shadow:
           0 2px 4px rgba(0, 0, 0, 0.8),

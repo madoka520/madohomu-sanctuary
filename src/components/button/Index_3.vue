@@ -26,7 +26,7 @@ const props = withDefaults(
   border: 1px solid rgba(255, 126, 185, 0.5);
   border-radius: 4px; /* 微圆角，更显科技利落感 */
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;

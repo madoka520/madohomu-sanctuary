@@ -116,7 +116,6 @@ useDrag(
     box-shadow 0.35s ease;
 
   .header {
-    width: 100vw;
     height: 30px;
     display: flex;
     justify-content: space-between;
@@ -156,14 +155,14 @@ useDrag(
         0 0 160px rgba(255, 255, 255, 0.2);
     }
     .send__button {
-      display: flex;
+      display: inline-flex;
     }
     .today__count {
       display: none;
     }
 
     .return__button {
-      display: flex;
+      display: inline-flex;
     }
   }
 }

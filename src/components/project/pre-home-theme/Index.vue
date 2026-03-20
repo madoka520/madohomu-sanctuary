@@ -42,54 +42,12 @@ const Root = (() => {
   return s
 })()
 
-/*;(() => {
-  let startX = 0
-  let isDragging = false
-
-  const onPointerDown = (e: PointerEvent) => {
-    const container = document.querySelector(".theme__container")
-    if (!container?.contains(e.target as Node)) return // 不在容器内就直接返回
-
-    startX = e.clientX
-    isDragging = true
-  }
-
-  const onPointerMove = (e: PointerEvent) => {
-    if (!isDragging) return
-    // 可选：这里可以做拖动效果，但不需要
-  }
-
-  const onPointerUp = (e: PointerEvent) => {
-    if (!isDragging) return
-    const deltaX = e.clientX - startX
-
-    if (deltaX > 50) {
-      emitter.emit("bg-slide-prev") // 向右滑
-    } else if (deltaX < -50) {
-      emitter.emit("bg-slide-next") // 向左滑
-    }
-
-    isDragging = false
-  }
-
-  onMounted(() => {
-    window.addEventListener("pointerdown", onPointerDown)
-    window.addEventListener("pointermove", onPointerMove)
-    window.addEventListener("pointerup", onPointerUp)
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener("pointerdown", onPointerDown)
-    window.removeEventListener("pointermove", onPointerMove)
-    window.removeEventListener("pointerup", onPointerUp)
-  })
-})()*/
 </script>
 
 <style scoped>
 .theme__container {
-  width: 100vw;
-  height: 100vh;
+  position: fixed;
+  inset: 0;
   .bg {
     width: 100%;
     height: 100%;

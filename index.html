@@ -35,9 +35,8 @@
             &::-webkit-scrollbar-thumb {
                 background: linear-gradient(90deg, #ffdae2, #ffb7c5, #ffdae2);
                 border-radius: 10px;
-                box-shadow:
-                        0 0 6px 1px rgba(255, 183, 197, 0.8),
-                        inset 0 0 4px rgba(255, 255, 255, 0.9);
+                box-shadow: 0 0 6px 1px rgba(255, 183, 197, 0.8),
+                inset 0 0 4px rgba(255, 255, 255, 0.9);
             }
 
             &::-webkit-scrollbar-button {
@@ -48,21 +47,30 @@
         }
 
         @media screen and (max-width: 768px) {
-            #madoka {
-                position: relative;
-            }
-
             #madoka::before {
-                content: "本网站仅支持PC端访问";
+                content: "检测到你为手机端用户 点击进入横屏模式";
                 position: fixed;
                 inset: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background: #fff;
-                color: #333;
-                font-size: 14px;
+                color: #ff6b81;
+                font-size: 16px;
                 z-index: 9999;
+            }
+
+            #madoka::after {
+                content: "";
+                position: fixed;
+                top: 60%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 120px;
+                height: 40px;
+                background: linear-gradient(90deg, #ffb7c5, #ffdae2);
+                border-radius: 20px;
+                box-shadow: 0 4px 12px rgba(255, 183, 197, 0.6);
             }
         }
 
@@ -70,9 +78,28 @@
 </head>
 <body>
 <div id="madoka"></div>
+<div id="browser-info" style="position: fixed; top: 10px; right: 10px; color: #ff6b81; font-size: 14px;"></div>
 <script type="module" src="/src/main.ts"></script>
 <script src="http://cdn.rain.madokami.cn/js/live2d/live2dcubismcore.min.js"></script>
 <script src="http://cdn.rain.madokami.cn/js/live2d/live2d.min.js"></script>
+<script>
+    // 监听点击遮罩
+    window.addEventListener('click', () => {
+        const isMobile = window.innerWidth <= 768
+        if (isMobile) {
+            const el = document.documentElement
 
+            el.requestFullscreen?.()
+                .then(() => {
+                    screen.orientation?.lock?.('landscape')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    })
+
+</script>
 </body>
 </html>

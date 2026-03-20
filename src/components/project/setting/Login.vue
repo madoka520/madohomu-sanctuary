@@ -2,7 +2,12 @@
   <div class="form-container flex-center">
     <div class="form-body">
       <div class="form-item">
-        <madoka-input v-model="Form.model.username" left-icon="mdi mdi-account-outline" placeholder="请输入昵称" @keyup.enter="Form.login" />
+        <madoka-input
+          v-model="Form.model.username"
+          left-icon="mdi mdi-account-outline"
+          placeholder="请输入昵称"
+          @keyup.enter="Form.login"
+        />
       </div>
 
       <Transition name="slide-fade">
@@ -20,23 +25,29 @@
         </div>
       </Transition>
       <div class="form__error" :class="{ 'is-active': Form.error }">
-        <span v-if="Form.error"><span class="mdi mdi-alert-circle-outline"></span> {{ Form.error }}</span>
+        <span v-if="Form.error">
+          <span class="mdi mdi-alert-circle-outline"></span>
+          {{ Form.error }}
+        </span>
       </div>
       <div class="form-options">
-        <madoka-checkbox v-model="Form.model.usePassword" label="使用密码登录" />
+        <madoka-checkbox
+          v-model="Form.model.usePassword"
+          label="使用密码登录"
+        />
       </div>
 
       <div class="form-actions">
-        <madoka-btn type="2" @click="Form.login"> 登录 / 注册 </madoka-btn>
+        <madoka-btn type="2" @click="Form.login">登录 / 注册</madoka-btn>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import MadokaInput from "@/components/MadokaInput.vue"
-import MadokaBtn from "@/components/button/Index.vue"
-import useToken from "@/hooks/useToken.ts"
-import MadokaCheckbox from "@/components/MadokaCheckbox.vue"
+import MadokaInput from '@/components/MadokaInput.vue'
+import MadokaBtn from '@/components/button/Index.vue'
+import useToken from '@/hooks/useToken.ts'
+import MadokaCheckbox from '@/components/MadokaCheckbox.vue'
 
 const Form = (() => {
   const showOrHiddenPsd = () => {
@@ -46,10 +57,10 @@ const Form = (() => {
   const login = async () => {
     try {
       if (!s.model.usePassword) {
-        s.model.password = ""
+        s.model.password = ''
       }
       await useToken().login(s.model as any)
-      s.error = ""
+      s.error = ''
     } catch (e: any) {
       s.error = e
     }
@@ -57,11 +68,11 @@ const Form = (() => {
 
   const s = reactive({
     model: {
-      username: useLocalStorage("username", ''),
-      password: useLocalStorage("password", ''),
-      usePassword: useLocalStorage("usePassword", false),
+      username: useLocalStorage('username', ''),
+      password: useLocalStorage('password', ''),
+      usePassword: useLocalStorage('usePassword', false),
     },
-    error: "",
+    error: '',
     showPassword: false,
     showOrHiddenPsd,
     login,
@@ -75,13 +86,14 @@ const Form = (() => {
 @error-red: #ff7875;
 
 .form-container {
-  width: 500px;
   margin: 0 auto;
-  padding: 10px 10px;
+  width: clamp(120px, 20vw, 500px);
+  padding-top: clamp(10px, 10vh, 50px);
+  padding-bottom: clamp(10px, 10vh, 50px);
 }
 
 .form-body {
-  width: 100%;
+  width: 500px;
   display: flex;
   flex-direction: column;
 }
