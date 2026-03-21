@@ -1,6 +1,6 @@
 <template>
   <div class="slider">
-    <div class="slider__title"><slot name="title"/></div>
+    <div class="slider__title"><slot name="title" /></div>
     <div class="slider__body">
       <div
         v-for="(item, index) in list"
@@ -12,7 +12,6 @@
         <span class="item-text">{{ item }}</span>
       </div>
     </div>
-
   </div>
 </template>
 <script setup lang="ts">
@@ -30,20 +29,11 @@ const current = defineModel({
 <style scoped lang="less">
 @deep-pink: #ff8fab; // 选中态深粉
 
-.slider {
-  width: 200px;
-
-  user-select: none;
-
-  &__active {
-    background: pink;
-    color: white;
-  }
-}
-
 // --- 左侧侧边栏 ---
 .slider {
-  width: 220px;
+  width: 200px;
+  user-select: none;
+
   border-right: 1px solid rgba(255, 255, 255, 0.4);
   padding: 32px 16px;
   display: flex;
@@ -51,7 +41,7 @@ const current = defineModel({
 
   &__title {
     padding: 0 16px 24px;
-    font-size: 18px;
+    font-size: clamp(8px, 2vw, 20px);
     font-weight: bold;
     color: @deep-pink;
     letter-spacing: 1px;
@@ -59,7 +49,6 @@ const current = defineModel({
     align-items: center;
     gap: 8px;
   }
-
 
   &__body {
     display: flex;
@@ -81,7 +70,7 @@ const current = defineModel({
 
       // ✨ 动态指示器（小粉条）
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
         top: 50%;
@@ -101,7 +90,6 @@ const current = defineModel({
       }
     }
   }
-
 
   // 选中状态
   .slider__active {

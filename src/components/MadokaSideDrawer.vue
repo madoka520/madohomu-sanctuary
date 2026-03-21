@@ -22,15 +22,29 @@
         <i class="mdi mdi-counter" />
         今日留言{{ todayCount }}
       </madoka-btn>
-      <madoka-btn
-        type="3"
-        @click="Root.goback"
-        style="height: 40px"
-        class="return__button"
-      >
-        <i class="mdi mdi-chevron-left" />
-        返回
-      </madoka-btn>
+      <div style="display: flex; gap: 10px">
+        <madoka-btn
+          type="3"
+          style="height: 40px"
+          v-if="Root.isMobile()"
+          @click="
+            () => {
+              Root.close()
+              peekPanelRef?.blur()
+            }
+          "
+        >
+          <i class="mdi mdi-window-minimize" />
+        </madoka-btn>
+        <madoka-btn
+          type="3"
+          @click="Root.goback"
+          style="height: 40px"
+          class="return__button"
+        >
+          <i class="mdi mdi-chevron-left" />
+        </madoka-btn>
+      </div>
     </div>
     <div class="content">
       <slot />
@@ -68,6 +82,7 @@ const Root = (() => {
   }
   const s = reactive({
     active: false,
+    isMobile: isMobile,
     lockActive,
     goback,
     close,
@@ -93,7 +108,15 @@ useDrag(
 )
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.box-shadow(@color: rgba(255, 255, 255, 0.2), @size1: 30px, @size2: 60px, @size3: 110px, @size4: 160px) {
+  box-shadow:
+    0 0 @size1 @color,
+    0 0 @size2 @color,
+    0 0 @size3 @color,
+    0 0 @size4 @color;
+}
+
 .peek-panel__mask {
   position: fixed;
   inset: 0;
@@ -148,11 +171,7 @@ useDrag(
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
 
-      box-shadow:
-        0 0 30px rgba(255, 255, 255, 0.2),
-        0 0 60px rgba(255, 255, 255, 0.2),
-        0 0 110px rgba(255, 255, 255, 0.2),
-        0 0 160px rgba(255, 255, 255, 0.2);
+      .box-shadow();
     }
     .send__button {
       display: inline-flex;
@@ -174,11 +193,7 @@ useDrag(
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
-    box-shadow:
-      0 0 30px rgba(255, 255, 255, 0.2),
-      0 0 60px rgba(255, 255, 255, 0.2),
-      0 0 110px rgba(255, 255, 255, 0.2),
-      0 0 160px rgba(255, 255, 255, 0.2);
+    .box-shadow();
   }
 }
 </style>
