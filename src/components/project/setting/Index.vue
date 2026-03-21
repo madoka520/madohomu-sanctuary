@@ -3,8 +3,14 @@
     <login v-if="!tokenStore.token" />
 
     <div v-else class="content">
-      <madoka-slidebar :list="Setting.list.map((item) => item.title)" v-model="Setting.current">
-        <template #title> <i class="mdi mdi-cog"></i> 设置中心 </template>
+      <madoka-slidebar
+        :list="Setting.list.map((item) => item.title)"
+        v-model="Setting.current"
+      >
+        <template #title>
+          <i class="mdi mdi-cog"></i>
+          设置中心
+        </template>
       </madoka-slidebar>
 
       <div class="main">
@@ -17,17 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue"
-import MadokaDialog from "@/components/MadokaDialog.vue"
-import Login from "@/components/project/setting/Login.vue"
-import useToken from "@/hooks/useToken.ts"
-import MadokaSlidebar from "@/components/MadokaSlidebar.vue"
+import { reactive } from 'vue'
+import MadokaDialog from '@/components/MadokaDialog.vue'
+import Login from '@/components/project/setting/Login.vue'
+import useToken from '@/hooks/useToken.ts'
+import MadokaSlidebar from '@/components/MadokaSlidebar.vue'
 
 const tokenStore = useToken()
-const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
+const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) =>
+  markRaw(defineAsyncComponent(comp))
 
 defineOptions({
-  name: "Setting",
+  name: 'Setting',
 })
 
 const Setting = (() => {
@@ -35,16 +42,22 @@ const Setting = (() => {
     current: 0,
     list: [
       {
-        title: "主题外观",
-        component: toAsyncComponent(() => import("@/components/project/setting/PreThemeSetting.vue")),
+        title: '主题外观',
+        component: toAsyncComponent(
+          () => import('@/components/project/setting/PreThemeSetting.vue'),
+        ),
       },
       {
-        title: "账号设置",
-        component: toAsyncComponent(() => import("@/components/project/setting/PreAccountMgr.vue")),
+        title: '账号设置',
+        component: toAsyncComponent(
+          () => import('@/components/project/setting/PreAccountMgr.vue'),
+        ),
       },
       {
-        title: "关于系统",
-        component: toAsyncComponent(() => import("@/components/project/setting/PreAbout.vue")),
+        title: '关于系统',
+        component: toAsyncComponent(
+          () => import('@/components/project/setting/PreAbout.vue'),
+        ),
       },
     ],
   })
@@ -76,23 +89,10 @@ defineExpose({
 
 .content {
   display: flex;
-
-  width: 800px;
-  height: 600px;
-
-  .main {
-    flex: 1;
-    width: 100%;
-  }
-}
-
-.content {
-  display: flex;
-  width: 800px;
-  height: 550px;
-
-  overflow: hidden;
-  font-family: "PingFang SC", sans-serif;
+  width: clamp(600px, 31vw, 800px);
+  height: clamp(110px, 47vh, 600px);
+  overflow: auto;
+  font-family: 'PingFang SC', sans-serif;
   color: @text-main;
 
   // --- 右侧内容区 ---

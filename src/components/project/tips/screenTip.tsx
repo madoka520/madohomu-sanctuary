@@ -39,7 +39,7 @@ export default () =>
           }}
         >
           <div>推荐使用 Chrome 浏览器访问</div>
-          <div>当前暂不支持移动端</div>
+          <div>当前暂不支持ios端</div>
         </footer>
       </div>
     ),
