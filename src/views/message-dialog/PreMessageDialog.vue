@@ -144,7 +144,7 @@ defineExpose({
   border-radius: 12px;
 
   // 布局与尺寸
-  width: 100%;
+  width: clamp(300px, 20vw, 600px);
   min-height: 340px;
   padding: 12px;
   box-sizing: border-box;
@@ -155,6 +155,7 @@ defineExpose({
   color: white;
   font-size: 14px;
   line-height: 1.5;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 
   // 交互动画
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -169,7 +170,7 @@ defineExpose({
   // 模拟 Placeholder (当内容为空时显示)
   &:empty::before {
     content: '说点什么吧...';
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
     pointer-events: none;
   }
 
