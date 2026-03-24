@@ -39,8 +39,6 @@ const Madoka = (() => {
     s.isTransparency = x + s.width > window.innerWidth && y + s.height > window.innerHeight
   }
 
-  console.log(window.innerHeight)
-  console.log(window.innerWidth)
   const s = reactive({
     width: 600,
     height: 480,
