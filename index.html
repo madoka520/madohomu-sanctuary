@@ -85,7 +85,7 @@
 <script>
     // 监听点击遮罩
     window.addEventListener('click', () => {
-        const isMobile = window.innerWidth <= 768
+        const isMobile = window.innerWidth <= 768 || !window.matchMedia('(pointer: fine)').matches
         if (isMobile) {
             const el = document.documentElement
 
