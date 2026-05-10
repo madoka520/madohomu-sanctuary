@@ -1,6 +1,6 @@
 {
   "name": "madohomu-sanctuary",
-  "installCommand": "pnpm install --ignore-scripts=false",
+  "installCommand": "npm install",
   "assets": {
     "directory": "./dist",
     "notFoundStrategy": "singlePageApplication"
