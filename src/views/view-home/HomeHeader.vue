@@ -11,11 +11,13 @@
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
+      <a class="friend-link show-with-hover" @click="openFriendLinks">友链</a>
       <div class="avatar-frame" @click="settingRef?.open()">
         <madoka-avatar :width="46" />
       </div>
     </div>
     <setting ref="settingRef" />
+    <pre-firend-links ref="friendLinksRef" />
   </nav>
 </template>
 
@@ -24,7 +26,12 @@ import MadokaPlayerControls from '@/components/madoka-mini-player-controls/Index
 import Setting from '@/components/project/setting/Index.vue'
 import MadokaDeskLrc from '@/components/MadokaDeskLrc.vue'
 import MadokaAvatar from '@/components/MadokaAvatar.vue'
+import PreFirendLinks from '@/views/view-home/PreFirendLinks.vue'
 const settingRef = useTemplateRef('settingRef')
+const friendLinksRef = useTemplateRef('friendLinksRef')
+const openFriendLinks = () => {
+  friendLinksRef.value?.open()
+}
 </script>
 
 <style scoped lang="less">
@@ -105,6 +112,18 @@ const settingRef = useTemplateRef('settingRef')
   flex: 1;
 }
 
+.friend-link {
+  font-size: 14px;
+  color: #ff6b8a;
+  font-weight: 600;
+  user-select: none;
+  transition: opacity 0.2s;
+  cursor: default;
+  text-decoration: none; // 👈 关键在这里
+  &:hover {
+    opacity: 0.7;
+  }
+}
 .right-entry {
   padding-right: 10px;
   display: flex;

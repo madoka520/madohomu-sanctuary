@@ -4,13 +4,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getAvatarUrl } from "@/utils/resource.ts"
-import useToken from "@/hooks/useToken.ts"
+import { getAvatarUrl } from '@/utils/resource.ts'
+import useToken from '@/hooks/useToken.ts'
 
 const props = withDefaults(
   defineProps<{
     width?: number
     uploadadble?: boolean
+    src?: string
   }>(),
   {
     uploadadble: false,
@@ -21,18 +22,24 @@ const tokenHook = useToken()
  * 根据updateTime来决定是否更新用户头像
  */
 const src = computed(() => {
+  // 👇 外部传入优先
+  if (props.src) return props.src
+
   const userInfo = tokenHook.userInfo
-  const userId = tokenHook.userInfo.id ?? "default"
+  const userId = tokenHook.userInfo.id ?? 'default'
+
   let url = getAvatarUrl(userId)
+
   if (userInfo.updateTime) {
     url += `?t=${userInfo.updateTime}`
   }
+
   return url
 })
 
 const onAvatarError = (e: Event) => {
   const img = e.target as HTMLImageElement
-  img.src = getAvatarUrl("default")
+  img.src = getAvatarUrl('default')
 }
 const style = computed(() => ({
   width: `${props.width}px`,
@@ -53,7 +60,7 @@ const style = computed(() => ({
 }
 .upload {
   &::before {
-    content: "上传头像";
+    content: '上传头像';
     position: absolute;
     inset: 0;
     border-radius: 50%;

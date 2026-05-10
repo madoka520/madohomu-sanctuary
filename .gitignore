@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 .env.*
-public/dev-cdn/*
+#public/dev-cdn/*
 auto-imports.d.ts

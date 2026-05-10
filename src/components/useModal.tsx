@@ -1,29 +1,31 @@
 // modal.tsx
-import { reactive, createVNode, render } from "vue"
-import type { JSX } from "vue/jsx-runtime"
-import MadokaDialog from "@/components/MadokaDialog.vue"
-import { message } from "@/components/message.tsx"
+import { reactive, createVNode, render } from 'vue'
+import type { JSX } from 'vue/jsx-runtime'
+import MadokaDialog from '@/components/MadokaDialog.vue'
+import { message } from '@/components/message'
 
 type ConfirmOptions = {
+  width?: string
   title?: string
   content?: JSX.Element | string
   onOk?: () => void
   onCancel?: () => void
   hiddenCancel?: boolean
   okText?: string
+  footer?: JSX.Element | string
 }
 
 export default (() => {
   const confirm = (options: ConfirmOptions) => {
     const state = reactive({
       visible: false, // ⚠️ 一定是 false
-      title: options.title ?? "",
+      title: options.title ?? '',
       content: options.content ?? null,
       onOk: options.onOk,
       onCancel: options.onCancel,
     })
 
-    const container = document.createElement("div")
+    const container = document.createElement('div')
     document.body.appendChild(container)
 
     const close = () => {
@@ -39,6 +41,7 @@ export default (() => {
         v-model={state.visible}
         title={state.title}
         okText={options.okText}
+        width={options.width}
         hiddenCancel={options.hiddenCancel}
         onOk={async () => {
           try {
@@ -53,7 +56,10 @@ export default (() => {
           close()
         }}
       >
-        {{ default: state.content }}
+        {{
+          default: state.content,
+          footer: () => options.footer,
+        }}
       </MadokaDialog>
     ))
 
@@ -65,16 +71,16 @@ export default (() => {
     })
   }
 
-  const info = (options: Omit<ConfirmOptions, "onCancel">) => {
+  const info = (options: Omit<ConfirmOptions, 'onCancel'>) => {
     confirm({
       ...options,
       hiddenCancel: true,
-      okText: "知道了",
+      okText: '知道了',
     })
   }
 
   return {
     confirm,
-    info
+    info,
   }
 })()
