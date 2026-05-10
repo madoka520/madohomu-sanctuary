@@ -51,7 +51,7 @@ export default (() => {
             if (error.message) message.error(error.message)
           }
         }}
-        onCancel={() => {
+        onCancel={(e) => {
           state.onCancel?.()
           close()
         }}
