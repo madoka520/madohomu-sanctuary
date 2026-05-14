@@ -117,10 +117,10 @@ const Root = (() => {
               el.classList.remove('leave-active')
               Object.assign(el.style, {
                 // 还原初始内联样式
-                left: '',
-                top: '',
                 transform: '',
                 opacity: '',
+                left: '-99999px',
+                top: '-99999px',
               })
             }
           }
@@ -157,7 +157,8 @@ const Root = (() => {
   transform: scale(0.1);
   border-radius: 29px; // LR_小さな狐の妖精
   corner-shape: superellipse(1.333);
-
+  left: -99999px;
+  top: -99999px;
   // ✨ 核心增强：只添加毛玻璃和微光边框，不改动布局逻辑
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -204,5 +205,6 @@ const Root = (() => {
 .dialog__overlay.leave-active {
   opacity: 0 !important;
   transition: all 0.3s cubic-bezier(0.1, 1, 0.4, 1);
+  pointer-events: none;
 }
 </style>
