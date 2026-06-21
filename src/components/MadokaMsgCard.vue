@@ -48,7 +48,18 @@ const props = withDefaults(
   }>(),
   {},
 )
-const emits = defineEmits(['like', 'handleReply'])
+const emits = defineEmits(['like', 'handleReply', 'showProfile'])
+
+const emitProfile = () => {
+  emits('showProfile', {
+    userId: props.message.userId,
+    username: props.message.username,
+    externalId: props.message.externalId,
+    origin: props.message.origin,
+    userUpdateTime: props.message.userUpdateTime,
+    avatar: avatarSrc.value,
+  })
+}
 
 const getAvatarSrc = async (
   origin: origin,
@@ -106,11 +117,13 @@ const Root = (() => {
    */
   const buildHeader = (src: any, username: string, id?: number) => (
     <header class="flex card__header">
-      <div class="avatar">
+      <div class="avatar" onClick={() => emitProfile()}>
         <img draggable="false" src={src} loading="lazy" alt="" />
       </div>
       <div class="user">
-        <div class="name">{username}</div>
+        <div class="name" onClick={() => emitProfile()}>
+          {username}
+        </div>
       </div>
       {id && (
         <div class="id" style="margin-left: auto">

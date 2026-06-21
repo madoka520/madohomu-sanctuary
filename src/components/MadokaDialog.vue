@@ -6,7 +6,6 @@
       @click.stop
       ref="overlayRef"
     >
-      <!--      <madoka-meteor-shower/>-->
       <header v-if="title || $slots.header">
         <slot name="header">
           {{ title }}

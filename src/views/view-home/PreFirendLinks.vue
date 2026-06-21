@@ -67,6 +67,13 @@ const links = shallowRef<FriendLink[]>([
     description: '这里是鹿目圆×晓美焰的主题网站',
   },
   {
+    name: '记忆之国',
+    url: 'https://memory-realm-madoka.top/',
+    avatar: 'https://memory-realm-madoka.top/favicon.ico',
+    description:
+      '欢迎来到记忆之国\n' + '收录同人作品、魔圆百科设定与精美画廊。',
+  },
+  {
     name: 'XingHuiSamaの宝藏之地',
     url: 'https://www.xinghuisama.top',
     avatar: 'https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg',

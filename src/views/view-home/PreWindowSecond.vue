@@ -22,11 +22,13 @@
           :key="`${item.createTime}${item.id}`"
           @like="(liked) => Msg.like(item, liked)"
           @handle-reply="(e) => dialogRef?.openReply(e)"
+          @show-profile="(e) => profileDialogRef?.open(e)"
         />
       </div>
       <madoka-timeline @change="Msg.changeDate" v-model="Msg.currentDay" />
     </madoka-side-drawer>
     <pre-message-dialog ref="dialogRef" @ok="Msg.pushOne" />
+    <user-profile-dialog ref="profileDialogRef" />
   </div>
 </template>
 
@@ -41,11 +43,13 @@ import MadokaLive2d from '@/components/MadokaLive2d.vue'
 import dayjs from 'dayjs'
 import { debounce, maxBy, minBy, uniqBy } from 'lodash-unified'
 import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
+import UserProfileDialog from '@/components/UserProfileDialog.vue'
 import messageApi from '@/api/MessageApi.ts'
 import type { Message } from '@/types/Message.ts'
 
 const scrollRef = useTemplateRef('scrollRef')
 const dialogRef = useTemplateRef('dialogRef')
+const profileDialogRef = useTemplateRef('profileDialogRef')
 type IParams = {
   from?: number
   time?: number
