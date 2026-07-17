@@ -2,9 +2,10 @@
   <div class="theme__container">
     <div class="bg">
       <div v-if="Root.currentTheme.type === 'video'">
-        <video autoplay muted loop style="width: 100%; height: 100%">
+        <madoka-hls-player :src="Root.currentTheme.src"/>
+<!--        <video autoplay muted loop style="width: 100%; height: 100%">
           <source :src="Root.currentTheme.src" />
-        </video>
+        </video>-->
       </div>
       <component
         :is="Root.currentTheme.component as object"
@@ -17,6 +18,7 @@
 <script setup lang="ts">
 import useSetting from '@/hooks/useSetting.ts'
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
+import MadokaHlsPlayer from '@/components/MadokaHlsPlayer.vue'
 
 defineOptions({
   name: 'pre-home-theme',

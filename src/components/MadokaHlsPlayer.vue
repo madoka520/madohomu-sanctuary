@@ -1,5 +1,5 @@
 <template>
-  <video ref="videoRef" class="madoka-hls-player" controls autoplay></video>
+  <video ref="videoRef" class="madoka-hls-player" autoplay></video>
 </template>
 
 <script setup lang="ts">
@@ -9,11 +9,9 @@ const props = withDefaults(
   defineProps<{
     src?: string
   }>(),
-  {
-    
-  }
+  {},
 )
-const videoRef = useTemplateRef("videoRef")
+const videoRef = useTemplateRef('videoRef')
 const Player = (() => {
   let hlsInstance: Hls | null = null
 
@@ -33,7 +31,7 @@ const Player = (() => {
         hlsInstance.destroy()
         hlsInstance = null
       }
-    }
+    },
   }
 
   const initHls = (url: string) => {
@@ -60,14 +58,13 @@ const Player = (() => {
   const init = () => {}
 
   const initOnMounted = () => {
-    if (s.src) {
-      initHls(s.src)
+    if (props.src) {
+      initHls(props.src)
     }
   }
 
   const s = reactive({
-    src: '',
-    ...f
+    ...f,
   })
 
   init()
@@ -85,6 +82,5 @@ const Player = (() => {
 .madoka-hls-player {
   width: 100%;
   height: 100%;
-  object-fit: contain;
 }
 </style>
