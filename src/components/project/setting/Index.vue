@@ -1,5 +1,5 @@
 <template>
-  <madoka-dialog :footer="false" v-model="Root.opened">
+  <madoka-dialog :footer="false" v-model="settingStore.opened">
     <login v-if="!tokenStore.token" />
 
     <div v-else class="content">
@@ -28,6 +28,7 @@ import MadokaDialog from '@/components/MadokaDialog.vue'
 import Login from '@/components/project/setting/Login.vue'
 import useToken from '@/hooks/useToken.ts'
 import MadokaSlidebar from '@/components/MadokaSlidebar.vue'
+import useSetting from '@/hooks/useSetting.ts'
 
 const tokenStore = useToken()
 const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) =>
@@ -36,7 +37,7 @@ const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) =>
 defineOptions({
   name: 'Setting',
 })
-
+const settingStore = useSetting()
 const Setting = (() => {
   const s = reactive({
     current: 0,

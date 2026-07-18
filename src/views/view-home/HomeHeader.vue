@@ -12,23 +12,22 @@
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <a class="friend-link show-with-hover" @click="openFriendLinks">友链</a>
-      <div class="avatar-frame" @click="settingRef?.open()">
+      <div class="avatar-frame" @click="settingStore.open()">
         <madoka-avatar :width="46" />
       </div>
     </div>
-    <setting ref="settingRef" />
     <pre-firend-links ref="friendLinksRef" />
   </nav>
 </template>
 
 <script setup lang="ts">
 import MadokaPlayerControls from '@/components/madoka-mini-player-controls/Index.vue'
-import Setting from '@/components/project/setting/Index.vue'
 import MadokaDeskLrc from '@/components/MadokaDeskLrc.vue'
 import MadokaAvatar from '@/components/MadokaAvatar.vue'
 import PreFirendLinks from '@/views/view-home/PreFirendLinks.vue'
-const settingRef = useTemplateRef('settingRef')
+import useSetting from '@/hooks/useSetting.ts'
 const friendLinksRef = useTemplateRef('friendLinksRef')
+const settingStore = useSetting()
 const openFriendLinks = () => {
   friendLinksRef.value?.open()
 }

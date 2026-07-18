@@ -3,7 +3,12 @@ import { getImgUrl, getVideoUrl } from "@/utils/resource.ts"
 import type { IThemeType } from "@/components/project/pre-home-theme/types.ts"
 export default defineStore("setting", () => {
   const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
+  const open = () => {
+    s.opened = true
+  }
   const s = reactive({
+    //setting弹窗开启状态
+    opened: false,
     theme: useLocalStorage('madokami_theme', 0),
     themeList: [
       {
@@ -27,6 +32,7 @@ export default defineStore("setting", () => {
         ),
       },
     ] as IThemeType[],
+    open
   })
 
   return toRefs(s)

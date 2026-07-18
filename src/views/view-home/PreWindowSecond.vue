@@ -4,7 +4,7 @@
     <pre-home-theme />
     <madoka-side-drawer
       @madoka-scroll="Scroll.madokaScroll"
-      @handle-sent="() => dialogRef?.open()"
+      @handle-sent="Msg.handleSend"
       :today-count="Msg.todayCount"
       @back="emits('back')"
     >
@@ -46,6 +46,8 @@ import PreMessageDialog from '@/views/message-dialog/PreMessageDialog.vue'
 import UserProfileDialog from '@/components/UserProfileDialog.vue'
 import messageApi from '@/api/MessageApi.ts'
 import type { Message } from '@/types/Message.ts'
+import useToken from '@/hooks/useToken.ts'
+import useSetting from '@/hooks/useSetting.ts'
 
 const scrollRef = useTemplateRef('scrollRef')
 const dialogRef = useTemplateRef('dialogRef')
@@ -165,6 +167,14 @@ const Msg = (() => {
     s.todayCount = (await messageApi.count()) as unknown as number
   }
 
+  const handleSend = () => {
+    if (!useToken().token) {
+      useSetting().open()
+      return
+    }
+    dialogRef.value?.open()
+  }
+
   const init = async () => {
     await getMaxTime()
     await getCount()
@@ -180,15 +190,16 @@ const Msg = (() => {
     todayCount: 0,
     list: [] as Message[],
     combineList: [] as Message[],
+    noMore: false,
+    loading: false,
     changeDate,
     getList,
     next,
     prev,
-    noMore: false,
-    loading: false,
     pushOne,
     like,
     init,
+    handleSend,
   })
 
   /**

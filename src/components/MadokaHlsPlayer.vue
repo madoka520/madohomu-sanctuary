@@ -1,5 +1,5 @@
 <template>
-  <video ref="videoRef" class="madoka-hls-player" autoplay></video>
+  <video ref="videoRef" class="madoka-hls-player" autoplay loop></video>
 </template>
 
 <script setup lang="ts">
