@@ -1,15 +1,14 @@
 /**
- * [Ethan] GiteeVideo 工具模块
- * 从 GiteeVideoPlayer.vue 抽离的 Gitee 视频资源加载管线。
+ * [Ethan] VideoCache 模块
+ * Gitee 视频资源加载管线：L1 内存缓存 → L2 IndexedDB → Gitee API → Blob URL。
  *
- * 通过 Gitee API v5 拉取 M3U8 + TS 分片，base64 解码后生成 Blob URL。
  * 缓存策略（分片粒度）：
- *   L1 — 内存 Map（同会话秒播）
+ *   L1 — 内存 Map（同会话秒播，跨组件实例存活）
  *   L2 — IndexedDB 两个 store：m3u8 + segments（分片独立存取，关闭浏览器不丢）
  *   Promise.allSettled 保证部分成功的分片已落缓存，下次只补拉缺失的
  */
-
 import { openDB } from 'idb'
+import { fetchText, fetchBytes } from '@/utils/giteeApi.ts'
 
 // ══════════════════════════════════════════════════════════════
 // [Ethan] 模块级 L1 缓存（单例，跨组件实例存活）
@@ -18,7 +17,7 @@ const _m3u8Cache = new Map<string, string>()
 const _segmentCache = new Map<string, Uint8Array>()
 
 // ══════════════════════════════════════════════════════════════
-// [Ethan] IndexedDB (L2) — idb 的 openDB 替代手写 indexedDB.open
+// [Ethan] IndexedDB (L2)
 // ══════════════════════════════════════════════════════════════
 const IDB_NAME = 'gitee-video-cache'
 const IDB_VERSION = 3
@@ -42,7 +41,7 @@ const openGiteeDB = () => {
       }
     },
     blocked() {
-      console.warn('[giteeVideo] IndexedDB 升级被旧连接阻塞，请关闭其他标签页')
+      console.warn('[videoCache] IndexedDB 升级被旧连接阻塞，请关闭其他标签页')
     },
   })
 }
@@ -52,12 +51,12 @@ const getDB = async () => {
     _dbPromise = openGiteeDB().catch(async (err) => {
       // [Ethan] 版本冲突（如开发期版本号回退）→ 删除重建
       if (err instanceof DOMException && err.name === 'VersionError') {
-        console.warn('[giteeVideo] IndexedDB 版本冲突，删除旧库重建')
+        console.warn('[videoCache] IndexedDB 版本冲突，删除旧库重建')
         await new Promise<void>((resolve, reject) => {
           const req = indexedDB.deleteDatabase(IDB_NAME)
           req.onsuccess = () => resolve()
           req.onerror = () => reject(req.error)
-          req.onblocked = () => console.warn('[giteeVideo] deleteDatabase 被阻塞')
+          req.onblocked = () => console.warn('[videoCache] deleteDatabase 被阻塞')
         })
         return openGiteeDB()
       }
@@ -95,88 +94,6 @@ const l2PutSegment = async (repoPath: string, bytes: Uint8Array): Promise<void> 
   // [Ethan] Uint8Array → 精确 ArrayBuffer（.buffer 可能更大）
   const data = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)
   await db.put('segments', { path: repoPath, data })
-}
-
-// ══════════════════════════════════════════════════════════════
-// [Ethan] Gitee API 配置
-// ══════════════════════════════════════════════════════════════
-
-const GITEE = {
-  owner: 'ultimate_madoka',
-  repo: 'madohomu-sanctuary',
-  branch: 'master',
-  get apiBase() {
-    return `https://gitee.com/api/v5/repos/${this.owner}/${this.repo}/contents`
-  },
-}
-
-// ══════════════════════════════════════════════════════════════
-// [Ethan] 重试逻辑
-// ══════════════════════════════════════════════════════════════
-
-/**
- * [Ethan] 带指数退避的重试包装器
- * - 网络错误 / 5xx / 429 → 退避重试（最多 maxRetries 次）
- * - 4xx（非 429）→ 立即抛出
- */
-const withRetry = async <T>(
-  fn: () => Promise<T>,
-  label: string,
-  maxRetries = 3,
-): Promise<T> => {
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      return await fn()
-    } catch (err) {
-      if (attempt === maxRetries) throw err
-
-      const msg = err instanceof Error ? err.message : ''
-      // 4xx 客户端错误（排除 429 限流）不重试
-      if (/Gitee API 4\d\d/.test(msg) && !msg.includes('429')) throw err
-
-      const delay = Math.min(1000 * Math.pow(2, attempt), 8000)
-      console.warn(
-        `[giteeVideo] ${label} 失败，${delay / 1000}s 后重试 (${attempt + 1}/${maxRetries})`,
-      )
-      await new Promise((r) => setTimeout(r, delay))
-    }
-  }
-  throw new Error('unreachable')
-}
-
-// ══════════════════════════════════════════════════════════════
-// [Ethan] Gitee API 请求
-// ══════════════════════════════════════════════════════════════
-
-/** API v5 → JSON → base64 解码 → 文本 */
-const fetchText = async (repoPath: string): Promise<string> => {
-  return withRetry(async () => {
-    const res = await fetch(`${GITEE.apiBase}/${repoPath}`)
-    if (!res.ok) throw new Error(`Gitee API ${res.status}: ${repoPath}`)
-    const json = await res.json()
-    if (json.encoding !== 'base64' || !json.content) {
-      throw new Error(`Unexpected response for ${repoPath}`)
-    }
-    return atob(json.content.replace(/\s/g, ''))
-  }, `M3U8:${repoPath}`)
-}
-
-/** API v5 → JSON → base64 解码 → Uint8Array */
-const fetchBytes = async (repoPath: string): Promise<Uint8Array> => {
-  return withRetry(async () => {
-    const res = await fetch(`${GITEE.apiBase}/${repoPath}`)
-    if (!res.ok) throw new Error(`Gitee API ${res.status}: ${repoPath}`)
-    const json = await res.json()
-    if (json.encoding !== 'base64' || !json.content) {
-      throw new Error(`Unexpected response for ${repoPath}`)
-    }
-    const raw = atob(json.content.replace(/\s/g, ''))
-    const bytes = new Uint8Array(raw.length)
-    for (let i = 0; i < raw.length; i++) {
-      bytes[i] = raw.charCodeAt(i)
-    }
-    return bytes
-  }, `TS:${repoPath}`)
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -219,15 +136,9 @@ const buildBlobMap = (
 }
 
 // ══════════════════════════════════════════════════════════════
-// [Ethan] 分片加载（含 allSettled + 缓存逐片落盘）
+// [Ethan] 分片加载（L1 → L2 → Gitee API，allSettled + 缓存逐片落盘）
 // ══════════════════════════════════════════════════════════════
 
-/**
- * [Ethan] 按分片粒度加载所有 TS 分片：
- *   对每个分片依次查 L1 → L2 → 标记需网络拉取
- *   用 allSettled 拉取缺失分片，成功的立即写 L1 + L2
- *   返回完整的分片 Map（全成功）或抛错（列出失败分片）
- */
 const loadSegments = async (
   segmentNames: string[],
   segmentDir: string,
@@ -261,7 +172,10 @@ const loadSegments = async (
       toFetch.push({ name, path: segPath })
     }
 
-    if (toFetch.length === 0) break // 全部命中缓存
+    if (toFetch.length === 0) {
+      pending = []
+      break
+    }
 
     // 并行拉取，allSettled 不因单个失败而丢弃其他成功结果
     const results = await Promise.allSettled(
@@ -280,7 +194,7 @@ const loadSegments = async (
         l2PutSegment(path, bytes).catch(() => {})
       } else {
         // 失败 → 下一轮重试
-        console.warn(`[giteeVideo] 分片 ${name} 拉取失败:`, r.reason)
+        console.warn(`[videoCache] 分片 ${name} 拉取失败:`, r.reason)
         pending.push(name)
       }
     }
@@ -293,21 +207,13 @@ const loadSegments = async (
 }
 
 // ══════════════════════════════════════════════════════════════
-// [Ethan] 公开 API
+// [Ethan] 主加载管线
 // ══════════════════════════════════════════════════════════════
 
-/**
- * [Ethan] 加载 Gitee 视频资源
- *
- * 流程：
- *   1. M3U8 文本：L1 → L2 → API，缓存到 L1+L2
- *   2. 分片：逐片 L1 → L2 → API（allSettled，成功即落缓存）
- *   3. 构建 blob URL → 返回可播放的 M3U8 Blob URL
- *
- * @param src 视频路径，形如 /dev-cdn/videos/madoka-op-muted/playlist.m3u8
- * @returns m3u8BlobUrl 可直接赋给 <video>.src；revoke() 释放本次创建的全部 Blob URL
- */
-export const loadGiteeVideo = async (
+const _pendingLoads = new Map<string, Promise<{ m3u8BlobUrl: string; revoke: () => void }>>()
+const _pendingPreloads = new Map<string, Promise<void>>()
+
+const _doLoad = async (
   src: string,
 ): Promise<{ m3u8BlobUrl: string; revoke: () => void }> => {
   const blobUrls: string[] = []
@@ -333,8 +239,6 @@ export const loadGiteeVideo = async (
   // ── 分片 ──────────────────────────────────────────────────
   const segmentNames = parseSegmentNames(m3u8Text)
   const segments = await loadSegments(segmentNames, segmentDir)
-
-  // ── 构建 Blob URL ─────────────────────────────────────────
   const blobMap = buildBlobMap(segments, blobUrls)
   const rewritten = rewriteWithBlobs(m3u8Text, blobMap)
   const m3u8Blob = new Blob([rewritten], { type: 'application/vnd.apple.mpegurl' })
@@ -349,4 +253,53 @@ export const loadGiteeVideo = async (
   }
 
   return { m3u8BlobUrl, revoke }
+}
+
+// ══════════════════════════════════════════════════════════════
+// [Ethan] 公开 API
+// ══════════════════════════════════════════════════════════════
+
+/**
+ * [Ethan] 加载 Gitee 视频资源
+ *
+ * 流程：M3U8 文本 L1→L2→API → 分片逐片 L1→L2→API → Blob URL → 可播放的 M3U8 Blob URL
+ * 并发去重：同一 src 的多次调用共享同一个 Promise
+ */
+export const loadGiteeVideo = async (
+  src: string,
+): Promise<{ m3u8BlobUrl: string; revoke: () => void }> => {
+  // [Ethan] 如果有正在进行的预加载，等待其完成（此时 L1 已就绪）
+  const preload = _pendingPreloads.get(src)
+  if (preload) {
+    await preload.catch(() => {})
+  }
+
+  const pending = _pendingLoads.get(src)
+  if (pending) return pending
+
+  const promise = _doLoad(src).finally(() => {
+    _pendingLoads.delete(src)
+  })
+  _pendingLoads.set(src, promise)
+  return promise
+}
+
+/**
+ * [Ethan] 预加载视频资源（仅填充 L1+L2 缓存，不返回 Blob URL）
+ *
+ * 应用启动时调用，提前拉取 M3U8 + 全部分片落盘。
+ * 后续 loadGiteeVideo 命中缓存即可即时播放。
+ */
+export const preloadGiteeVideo = async (src: string): Promise<void> => {
+  // [Ethan] 去重：正在预加载中直接复用 Promise
+  const pending = _pendingPreloads.get(src)
+  if (pending) return pending
+
+  const promise = (async () => {
+    const result = await _doLoad(src)
+    result.revoke()
+  })()
+  _pendingPreloads.set(src, promise)
+  promise.finally(() => _pendingPreloads.delete(src))
+  return promise
 }
