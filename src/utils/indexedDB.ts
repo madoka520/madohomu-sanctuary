@@ -5,7 +5,7 @@
 import { openDB } from 'idb'
 
 const DB_NAME = 'madohomu-cache'
-const DB_VERSION = 4
+const DB_VERSION = 5
 
 let _dbPromise: ReturnType<typeof openDB> | null = null
 
@@ -17,6 +17,10 @@ const _open = () => {
       }
       if (!db.objectStoreNames.contains('segments')) {
         db.createObjectStore('segments', { keyPath: 'path' })
+      }
+      // [Ethan] audio store：缓存 Gitee 音频文件（单文件 .weba）
+      if (!db.objectStoreNames.contains('audio')) {
+        db.createObjectStore('audio', { keyPath: 'src' })
       }
     },
     blocked() {

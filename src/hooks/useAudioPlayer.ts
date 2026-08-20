@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { getAudioUrl } from '@/utils/resource.ts'
+// [Ethan] 音频缓存管线：L1 Map → L2 IndexedDB → Gitee API → Blob URL
+import { loadGiteeAudio, preloadGiteeAudio } from '@/utils/audioCache.ts'
 
 type SongItem = {
   title: string
@@ -257,6 +259,25 @@ export default defineStore("madokaAudioPlayer", () => {
     return songList[s.current] ?? null
   })
 
+  /*
+  [原代码] 直接 audio.play()，无缓存加载
+  const next = async () => {
+    if (!songList.length) return
+    s.randomIndex = (s.randomIndex + 1) % songList.length
+    s.current = s.randomList[s.randomIndex]
+    s.playing = true
+    const audio = s.ref.value
+    if (!audio) return
+    audio.pause()
+    audio.currentTime = 0
+    audio.volume = s.volume
+    try {
+      await audio.play()
+      if (s.randomIndex === s.randomList.length - 1) { buildRandomList() }
+    } catch (e) { ... }
+  }
+  */
+  // [Ethan] 异步加载音频 → Blob URL 后再播放，播完预加载下一首
   const next = async () => {
     if (!songList.length) return
 
@@ -267,33 +288,48 @@ export default defineStore("madokaAudioPlayer", () => {
     const audio = s.ref.value
     if (!audio) return
 
-    // 暂停上一个播放，重置时间
     audio.pause()
     audio.currentTime = 0
     audio.volume = s.volume
+
+    await s._loadAndSetSrc()
 
     try {
       await audio.play()
       if (s.randomIndex === s.randomList.length - 1) {
         buildRandomList()
       }
+      s._preloadNext()
     } catch (e) {
       if ((e as DOMException).name !== "AbortError") {
         console.error(e)
       }
-      // AbortError 可以忽略
     }
   }
 
   /** 上一首 */
-  const prev = () => {
+  /*
+  [原代码] 无缓存加载
+  const prev = () => { ... }
+  */
+  // [Ethan] 异步加载后播放
+  const prev = async () => {
     if (!songList.length) return
     s.randomIndex = (s.randomIndex - 1 + songList.length) % songList.length
     s.current = s.randomList[s.randomIndex]
-    s.ref.value?.play()
     s.playing = true
+
+    await s._loadAndSetSrc()
+
+    s.ref.value?.play()
+    s._preloadNext()
   }
 
+  /*
+  [原代码] 直接设置 current（触发 computed currentUrl）后 play，无缓存
+  const play = async (index: number = 0) => { ... }
+  */
+  // [Ethan] 异步加载 → Blob URL → 播放
   const play = async (index: number = 0) => {
     s.current = index
     s.playing = true
@@ -303,14 +339,16 @@ export default defineStore("madokaAudioPlayer", () => {
 
     audio.volume = s.volume
 
+    await s._loadAndSetSrc()
+
     try {
       timeupdate()
       await audio.play()
+      s._preloadNext()
     } catch (e) {
       if ((e as DOMException).name !== "AbortError") {
         console.error(e)
       }
-      // AbortError 可以忽略
     }
   }
 
@@ -336,11 +374,16 @@ export default defineStore("madokaAudioPlayer", () => {
   }
 
   /** 获取当前歌曲播放链接（供 <audio> 使用） */
+  /*
+  [原代码] CDN 直链，无缓存
   const currentUrl = computed(() => {
     const song = currentSong.value
     if (!song) return ""
     return getAudioUrl(`${song.title}.weba`)
   })
+  */
+  // [Ethan] 改为异步加载管线设置 Blob URL，不再通过此 computed 提供 src
+  // currentUrl 保留为 reactive string，由 _loadAndSetSrc 写入 blob URL
 
   const timeupdate = () => {
     requestAnimationFrame(timeupdate)
@@ -360,7 +403,11 @@ export default defineStore("madokaAudioPlayer", () => {
     currentTime: 0,
     volume: 0.5,
     currentSong,
-    currentUrl,
+    // [Ethan] currentUrl 改为 reactive string，由 _loadAndSetSrc 写入 Blob URL
+    // [原代码] currentUrl: computed(() => getAudioUrl(...))
+    currentUrl: '',
+    // [Ethan] 当前 Blob URL 的 revoke 句柄，切歌时调用
+    _blobRevoke: null as (() => void) | null,
     /** 状态 */
     playing: false,
     seek,
@@ -372,6 +419,36 @@ export default defineStore("madokaAudioPlayer", () => {
     playByName,
     timeupdate,
     buildRandomList,
+    // [Ethan] 异步加载当前歌曲 → Blob URL → 写入 currentUrl + audio.src
+    _loadAndSetSrc: async () => {
+      const song = currentSong.value
+      if (!song) return
+
+      // 释放上一首的 Blob URL
+      s._blobRevoke?.()
+      s._blobRevoke = null
+
+      const src = getAudioUrl(`${song.title}.weba`)
+      try {
+        const handle = await loadGiteeAudio(src)
+        s._blobRevoke = handle.revoke
+        s.currentUrl = handle.blobUrl
+        // 同步写入 audio 元素（ViewPlayer 的 :src 绑定可能尚未触发更新时）
+        if (s.ref.value) {
+          s.ref.value.src = handle.blobUrl
+        }
+      } catch (e) {
+        console.error('[AudioPlayer] 加载失败:', song.title, e)
+      }
+    },
+    // [Ethan] 预加载随机列表中的下一首
+    _preloadNext: () => {
+      const nextIndex = (s.randomIndex + 1) % songList.length
+      const nextSong = songList[s.randomList[nextIndex]]
+      if (!nextSong) return
+      const src = getAudioUrl(`${nextSong.title}.weba`)
+      preloadGiteeAudio(src).catch(() => {})
+    },
   })
   return toRefs(s)
 })
