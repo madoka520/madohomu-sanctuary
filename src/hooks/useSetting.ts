@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { getImgUrl, getVideoUrl } from "@/utils/resource.ts"
+import { getGiteeVideoUrl, getImgUrl, getVideoUrl } from "@/utils/resource.ts"
 import type { IThemeType } from "@/components/project/pre-home-theme/types.ts"
 export default defineStore("setting", () => {
   const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) => markRaw(defineAsyncComponent(comp))
@@ -25,14 +25,14 @@ export default defineStore("setting", () => {
       {
         name: '「魔法少女小圆」OP【コネクト】',
         type: 'video',
-        src: getVideoUrl('madoka-op-muted/playlist.m3u8'),
+        src: getGiteeVideoUrl('madoka-op-muted/playlist.m3u8'),
         song: 'コネクト',
         cover: getImgUrl(
           '/themes/covers/完整版「魔法少女小圆」OP【コネクト】.webp',
         ),
       },
     ] as IThemeType[],
-    open
+    open,
   })
 
   return toRefs(s)
