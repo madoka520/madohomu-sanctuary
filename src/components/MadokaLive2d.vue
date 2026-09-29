@@ -215,6 +215,32 @@ const activeFestival = (): Festival | null => {
   return FESTIVALS.find((f) => f.dates.some((d) => (d.length === 5 ? d === md : d === ymd))) ?? null
 }
 
+// Codex 新增开始 ===== 表情系统：11 个表情按参数语义分池，随部位/场景切换，超时回归默认神态
+// （依据 exp3.json 参数分析：EyeSmile=1 弯眼笑 / EyeOpen=-2.5 眯眼 / BrowY 越正越挑眉）
+const EXPRESSION_POOLS = {
+  // 微笑系（弯眼笑）：011 / 041 / 060
+  smile: [2, 7, 10],
+  // 大笑系（眯成一条缝）：030 / 031
+  laugh: [4, 5],
+  // 惊讶系（高挑眉、眼形变化）：051 / 052
+  surprised: [8, 9],
+  // 温和系（眉眼舒展的平静神态）：001 / 020
+  gentle: [0, 3],
+} as const
+// 默认神态：ex_010 全参数零位
+const NEUTRAL_EXPRESSION = 1
+
+// 部位 → 神态：头=开心笑 / 手=温柔 / 胸口=慌张 / 小腹=怕痒大笑 / 裙摆=嗔怪惊讶 / 腿=含羞微笑
+const ZONE_EXPRESSION: Record<Zone, keyof typeof EXPRESSION_POOLS> = {
+  head: 'smile',
+  hand: 'gentle',
+  chest: 'surprised',
+  belly: 'laugh',
+  skirt: 'surprised',
+  legs: 'smile',
+}
+// Codex 新增结束
+
 // 模块间共享的模型句柄（非响应式，避免代理 PIXI 对象）
 const live2dState = { app: null as any, model: null as any }
 // Codex 新增结束
@@ -341,6 +367,8 @@ const Interact = (() => {
   let zoneStreak = 0
   let lastJp = ""
   let ambientTimer: ReturnType<typeof setInterval> | undefined
+  // 表情回归默认神态的定时器
+  let expressionTimer: ReturnType<typeof setTimeout> | undefined
 
   // 部位判定：容器矩形粗筛 → client 坐标映射到舞台坐标 → 模型包围盒内按横纵两轴分区
   // 上段=头；中段两侧=手、中间上=胸口、中间下=小腹；下段=裙摆/腿
@@ -367,12 +395,25 @@ const Interact = (() => {
     return relY < 0.78 ? "skirt" : "legs"
   }
 
-  // 随机播放动作，半数概率换一个表情 —— 神明也有百种神情
+  // 随机播放动作 —— 神态交给表情系统按场景调度（原随机表情已由 EXPRESSION_POOLS 取代）
   const playRandomMotion = () => {
     const model = live2dState.model
     if (!model) return
     model.motion("Motion", undefined, 3)
-    if (Math.random() < 0.5) model.expression(Math.floor(Math.random() * 11))
+    // 原代码 - Codex 保留（随机表情与台词情绪无关）
+    // if (Math.random() < 0.5) model.expression(Math.floor(Math.random() * 11))
+  }
+
+  // 🎭 表情调度：设为指定池中的随机一档，6 秒后回归默认神态（神态不长期滞留）
+  const setExpression = (pool: keyof typeof EXPRESSION_POOLS | 'neutral') => {
+    const model = live2dState.model
+    if (!model) return
+    const poolArr = pool === 'neutral' ? [NEUTRAL_EXPRESSION] : [...EXPRESSION_POOLS[pool]]
+    model.expression(poolArr[Math.floor(Math.random() * poolArr.length)])
+    clearTimeout(expressionTimer)
+    expressionTimer = setTimeout(() => {
+      live2dState.model?.expression(NEUTRAL_EXPRESSION)
+    }, 6000)
   }
 
   const handleClick = (e: MouseEvent) => {
@@ -381,18 +422,22 @@ const Interact = (() => {
     const now = Date.now()
     clicks = [...clicks.filter((t) => now - t < 3000), now]
     playRandomMotion()
+    // 🎭 神态跟着部位走
+    setExpression(ZONE_EXPRESSION[zone])
     // 3 秒内摸 4 次：害羞特殊反应，连击清空重新计
     if (clicks.length >= 4) {
       clicks = []
+      setExpression('surprised')
       const q = pickAvoid(QUOTES.shy, lastJp)
       lastJp = q.jp
       Chat.show(q.jp, q.cn)
       return
     }
     lastPetAt = now
-    // 连续摸同一部位 → 第二次起切换到升级语录
+    // 连续摸同一部位 → 第二次起切换到升级语录，神态也升级为大笑
     zoneStreak = zone === lastZone ? zoneStreak + 1 : 1
     lastZone = zone
+    if (zoneStreak >= 2) setExpression('laugh')
     const pool = zoneStreak >= 2 ? QUOTES[zone].repeat : QUOTES[zone].normal
     const q = pickAvoid(pool, lastJp)
     lastJp = q.jp
@@ -400,6 +445,8 @@ const Interact = (() => {
   }
 
   const greet = () => {
+    // 🎭 问候时挂上微笑神态
+    setExpression('smile')
     // 🎆 节日当天优先送节日祝福
     const festival = activeFestival()
     if (festival) {
@@ -418,6 +465,8 @@ const Interact = (() => {
   const ambientTick = () => {
     if (Date.now() - lastPetAt < 45000) return
     const festival = activeFestival()
+    // 🎭 主动搭话时温柔微笑
+    setExpression('gentle')
     const pool = festival && Math.random() < 0.5 ? festival.quotes : QUOTES.ambient
     const q = pickAvoid(pool, lastJp)
     lastJp = q.jp

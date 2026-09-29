@@ -68,7 +68,25 @@
             :key="msg.id"
             class="profile__msg"
           >
+            <!-- Codex 新增开始 —— 历史留言把表情标记还原成小图（原插值会露出 [B_M_12] 原文） -->
+            <div class="profile__msg-content">
+              <template
+                v-for="(part, i) in splitStickerText(msg.content)"
+                :key="i"
+              >
+                <span v-if="part.type === 'text'">{{ part.value }}</span>
+                <img
+                  v-else
+                  class="sticker-img"
+                  :src="part.url"
+                  :alt="`[${part.value}]`"
+                  draggable="false"
+                />
+              </template>
+            </div>
+            <!-- 原代码 - Codex 保留
             <div class="profile__msg-content">{{ msg.content }}</div>
+            -->
             <div class="profile__msg-time">
               {{ dayjs(msg.createTime).format('MM/DD HH:mm') }}
             </div>
@@ -84,6 +102,9 @@
 import dayjs from 'dayjs'
 import UserApi from '@/api/UserApi.ts'
 import { MadokaDialog } from '@madoka520/vue-ui'
+// Codex 新增开始 —— 历史留言表情渲染
+import { splitStickerText } from '@/utils/stickers.ts'
+// Codex 新增结束
 
 type UserData = {
   userId: number
@@ -386,6 +407,18 @@ defineExpose({ open })
     white-space: nowrap;
     line-height: 1.5;
     color: @text-main;
+
+    // Codex 新增开始 —— 历史留言里的行内小表情（单行预览，用小尺寸）
+    .sticker-img {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      vertical-align: -4px;
+      margin: 0 1px;
+      user-select: none;
+    }
+    // Codex 新增结束
   }
 
   &__msg-time {

@@ -8,7 +8,14 @@
           "
         />
         <div class="card__content">
-          <div class="main-text">{{ message.content }}</div>
+          <!-- Codex 修改开始 —— 文本 + [A_1] 表情标记混合渲染 -->
+          <div class="main-text">
+            <template v-for="(part, i) in contentParts(message.content)" :key="i">
+              <span v-if="part.type === 'text'">{{ part.value }}</span>
+              <img v-else class="sticker-img" :src="part.url" :alt="`[${part.value}]`" loading="lazy" draggable="false" />
+            </template>
+          </div>
+          <!-- Codex 修改结束 -->
 
           <div v-if="message.image" class="image-gallery">
             <madoka-img
@@ -41,6 +48,11 @@ import messageApi from '@/api/MessageApi.ts'
 import { isEmpty } from 'lodash-unified'
 import type { Message, origin } from '@/types/Message.ts'
 import useCache from '@/hooks/useCache.ts'
+// Codex 新增开始 —— 表情包标记渲染
+import { splitStickerText } from '@/utils/stickers.ts'
+
+const contentParts = splitStickerText
+// Codex 新增结束
 
 const props = withDefaults(
   defineProps<{
@@ -189,7 +201,15 @@ const Root = (() => {
                 undefined,
               )}
               <div>
-                {reply.content}
+                {/* Codex 新增开始 —— 回复内容同样支持表情标记 */}
+                {splitStickerText(reply.content).map((p, i) =>
+                  p.type === 'text' ? (
+                    p.value
+                  ) : (
+                    <img class="sticker-img" key={i} src={p.url} alt={`[${p.value}]`} loading="lazy" draggable={false} />
+                  ),
+                )}
+                {/* Codex 新增结束 */}
                 <div class="replies-container">
                   {!isEmpty(reply.replies) && buildReplies(reply.replies)}
                 </div>
@@ -334,6 +354,18 @@ const Root = (() => {
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-word;
+
+    // Codex 新增开始 —— 表情包：行内展示，限制尺寸避免撑坏排版
+    .sticker-img {
+      display: inline-block;
+      width: clamp(36px, 2.8vw, 48px);
+      height: clamp(36px, 2.8vw, 48px);
+      object-fit: contain;
+      margin: 0 3px;
+      vertical-align: middle;
+      user-select: none;
+    }
+    // Codex 新增结束
 
     .image-gallery {
       display: flex;
