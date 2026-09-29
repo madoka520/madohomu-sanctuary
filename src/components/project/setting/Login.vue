@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import MadokaInput from '@/components/MadokaInput.vue'
-import MadokaBtn from '@/components/button/Index.vue'
+import { MadokaBtn } from '@madoka520/vue-ui'
 import useToken from '@/hooks/useToken.ts'
 import MadokaCheckbox from '@/components/MadokaCheckbox.vue'
 

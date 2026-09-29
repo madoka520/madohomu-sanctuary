@@ -1,5 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from "axios"
-import { message } from "@/components/message.tsx"
+import { message } from "@madoka520/vue-ui"
 import type { MyAxiosRequestConfig } from "@/types/IAxiosType.ts"
 // import { useToken } from "@/hooks/useToken.ts";
 

@@ -7,10 +7,17 @@
     />
   </div>
   <div class="scene"/>
+  <!-- Codex 新增开始 —— 参考站同款液面水波：鼠标轨迹涟漪折射首屏背景（加载失败时静态背景兜底） -->
+  <view-water-wave />
+  <!-- Codex 新增结束 -->
   <slot />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+// Codex 新增开始 —— 液面水波层
+import ViewWaterWave from '@/views/ViewWaterWave.vue'
+// Codex 新增结束
+</script>
 
 <style scoped lang="less">
 .scene {

@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { debounce } from 'lodash-unified'
-import MadokaDialog from '@/components/MadokaDialog.vue'
+import { MadokaDialog } from '@madoka520/vue-ui'
 import MadokaMagicCard from '@/components/MadokaMagicCard.vue'
 
 interface FriendLink {

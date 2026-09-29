@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { useDrag } from '@vueuse/gesture'
-import MadokaBtn from '@/components/button/Index.vue'
+import { MadokaBtn } from '@madoka520/vue-ui'
 
 const peekPanelRef = useTemplateRef('peekPanelRef')
 

@@ -31,9 +31,40 @@ export default defineStore("setting", () => {
           '/themes/covers/完整版「魔法少女小圆」OP【コネクト】.webp',
         ),
       },
+      // Codex 新增开始 —— 小圆生日主题（10/3）：纯 CSS 夜空生日场景，封面用内联 SVG（无图片素材依赖）
+      {
+        name: '圆诞',
+        type: 'customer',
+        component: toAsyncComponent(
+          () =>
+            import(
+              '@/components/project/pre-home-theme/components/madoka-birthday/Index.vue'
+            ),
+        ),
+        cover: getImgUrl('/themes/birthday/mainbg1.jpg'),
+        song: 'また あした',
+      },
+      // Codex 新增结束
     ] as IThemeType[],
     open,
   })
+
+  // Codex 新增开始 —— 生日自动主题（参考 madohomu.love）：10/3 00:00 ~ 10/4 06:00 期间，
+  // 仅对未手动选择过主题（仍为默认 0）的访客自动切到生日主题；窗口过后自动还原，不打扰手动选择
+  {
+    const now = new Date()
+    const y = now.getFullYear()
+    const AUTO_FLAG = 'madokami_auto_birthday'
+    const inWindow = now >= new Date(y, 9, 3, 0, 0) && now < new Date(y, 9, 4, 6, 0)
+    if (inWindow && s.theme === 0) {
+      s.theme = 2
+      localStorage.setItem(AUTO_FLAG, String(y))
+    } else if (!inWindow && localStorage.getItem(AUTO_FLAG)) {
+      if (s.theme === 2) s.theme = 0
+      localStorage.removeItem(AUTO_FLAG)
+    }
+  }
+  // Codex 新增结束
 
   return toRefs(s)
 })

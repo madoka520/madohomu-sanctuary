@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import UserApi from '@/api/UserApi.ts'
-import MadokaDialog from '@/components/MadokaDialog.vue'
+import { MadokaDialog } from '@madoka520/vue-ui'
 
 type UserData = {
   userId: number

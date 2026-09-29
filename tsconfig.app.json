@@ -8,7 +8,11 @@
     /* Linting */
     "baseUrl": ".",
     "lib": ["esnext", "dom"],
-    "types": ["vite/client", "vue/ref-macros"],
+    // 原代码 - Codex 保留（vue 3.5.27 已不提供 vue/ref-macros 类型入口，导致 vue-tsc 全量失败）
+    // "types": ["vite/client", "vue/ref-macros"],
+    // Codex 新增开始
+    "types": ["vite/client"],
+    // Codex 新增结束
     "paths": {
       "@/*": ["./src/*"]
     },

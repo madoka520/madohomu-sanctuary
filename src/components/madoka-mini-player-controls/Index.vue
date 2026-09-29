@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
 import { getImgUrl } from '@/utils/resource.ts'
-import MadokaDialog from '@/components/MadokaDialog.vue'
+import { MadokaDialog } from '@madoka520/vue-ui'
 import PreAudioPlayerUi from '@/components/project/pre-audio-player-ui/Index.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 const swiperRef = ref<any>(null)

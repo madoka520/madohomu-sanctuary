@@ -3,6 +3,7 @@ import App from './App.vue'
 import "@/assets/styles/layout.less"
 import { createPinia } from "pinia";
 import "@mdi/font/css/materialdesignicons.css"
+import "@madoka520/vue-ui/style.css"
 import "swiper/css"
 import "@/assets/styles/font.less"
 

@@ -17,12 +17,21 @@
       <div class="name">{{ item.name }}</div>
 
       <!-- [Ethan] 视频主题已缓存标记 -->
-      <div
+      <!-- 原代码 - Codex 保留（常驻显示，下载完成后角标不会消失） -->
+      <!-- <div
         v-if="item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Cached"
         class="cached-badge"
       >
         <i class="mdi mdi-check-circle" />
+      </div> -->
+      <!-- Codex 新增开始 —— 缓存完成的勾只在完成瞬间展示 2.5s，随后自动淡出 -->
+      <div
+        v-if="item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Cached && cachedBadgeVisible[item.src!]"
+        class="cached-badge"
+      >
+        <i class="mdi mdi-check-circle" />
       </div>
+      <!-- Codex 新增结束 -->
 
       <!-- [Ethan] 缓存未完成 → 进度条遮罩 -->
       <div
@@ -59,9 +68,28 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
   if (item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Loading) return
   setting.theme = index
 }
+
+// Codex 新增开始 —— "已缓存"角标短暂展示逻辑：只在 Loading→Cached 的完成瞬间亮起，2.5s 后熄灭；
+// 页面加载时本来就已缓存的视频（无 Loading 前态）不再打扰
+const cachedBadgeVisible = reactive<Record<string, boolean>>({})
+watch(
+  () => ({ ...videoPreload.cacheStatus }),
+  (cur, prev) => {
+    for (const src of Object.keys(cur)) {
+      if (cur[src] === CacheStatus.Cached && prev && prev[src] === CacheStatus.Loading) {
+        cachedBadgeVisible[src] = true
+        setTimeout(() => {
+          cachedBadgeVisible[src] = false
+        }, 2500)
+      }
+    }
+  },
+)
+// Codex 新增结束
 </script>
 
 <style scoped lang="less">
+/* 原代码 - Codex 保留（旧版主题卡片样式：暗色半透明卡片 + 小尺寸封面，整体偏素）
 @madoka-pink: #ffb7ce;
 @madoka-pink-deep: #ff69b4;
 @bg-card: rgba(255, 183, 206, 0.06);
@@ -99,7 +127,6 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
     transform: translateY(-2px);
   }
 
-  // [Ethan] 当前选中主题
   &.is-active {
     background: @bg-card-active;
     border-color: @madoka-pink;
@@ -113,7 +140,6 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
     }
   }
 
-  // [Ethan] 加载中 — 禁止点击
   &.is-loading {
     pointer-events: none;
     cursor: not-allowed;
@@ -143,15 +169,97 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
     transform: scale(1.08);
   }
 }
+*/
+
+/* Codex 新增开始 —— 新版主题卡片：无背景填充 + 直角细边框，选中态粉色光晕 */
+@pink-primary: #ffb7c5;
+@pink-dark: #ff85a2;
+@rose-text: #8a5d6f;
+// 兼容下方旧角标/遮罩样式的变量别名（原定义已随旧样式注释）
+@madoka-pink: @pink-primary;
+
+.theme-select-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  padding: 10px 4px 6px;
+}
+
+.theme-option {
+  position: relative;
+  width: 176px;
+  padding: 10px 10px 12px;
+  background: transparent; // 无背景填充，靠边框成形
+  border: 1.5px solid rgba(255, 183, 197, 0.45);
+  border-radius: 0; // 直角
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: rgba(255, 133, 162, 0.75);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(255, 183, 197, 0.35);
+
+    .theme-cover img {
+      transform: scale(1.06);
+    }
+  }
+
+  // 按下时的物理感
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+
+  // 当前选中：粉色实线描边 + 光晕
+  &.is-active {
+    border-color: @pink-dark;
+    box-shadow:
+      0 0 0 1px rgba(255, 133, 162, 0.3),
+      0 8px 24px rgba(255, 133, 162, 0.35);
+
+    .name {
+      color: @pink-dark;
+      font-weight: 600;
+    }
+  }
+
+  &.is-loading {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+}
+
+// 封面：铺满卡片宽度，3:2 取景，同样直角无底色
+.theme-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
 
 .name {
+  margin-top: 10px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
   text-align: center;
-  line-height: 1.4;
-  transition: color 0.25s ease;
+  line-height: 1.5;
+  color: @rose-text;
   word-break: break-all;
+  transition: color 0.25s ease;
 }
+/* Codex 新增结束 */
 
 // [Ethan] 已缓存标记
 .cached-badge {
@@ -159,6 +267,7 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
   top: 8px;
   right: 8px;
   z-index: 1;
+  animation: badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   .mdi {
     font-size: 16px;
@@ -167,11 +276,24 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
   }
 }
 
+// Codex 新增开始 —— 角标弹入：完成瞬间的确认感
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+// Codex 新增结束
+
 // [Ethan] 卡片遮罩层
 .card-overlay {
   position: absolute;
   inset: 0;
-  border-radius: 12px;
+  border-radius: 0; // Codex 修改：匹配新版卡片直角
   background: rgba(0, 0, 0, 0.55);
   display: flex;
   flex-direction: column;

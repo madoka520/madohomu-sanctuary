@@ -1,8 +1,12 @@
 <template>
+  <!-- Codex 新增开始 —— 开屏：圆环之理动画，退场后才露出主页面 -->
+  <view-splash />
+  <!-- Codex 新增结束 -->
   <view-home />
 </template>
 <script setup lang="ts">
 import ViewHome from "@/views/view-home/Index.vue"
+import ViewSplash from "@/views/ViewSplash.vue"
 import useOnce from "@/components/useOnce.ts"
 import screenTip from "@/components/project/tips/screenTip.tsx"
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'

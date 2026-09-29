@@ -30,12 +30,12 @@
 
 <script setup lang="tsx">
 import { reactive } from "vue"
-import MadokaBtn from "@/components/button/Index.vue"
+import { MadokaBtn } from "@madoka520/vue-ui"
 import useToken, { type UserInfo } from "@/hooks/useToken.ts"
 import AuthApi from "@/api/AuthApi.ts"
-import { message } from "@/components/message.tsx"
+import { message } from "@madoka520/vue-ui"
 import MadokaAvatar from "@/components/MadokaAvatar.vue"
-import useModal from "@/components/useModal.tsx"
+import { useModal } from "@madoka520/vue-ui"
 import MadokaInput from "@/components/MadokaInput.vue"
 import { fileToSHA1 } from "@/utils/shaUtils.ts"
 import { imageToWebp } from "@/utils/imageUtils.ts"
@@ -113,7 +113,11 @@ const Root = (() => {
       input.value = ""
       return
     }
-    const newFile = await imageToWebp(file)
+    // 原代码 - Codex 保留（后端 sharp 负责压缩，前端不裁剪）
+    // const newFile = await imageToWebp(file)
+    // Codex 新增开始 —— 直传后压缩由前端负责，传 maxSize=256 对齐后端原 sharp 256x256 cover 行为
+    const newFile = await imageToWebp(file, 0.8, 256)
+    // Codex 新增结束
 
     const hash = await fileToSHA1(newFile)
 

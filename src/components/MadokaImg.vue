@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onUnmounted } from "vue"
-import MadokaMask from "@/components/MadokaMask.vue"
+import { MadokaMask } from "@madoka520/vue-ui"
 
 const props = withDefaults(
   defineProps<{

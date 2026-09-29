@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部导航 -->
-  <nav class="flex nav" tabindex="-1">
+  <nav ref="headerRef" class="flex nav" tabindex="-1">
     <div class="flex left-entry">
       <span class="mado">Mado</span>
       <span class="homu">Homu</span>
@@ -12,6 +12,17 @@
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <a class="friend-link show-with-hover" @click="openFriendLinks">友链</a>
+      <!-- Codex 新增开始 —— GitHub 仓库入口，与友链同排悬浮渐显 -->
+      <a
+        class="github-link show-with-hover"
+        href="https://github.com/madoka520/madohomu-sanctuary"
+        target="_blank"
+        rel="noreferrer"
+        title="GitHub 仓库"
+      >
+        <i class="mdi mdi-github" />
+      </a>
+      <!-- Codex 新增结束 -->
       <div class="avatar-frame" @click="settingStore.open()">
         <madoka-avatar :width="46" />
       </div>
@@ -31,6 +42,22 @@ const settingStore = useSetting()
 const openFriendLinks = () => {
   friendLinksRef.value?.open()
 }
+
+// Codex 新增开始 —— 修复：点击导航栏后焦点落在 nav 上，留言区手势滚动会拦截后续点击的默认焦点转移，
+// 导致 :focus-within 玻璃态卡住不消失；参考 SideDrawer 的 peekPanelRef.blur() 方案手动失焦，
+// 用 pointerdown 捕获阶段监听（先于手势的 preventDefault 执行，保证可靠触发）
+const headerRef = useTemplateRef<HTMLElement>('headerRef')
+onMounted(() => {
+  document.addEventListener(
+    'pointerdown',
+    (e) => {
+      const el = headerRef.value
+      if (el && !el.contains(e.target as Node)) el.blur()
+    },
+    true,
+  )
+})
+// Codex 新增结束
 </script>
 
 <style scoped lang="less">
@@ -48,6 +75,9 @@ const openFriendLinks = () => {
   padding-bottom: 10px;
   height: 60px;
   z-index: 2;
+  // Codex 新增开始 —— tabindex=-1 的 nav 点击后获得焦点，再按键时浏览器会在整个导航栏外沿画默认黑框，这里按掉
+  outline: none;
+  // Codex 新增结束
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
@@ -123,6 +153,31 @@ const openFriendLinks = () => {
     opacity: 0.7;
   }
 }
+
+/* Codex 新增开始 —— GitHub 图标：与友链同色系，hover 放大发光 */
+.github-link {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  color: #ff6b8a;
+  text-decoration: none;
+  // 👉 有 href 的链接可被聚焦，浏览器默认黑色焦点框在粉色导航上很丑，去掉换成光晕
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .mdi {
+    text-shadow: 0 1px 2px rgba(255, 120, 180, 0.4);
+  }
+  &:hover {
+    transform: scale(1.18) rotate(-8deg);
+    color: #ff4f7e;
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.65);
+  }
+  // 键盘聚焦时的可见反馈（保留可访问性）：粉色光晕代替黑框
+  &:focus-visible .mdi {
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.95);
+  }
+}
+/* Codex 新增结束 */
 .right-entry {
   padding-right: 10px;
   display: flex;

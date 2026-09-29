@@ -1,4 +1,4 @@
-import useModal from "@/components/useModal.tsx"
+import { useModal } from "@madoka520/vue-ui"
 import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
 
 export default () =>

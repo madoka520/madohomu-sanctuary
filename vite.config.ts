@@ -50,6 +50,9 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
+      // Codex 新增开始 —— 本地 link: 引入 @madoka520/vue-ui，强制 vue/@vueuse/core 使用本项目实例，避免双 Vue
+      dedupe: ["vue", "@vueuse/core"],
+      // Codex 新增结束
     },
   }
 });

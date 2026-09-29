@@ -100,8 +100,11 @@ const avatarSrc = computedAsync(
 )
 
 const cardStyle = computed(() => {
-  // 使用 externalId 取模，确保同一个 ID 的卡片背景永远固定
-  const fixedNum = (props.message.externalId % 22) + 1
+  // 原代码 - Codex 保留（externalId 取模固定分配：同一个人永远是同一张底图）
+  // const fixedNum = (props.message.externalId % 22) + 1
+  // Codex 新增开始 —— 随机底图：setup 时掷一次（放 computed 里会在列表刷新时闪烁跳变）
+  const fixedNum = Math.floor(Math.random() * 22) + 1
+  // Codex 新增结束
   const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${fixedNum}`)
   return {
     '--bg-image': `url(${bgUrl}.webp)`,

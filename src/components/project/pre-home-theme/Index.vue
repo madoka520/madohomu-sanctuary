@@ -28,8 +28,7 @@
 <script setup lang="ts">
 import useSetting from '@/hooks/useSetting.ts'
 import useAudioPlayer from '@/hooks/useAudioPlayer.ts'
-// [原代码] MadokaHlsPlayer 暂不用，保留引用
-import MadokaHlsPlayer from '@/components/MadokaHlsPlayer.vue'
+// [原代码] MadokaHlsPlayer 已删除（hls.js 方案弃用，改用 GiteeVideoPlayer）
 // [Ethan] GiteeVideoPlayer - 从 Gitee API 拉取 M3U8 → 解析 JSON → Blob URL 播放
 import GiteeVideoPlayer from '@/components/GiteeVideoPlayer.vue'
 

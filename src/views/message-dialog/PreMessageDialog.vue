@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import MadokaDialog from '@/components/MadokaDialog.vue'
+import { MadokaDialog } from '@madoka520/vue-ui'
 import MessageApi from '@/api/MessageApi.ts'
 
 const inputRef = useTemplateRef('inputRef')
