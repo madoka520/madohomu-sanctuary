@@ -3,3 +3,18 @@
   src: url('@/assets/fonts/AaWoyoudianfangLite.ttf');
   font-display: swap; // 这很重要，字体没加载完前先用系统字体垫着，不会白屏
 }
+
+/* =========start========== 魔女文（witch runes）：仅覆盖拉丁字形，配英文词典使用。
+   语言选「魔女文」时 html 挂 runes-mode，全局字体切换；mdi 图标字体排除在外 */
+@font-face {
+  font-family: 'MadokaRunes';
+  src: url('@/assets/fonts/MadokaRunes-2.0.ttf');
+  font-display: swap;
+}
+
+html.runes-mode {
+  *:not(.mdi) {
+    font-family: 'MadokaRunes' !important;
+  }
+}
+/* ========end======== */

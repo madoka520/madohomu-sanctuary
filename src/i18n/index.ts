@@ -8,6 +8,8 @@ export const LOCALES = [
   { value: 'zh-CN', label: '简体中文' },
   { value: 'ja-JP', label: '日本語' },
   { value: 'en-US', label: 'English' },
+  // 魔女文：witch runes 字体只有拉丁字形，因此复用英文文案
+  { value: 'runes', label: '魔女文' },
 ] as const
 
 export type LocaleValue = (typeof LOCALES)[number]['value']
@@ -37,17 +39,27 @@ const i18n = createI18n({
     'zh-CN': zhCN,
     'ja-JP': jaJP,
     'en-US': enUS,
+    runes: enUS,
   },
 })
+
+// =========start========== 魔女文：html 挂 runes-mode 触发全局字体切换（见 font.less）
+const applyRunesMode = (locale: LocaleValue) => {
+  document.documentElement.classList.toggle('runes-mode', locale === 'runes')
+}
 
 /** 切换语言：更新实例 + 持久化 + 同步 <html lang> */
 export const setLocale = (locale: LocaleValue) => {
   i18n.global.locale.value = locale
   localStorage.setItem(STORAGE_KEY, locale)
-  document.documentElement.lang = locale
+  document.documentElement.lang = locale === 'runes' ? 'en' : locale
+  applyRunesMode(locale)
 }
 
-document.documentElement.lang = i18n.global.locale.value
+document.documentElement.lang =
+  i18n.global.locale.value === 'runes' ? 'en' : i18n.global.locale.value
+applyRunesMode(i18n.global.locale.value as LocaleValue)
+// ========end========
 
 export default i18n
 // ========end========
