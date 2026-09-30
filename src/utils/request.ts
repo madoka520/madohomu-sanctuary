@@ -1,4 +1,7 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from "axios"
+import
+// =========start========== i18n
+import i18n from '@/i18n'
+// ========end======== axios, { type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig } from "axios"
 import { message } from "@madoka520/vue-ui"
 import type { MyAxiosRequestConfig } from "@/types/IAxiosType.ts"
 // import { useToken } from "@/hooks/useToken.ts";
@@ -29,7 +32,7 @@ service.interceptors.response.use(
       case "put":
       case "post": {
         if (res.status === 200 && res.config.showSuccessMessage) {
-          message.success(res.data.message ?? "操作成功")
+          message.success(res.data.message ?? i18n.global.t('request.success'))
         }
       }
     }
@@ -43,7 +46,7 @@ service.interceptors.response.use(
 
     // 根据配置决定是否显示错误提示
     if (cfg?.showErrorMessage !== false && !["get", "GET"].includes(cfg.method!)) {
-      message.error(error ?? "出错啦~")
+      message.error(error ?? i18n.global.t('request.error'))
     }
 
     return Promise.reject(msg ?? error ?? err)

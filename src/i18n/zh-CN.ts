@@ -1,5 +1,40 @@
 // =========start========== 站点 i18n 中文简体（默认语言，也是回退语言）
 export default {
+
+  login: {
+    usernamePlaceholder: '请输入昵称',
+    passwordPlaceholder: '请输入密码',
+    usePassword: '使用密码登录',
+    submit: '登录 / 注册',
+  },
+  lrc: { instrumental: '纯音乐，请欣赏' },
+  themePage: {
+    loading: '加载中…',
+    retry: '点击重试',
+  },
+  tips: {
+    p1: '喜欢魔圆的小伙伴们，很高兴认识大家。',
+    p2: '这里是「圆焰之庭」。',
+    p3: '一个为<圆焰圆>厨准备的小小角落。',
+    p4: '可以在这里分享心情，',
+    p5: '也可以认识彼此。',
+    browser: '推荐使用 Chrome 浏览器访问',
+    noIos: '当前暂不支持ios端',
+  },
+  request: {
+    success: '操作成功',
+    error: '出错啦~',
+  },
+  auth: {
+    signFail: '获取上传签名失败，请重试~',
+    uploadFail: '头像上传失败，请重试~',
+  },
+  misc: {
+    previewImage: '预览图片',
+    githubRepo: 'GitHub 仓库',
+    linksTitle: '因果节点 · 观测枢',
+    corridorTitle: '焰之回廊',
+  },
   common: {
     send: '发送',
     cancel: '取消',
@@ -51,6 +86,9 @@ export default {
     avatarSuccess: '头像上传成功!',
   },
   profile: {
+    title: '用户资料',
+    statMessages: '发言',
+    statLastLogin: '最近登录',
     fromUser: '来自 {origin} 的用户',
     formerNames: '曾用名',
     recentMessages: '最近发言',

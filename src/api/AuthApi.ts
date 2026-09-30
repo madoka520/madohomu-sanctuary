@@ -1,4 +1,7 @@
-import { madokaPost, madokaPut } from "@/utils/request.ts"
+import
+// =========start========== i18n
+import i18n from '@/i18n'
+// ========end======== { madokaPost, madokaPut } from "@/utils/request.ts"
 import DriverManager from "@/utils/oss/DriverManager.ts"
 import type { SignedPath } from "@/types/upload.ts"
 import { message } from "@madoka520/vue-ui"
@@ -25,14 +28,14 @@ export default {
     )
 
     if (!signed) {
-      message.error("获取上传签名失败，请重试~")
+      message.error(i18n.global.t('auth.signFail'))
       throw new Error("获取上传签名失败")
     }
 
     try {
       await DriverManager.getDriver(signed.driver).upload(file, signed)
     } catch (e) {
-      message.error("头像上传失败，请重试~")
+      message.error(i18n.global.t('auth.uploadFail'))
       throw e
     }
 

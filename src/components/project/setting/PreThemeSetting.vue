@@ -40,7 +40,7 @@
       >
         <i class="mdi mdi-progress-download icon-download" />
         <MadokaProgressBar indeterminate class="card-progress" />
-        <span class="overlay-text">加载中…</span>
+        <span class="overlay-text">{{ $t('themePage.loading') }}</span>
       </div>
 
       <!-- [Ethan] 缓存失败 → 重载图标 -->
@@ -50,7 +50,7 @@
         @click.stop="() => videoPreload.retryPreload(item.src!)"
       >
         <i class="mdi mdi-refresh icon-retry" />
-        <span class="overlay-text">点击重试</span>
+        <span class="overlay-text">{{ $t('themePage.retry') }}</span>
       </div>
     </div>
   </div>

@@ -5,7 +5,7 @@
     <div class="overlay">
       <div class="overlay-content">
         <i class="mdi mdi-image-filter-center-focus icon"></i>
-        <span class="text">预览图片</span>
+        <span class="text">{{ $t('misc.previewImage') }}</span>
       </div>
     </div>
 

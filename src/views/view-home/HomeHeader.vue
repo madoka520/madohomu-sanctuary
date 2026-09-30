@@ -18,7 +18,7 @@
         href="https://github.com/madoka520/madohomu-sanctuary"
         target="_blank"
         rel="noreferrer"
-        title="GitHub 仓库"
+        :title="$t('misc.githubRepo')"
       >
         <i class="mdi mdi-github" />
       </a>

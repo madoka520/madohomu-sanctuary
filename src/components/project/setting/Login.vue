@@ -5,7 +5,7 @@
         <madoka-input
           v-model="Form.model.username"
           left-icon="mdi mdi-account-outline"
-          placeholder="请输入昵称"
+          :placeholder="$t('login.usernamePlaceholder')"
           @keyup.enter="Form.login"
         />
       </div>
@@ -18,7 +18,7 @@
             :type="Form.showPassword ? 'text' : `password`"
             :show-password="Form.showPassword"
             :right-icon="`mdi-${Form.showPassword ? 'eye' : 'eye-off'}-outline`"
-            placeholder="请输入密码"
+            :placeholder="$t('login.passwordPlaceholder')"
             @right-icon-click="Form.showOrHiddenPsd"
             @keyup.enter="Form.login"
           />
@@ -33,12 +33,12 @@
       <div class="form-options">
         <madoka-checkbox
           v-model="Form.model.usePassword"
-          label="使用密码登录"
+          :label="$t('login.usePassword')"
         />
       </div>
 
       <div class="form-actions">
-        <madoka-btn type="2" @click="Form.login">登录 / 注册</madoka-btn>
+        <madoka-btn type="2" @click="Form.login">{{ $t('login.submit') }}</madoka-btn>
       </div>
     </div>
   </div>

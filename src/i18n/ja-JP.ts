@@ -1,5 +1,40 @@
 // =========start========== 站点 i18n 日本語
 export default {
+
+  login: {
+    usernamePlaceholder: 'ニックネームを入力',
+    passwordPlaceholder: 'パスワードを入力',
+    usePassword: 'パスワードでログイン',
+    submit: 'ログイン / 登録',
+  },
+  lrc: { instrumental: 'インストゥルメンタルをお楽しみください' },
+  themePage: {
+    loading: '読み込み中…',
+    retry: 'クリックで再試行',
+  },
+  tips: {
+    p1: 'まどか☆マギカ好きのみなさん、はじめまして。',
+    p2: 'ここは「円焰之庭」です。',
+    p3: 'まどほむ好きのための小さな居場所です。',
+    p4: '気持ちを分かち合ったり、',
+    p5: 'お互いを知ることもできます。',
+    browser: 'Chrome ブラウザの利用を推奨します',
+    noIos: '現在 iOS には対応していません',
+  },
+  request: {
+    success: '成功しました',
+    error: 'エラーが発生しました~',
+  },
+  auth: {
+    signFail: '署名の取得に失敗しました。もう一度お試しください~',
+    uploadFail: 'アバターのアップロードに失敗しました~',
+  },
+  misc: {
+    previewImage: '画像をプレビュー',
+    githubRepo: 'GitHub リポジトリ',
+    linksTitle: '因果ノード・観測枢',
+    corridorTitle: 'ほむらの回廊',
+  },
   common: {
     send: '送信',
     cancel: 'キャンセル',
@@ -51,6 +86,9 @@ export default {
     avatarSuccess: 'アバターをアップロードしました！',
   },
   profile: {
+    title: 'ユーザープロフィール',
+    statMessages: '投稿',
+    statLastLogin: '最終ログイン',
     fromUser: '{origin} からのユーザー',
     formerNames: '旧名',
     recentMessages: '最近の投稿',

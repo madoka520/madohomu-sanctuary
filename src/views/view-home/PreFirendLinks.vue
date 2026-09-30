@@ -7,7 +7,7 @@
   >
     <div class="friend-links-container">
       <div class="header-section">
-        <h1 class="title">因果节点 · 观测枢</h1>
+        <h1 class="title">{{ $t('misc.linksTitle') }}</h1>
         <div class="title-decoration">
           <span class="line left"></span>
           <div class="magic-star"></div>

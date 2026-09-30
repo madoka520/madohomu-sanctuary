@@ -1,5 +1,40 @@
 // =========start========== 站点 i18n English (US)
 export default {
+
+  login: {
+    usernamePlaceholder: 'Enter a nickname',
+    passwordPlaceholder: 'Enter password',
+    usePassword: 'Sign in with password',
+    submit: 'Sign In / Sign Up',
+  },
+  lrc: { instrumental: 'Instrumental — enjoy' },
+  themePage: {
+    loading: 'Loading…',
+    retry: 'Click to retry',
+  },
+  tips: {
+    p1: 'Nice to meet you, fellow Madoka Magica fans!',
+    p2: 'This is MadoHomu Sanctuary.',
+    p3: 'A little corner for MadoHomu fans.',
+    p4: 'Share your feelings here,',
+    p5: 'and get to know each other.',
+    browser: 'Chrome browser recommended',
+    noIos: 'iOS is not supported yet',
+  },
+  request: {
+    success: 'Success',
+    error: 'Something went wrong~',
+  },
+  auth: {
+    signFail: 'Failed to get upload signature, please retry~',
+    uploadFail: 'Avatar upload failed, please retry~',
+  },
+  misc: {
+    previewImage: 'Preview image',
+    githubRepo: 'GitHub Repository',
+    linksTitle: 'Causal Nodes · Observatory',
+    corridorTitle: "Homura's Corridor",
+  },
   common: {
     send: 'Send',
     cancel: 'Cancel',
@@ -51,6 +86,9 @@ export default {
     avatarSuccess: 'Avatar uploaded!',
   },
   profile: {
+    title: 'User Profile',
+    statMessages: 'Messages',
+    statLastLogin: 'Last Login',
     fromUser: 'User from {origin}',
     formerNames: 'Former Names',
     recentMessages: 'Recent Messages',

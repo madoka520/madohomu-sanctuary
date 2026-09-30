@@ -1,6 +1,6 @@
 <template>
   <div class="corridor">
-    <h2>焰之回廊</h2>
+    <h2>{{ $t('misc.corridorTitle') }}</h2>
     <div class="timeline">
       <div v-for="item in memories" :key="item.id" class="entry">
         <div class="dot"></div>

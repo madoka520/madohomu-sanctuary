@@ -1,7 +1,7 @@
 <template>
   <madoka-dialog
     v-model="opened"
-    title="用户资料"
+    :title="$t('profile.title')"
     width="380px"
     height="auto"
     :footer="false"
@@ -33,14 +33,14 @@
           <div class="profile__stat-value">
             {{ profile.messageCount ?? '—' }}
           </div>
-          <div class="profile__stat-label">发言</div>
+          <div class="profile__stat-label">{{ $t('profile.statMessages') }}</div>
         </div>
         <div class="profile__stat-divider"></div>
         <div class="profile__stat">
           <div class="profile__stat-value">
             {{ profile.lastLogin ?? '—' }}
           </div>
-          <div class="profile__stat-label">最近登录</div>
+          <div class="profile__stat-label">{{ $t('profile.statLastLogin') }}</div>
         </div>
       </div>
       <div class="profile__external" v-else>

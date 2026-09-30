@@ -20,6 +20,9 @@ import { reactive, onUnmounted, watch } from 'vue'
 import useAudioPlayer from '@/hooks/useAudioPlayer'
 import { getAssetUrl } from '@/utils/resource'
 import useSetting from '@/hooks/useSetting.ts'
+// =========start========== i18n
+import i18n from '@/i18n'
+// ========end========
 const audioPlayer = useAudioPlayer()
 const setting = useSetting()
 const LyricState = (() => {
@@ -84,7 +87,7 @@ const LyricState = (() => {
     s.lyricStyle['--p'] = '0%'
 
     if (!name) {
-      s.currentLineText = '纯音乐，请欣赏'
+      s.currentLineText = i18n.global.t('lrc.instrumental')
       s.lines = []
       return
     }
@@ -92,7 +95,7 @@ const LyricState = (() => {
     try {
       if (audioPlayer.currentSong.isInstrumental) {
         s.lines = []
-        s.currentLineText = '纯音乐，请欣赏'
+        s.currentLineText = i18n.global.t('lrc.instrumental')
         return
       }
       const res = await fetch(getAssetUrl(`lrc/${name}.lrc`))
@@ -100,10 +103,10 @@ const LyricState = (() => {
       const text = await res.text()
       const newLines = parseLrc(text)
       s.lines = newLines.length ? newLines : []
-      if (!s.lines.length) s.currentLineText = '纯音乐，请欣赏'
+      if (!s.lines.length) s.currentLineText = i18n.global.t('lrc.instrumental')
     } catch {
       s.lines = []
-      s.currentLineText = '纯音乐，请欣赏'
+      s.currentLineText = i18n.global.t('lrc.instrumental')
     }
   }
 
@@ -111,7 +114,7 @@ const LyricState = (() => {
     const nowMs = audioPlayer.currentTime * 1000
 
     if (!s.lines.length) {
-      s.currentLineText = '纯音乐，请欣赏'
+      s.currentLineText = i18n.global.t('lrc.instrumental')
       s.lyricStyle['--p'] = '0%'
       lastProgress = 0
     } else {

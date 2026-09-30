@@ -1,4 +1,7 @@
-import { useModal } from "@madoka520/vue-ui"
+import
+// =========start========== i18n
+import i18n from '@/i18n'
+// ========end======== { useModal } from "@madoka520/vue-ui"
 import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
 
 export default () =>
@@ -23,11 +26,11 @@ export default () =>
             fontSize: "15px",
           }}
         >
-          <p>喜欢魔圆的小伙伴们，很高兴认识大家。</p>
-          <p>这里是「圆焰之庭」。</p>
-          <p>一个为&lt;圆焰圆&gt;厨准备的小小角落。</p>
-          <p>可以在这里分享心情，</p>
-          <p>也可以认识彼此。</p>
+          <p>{i18n.global.t('tips.p1')}</p>
+          <p>{i18n.global.t('tips.p2')}</p>
+          <p>{i18n.global.t('tips.p3')}</p>
+          <p>{i18n.global.t('tips.p4')}</p>
+          <p>{i18n.global.t('tips.p5')}</p>
         </div>
 
         {/* 底部说明 */}
@@ -38,8 +41,8 @@ export default () =>
             lineHeight: "1.6",
           }}
         >
-          <div>推荐使用 Chrome 浏览器访问</div>
-          <div>当前暂不支持ios端</div>
+          <div>{i18n.global.t('tips.browser')}</div>
+          <div>{i18n.global.t('tips.noIos')}</div>
         </footer>
       </div>
     ),
