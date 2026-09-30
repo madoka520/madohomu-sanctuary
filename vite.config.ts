@@ -54,6 +54,13 @@ export default defineConfig(({ mode }) => {
       dedupe: ["vue", "@vueuse/core"],
       // Codex 新增结束
     },
+    // =========start========== i18n：vue-i18n 显式预构建，避免 dev server
+    // 运行中发现新依赖触发重新优化，产生双 Vue 运行时
+    // （症状：库组件 useTemplateRef 报 object is not extensible）
+    optimizeDeps: {
+      include: ["vue", "vue-i18n"],
+    },
+    // ========end========
   }
 });
 
