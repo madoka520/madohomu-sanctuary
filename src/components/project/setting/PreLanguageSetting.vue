@@ -49,9 +49,19 @@ const current = computed(() => i18n.global.locale.value)
     gap: 10px;
   }
 
+  // 语言名各自保持可读：即使处于魔女文全局字体模式下，
+  // 非 runes 项也要以正常字体显示（!important 对冲全局的 !important）
+  &__item:not(.is-runes) span {
+    font-family:
+      'PingFang SC',
+      'Hiragino Sans',
+      'Microsoft YaHei',
+      sans-serif !important;
+  }
+
   // 魔女文项用自己的字形展示自己（拉丁文本 + runes 字体）
   &__item.is-runes span {
-    font-family: 'MadokaRunes';
+    font-family: 'MadokaRunes' !important;
     letter-spacing: 1px;
   }
 
