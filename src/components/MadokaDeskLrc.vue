@@ -217,10 +217,34 @@ const LyricState = (() => {
   justify-content: center;
   background: transparent;
   user-select: none;
+
+  /* =========start========== 长歌词防溢出：
+     flex 居中内容超宽时会向两侧对称溢出盖住 header 两端；
+     min-width:0 允许作为 flex 子项收缩 + overflow 裁切 + 两侧羽化渐隐 */
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  /* ========end======== */
 }
 
 .cyber-pink-lyric {
   position: relative;
+  // 单行展示，超长交给容器的裁切与羽化
+  white-space: nowrap;
   font-size: clamp(18px, 2.5vw, 38px);
   font-weight: 900;
   color: var(--lyric-dim-color);
