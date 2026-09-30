@@ -1,7 +1,7 @@
-import
+import { useModal } from "@madoka520/vue-ui"
 // =========start========== i18n
 import i18n from '@/i18n'
-// ========end======== { useModal } from "@madoka520/vue-ui"
+// ========end========
 import useAudioPlayer from "@/hooks/useAudioPlayer.ts"
 
 export default () =>

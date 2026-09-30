@@ -1,7 +1,7 @@
-import
+import { madokaPost, madokaPut } from "@/utils/request.ts"
 // =========start========== i18n
 import i18n from '@/i18n'
-// ========end======== { madokaPost, madokaPut } from "@/utils/request.ts"
+// ========end========
 import DriverManager from "@/utils/oss/DriverManager.ts"
 import type { SignedPath } from "@/types/upload.ts"
 import { message } from "@madoka520/vue-ui"

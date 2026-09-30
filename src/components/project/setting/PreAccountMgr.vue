@@ -59,7 +59,7 @@ const Root = (() => {
     useModal.confirm({
       title: i18n.global.t('account.changeUsername'),
       //@ts-ignore
-      content: () => <MadokaInput :placeholder="i18n.global.t('account.usernamePlaceholder')" v-model={value.value} />,
+      content: () => <MadokaInput placeholder={i18n.global.t('account.usernamePlaceholder')} v-model={value.value} />,
       onOk: async () => {
         await AuthApi.updateUsername(value.value)
         s.model.username = value.value
@@ -76,8 +76,8 @@ const Root = (() => {
       //@ts-ignore
       content: () => (
         <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
-          <MadokaInput type="password" :placeholder="i18n.global.t('account.newPasswordPlaceholder')" v-model={value.value} />
-          <MadokaInput type="password" :placeholder="i18n.global.t('account.confirmPasswordPlaceholder')" v-model={valueAgain.value} />
+          <MadokaInput type="password" placeholder={i18n.global.t('account.newPasswordPlaceholder')} v-model={value.value} />
+          <MadokaInput type="password" placeholder={i18n.global.t('account.confirmPasswordPlaceholder')} v-model={valueAgain.value} />
           {!equal.value && <div style="color: red;font-size: 13px">{i18n.global.t('account.passwordMismatch')}</div>}
         </div>
       ),
