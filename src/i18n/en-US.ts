@@ -32,7 +32,6 @@ export default {
     account: 'Account',
     about: 'About',
     language: 'Language',
-    languageDesc: 'Switch the interface language. Applies instantly and is remembered',
   },
   profile: {
     formerNames: 'Former Names',

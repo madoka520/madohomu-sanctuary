@@ -32,7 +32,6 @@ export default {
     account: '账号设置',
     about: '关于系统',
     language: '语言',
-    languageDesc: '切换界面显示语言，立即生效并记住选择',
   },
   profile: {
     formerNames: '曾用名',

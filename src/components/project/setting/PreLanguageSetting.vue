@@ -1,7 +1,6 @@
 <!-- =========start========== 语言设置页：三语言切换，立即生效并持久化 -->
 <template>
   <div class="language">
-    <p class="language__desc">{{ $t('settings.languageDesc') }}</p>
     <div class="language__list">
       <button
         v-for="l in LOCALES"
@@ -36,12 +35,6 @@ const current = computed(() => i18n.global.locale.value)
   display: flex;
   flex-direction: column;
   gap: 16px;
-
-  &__desc {
-    font-size: 12.5px;
-    color: @rose-sub;
-    line-height: 1.7;
-  }
 
   &__list {
     display: flex;

@@ -32,7 +32,6 @@ export default {
     account: 'アカウント設定',
     about: 'システムについて',
     language: '言語',
-    languageDesc: '表示言語を切り替えます。即時反映・選択は保存されます',
   },
   profile: {
     formerNames: '旧名',
