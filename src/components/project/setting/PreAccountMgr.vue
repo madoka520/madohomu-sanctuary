@@ -230,6 +230,10 @@ const Root = (() => {
   & > div {
     border-radius: 22px;
     color: white;
+    /* =========start========== 库基类 madoka-btn-base 的 width: fit-content
+       会让按钮缩成文字宽；块级场景下恢复旧的占满宽度行为 */
+    width: 100%;
+    /* ========end======== */
   }
 }
 </style>
