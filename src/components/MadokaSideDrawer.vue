@@ -28,13 +28,14 @@
           已运行 {{ Uptime.text }}
         </madoka-btn>
         <!-- Codex 新增结束 -->
-      <!-- Codex 新增开始 -->
+        <!-- Codex 新增开始 -->
+        <madoka-btn class="today__count" type="3" style="height: 40px">
+          <i class="mdi mdi-counter" />
+          今日留言{{ todayCount }}
+        </madoka-btn>
       </div>
       <!-- Codex 新增结束 -->
-      <madoka-btn class="today__count" type="3" style="height: 40px">
-        <i class="mdi mdi-counter" />
-        今日留言{{ todayCount }}
-      </madoka-btn>
+
       <div style="display: flex; gap: 10px">
         <madoka-btn
           type="3"
@@ -234,13 +235,13 @@ useDrag(
     .send__button {
       display: inline-flex;
     }
+    // 原代码 - Codex 保留（悬停打开面板时隐藏今日留言，换成发送留言+返回）
+    // .today__count {
+    //   display: none;
+    // }
+    // Codex 新增开始 —— 打开面板时今日留言保留显示（用户要求不去掉访客标签）
     .today__count {
-      display: none;
-    }
-
-    // Codex 新增开始 —— 移动端隐藏运行时长（同今日留言，头部空间有限）
-    .site-uptime {
-      display: none;
+      display: inline-flex;
     }
     // Codex 新增结束
 
