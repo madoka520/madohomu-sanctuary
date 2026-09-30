@@ -13,6 +13,7 @@ export default defineStore("setting", () => {
     themeList: [
       {
         name: 'kami',
+        i18n: 'theme.kami',
         type: 'customer',
         component: toAsyncComponent(
           () =>
@@ -24,6 +25,7 @@ export default defineStore("setting", () => {
       },
       {
         name: '「魔法少女小圆」OP【コネクト】',
+        i18n: 'theme.op',
         type: 'video',
         src: getGiteeVideoUrl('madoka-op-muted/playlist.m3u8'),
         song: 'コネクト',
@@ -34,6 +36,7 @@ export default defineStore("setting", () => {
       // =========start========== 小圆生日主题（10/3）：纯 CSS 夜空生日场景，封面用内联 SVG（无图片素材依赖）
       {
         name: '圆诞',
+        i18n: 'theme.birthday',
         type: 'customer',
         component: toAsyncComponent(
           () =>

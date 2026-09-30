@@ -14,7 +14,7 @@
       <div class="theme-cover">
         <img :src="item.cover" alt="" />
       </div>
-      <div class="name">{{ item.name }}</div>
+      <div class="name">{{ $t(item.i18n ?? 'theme.kami') }}</div>
 
       <!-- [Ethan] 视频主题已缓存标记 -->
       <!-- 原代码 - Codex 保留（常驻显示，下载完成后角标不会消失） -->

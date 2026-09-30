@@ -9,7 +9,7 @@
       >
         <template #title>
           <i class="mdi mdi-cog"></i>
-          设置中心
+          {{ $t('settings.center') }}
         </template>
       </madoka-slidebar>
 
@@ -29,6 +29,9 @@ import Login from '@/components/project/setting/Login.vue'
 import useToken from '@/hooks/useToken.ts'
 import { MadokaSlidebar } from '@madoka520/vue-ui'
 import useSetting from '@/hooks/useSetting.ts'
+// =========start========== i18n：菜单标题随语言切换
+import { useI18n } from 'vue-i18n'
+// ========end========
 
 const tokenStore = useToken()
 const toAsyncComponent = <T extends Component>(comp: () => Promise<T>) =>
@@ -38,32 +41,37 @@ defineOptions({
   name: 'Setting',
 })
 const settingStore = useSetting()
+// =========start========== i18n：菜单标题用 computed 保持语言切换时的响应性；
+// 异步组件缓存到外面，避免每次换语言都重建组件导致页面重挂载
+const { t } = useI18n()
 const Setting = (() => {
+  const components = {
+    theme: toAsyncComponent(
+      () => import('@/components/project/setting/PreThemeSetting.vue'),
+    ),
+    account: toAsyncComponent(
+      () => import('@/components/project/setting/PreAccountMgr.vue'),
+    ),
+    language: toAsyncComponent(
+      () => import('@/components/project/setting/PreLanguageSetting.vue'),
+    ),
+    about: toAsyncComponent(
+      () => import('@/components/project/setting/PreAbout.vue'),
+    ),
+  }
+  const list = computed(() => [
+    { title: t('settings.theme'), component: components.theme },
+    { title: t('settings.account'), component: components.account },
+    { title: t('settings.language'), component: components.language },
+    { title: t('settings.about'), component: components.about },
+  ])
   const s = reactive({
     current: 0,
-    list: [
-      {
-        title: '主题外观',
-        component: toAsyncComponent(
-          () => import('@/components/project/setting/PreThemeSetting.vue'),
-        ),
-      },
-      {
-        title: '账号设置',
-        component: toAsyncComponent(
-          () => import('@/components/project/setting/PreAccountMgr.vue'),
-        ),
-      },
-      {
-        title: '关于系统',
-        component: toAsyncComponent(
-          () => import('@/components/project/setting/PreAbout.vue'),
-        ),
-      },
-    ],
+    list,
   })
   return s
 })()
+// ========end========
 
 const Root = (() => {
   const open = () => {

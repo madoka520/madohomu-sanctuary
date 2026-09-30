@@ -1,12 +1,12 @@
 <template>
   <madoka-dialog
     v-model="Root.opened"
-    title="发送留言"
-    ok-text="发送"
+    :title="$t('msgDialog.title')"
+    :ok-text="$t('common.send')"
     @ok="Root.ok"
   >
     <div v-if="Root.opened" class="input-wrap">
-      <div class="madoka-input" contenteditable="true" v-if="Root.opened" ref="inputRef">
+      <div class="madoka-input" contenteditable="true" v-if="Root.opened" ref="inputRef" :data-placeholder="$t('msgDialog.placeholder')">
       <div v-if="Root.isReply" class="reply" contenteditable="false">
         <header class="flex">
           <i class="mdi mdi-reply" style="font-size: 28px"></i>
@@ -51,7 +51,7 @@
         ref="stickerToggleRef"
         class="sticker-toggle"
         :class="{ 'is-active': Root.pickerOpened }"
-        title="表情包"
+        :title="$t('msgDialog.sticker')"
         @mousedown.prevent
         @click="Root.pickerOpened = !Root.pickerOpened"
       >
@@ -69,7 +69,7 @@
             @mousedown.prevent
             @click="Root.activeGroup = g.key"
           >
-            {{ g.label }}
+            {{ $t('stickers.' + g.label) }}
           </button>
         </div>
         <div class="sticker-grid">
@@ -94,6 +94,9 @@ import { MadokaDialog } from '@madoka520/vue-ui'
 import MessageApi from '@/api/MessageApi.ts'
 // =========start========== 系统预设表情包
 import { STICKER_GROUPS, stickerUrl, splitStickerText, type StickerGroupKey } from '@/utils/stickers.ts'
+// =========start========== i18n：表情分组悬浮提示文案
+import i18n from '@/i18n'
+// ========end========
 // ========end========
 
 const inputRef = useTemplateRef('inputRef')
@@ -177,11 +180,11 @@ const Root = (() => {
     STICKER_GROUPS.find((g) => g.key === s.activeGroup)?.items ?? [],
   )
 
-  // 悬浮提示用「分组名 + 序号」，不暴露 B_M_12 这类文件名
+  // 悬浮提示用「分组名 + 序号」，不暴露 B_M_12 这类文件名；分组名走 i18n
   const stickerTitle = (file: string) => {
-    const label = STICKER_GROUPS.find((g) => g.key === s.activeGroup)?.label ?? ''
+    const labelKey = STICKER_GROUPS.find((g) => g.key === s.activeGroup)?.label ?? ''
     const no = file.replace(/\.\w+$/, '').split('_').pop()
-    return `${label} ${no}`
+    return `${i18n.global.t(`stickers.${labelKey}`)} ${no}`
   }
 
   // 面板按钮 @mousedown.prevent 保住了输入框焦点/选区，可直接在光标处插入
@@ -449,7 +452,7 @@ watch(
 
   // 模拟 Placeholder (当内容为空时显示)
   &:empty::before {
-    content: '说点什么吧...';
+    content: attr(data-placeholder);
     color: rgba(255, 255, 255, 1);
     pointer-events: none;
   }

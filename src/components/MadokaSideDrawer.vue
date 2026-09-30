@@ -17,15 +17,15 @@
           style="height: 40px"
         >
           <i class="mdi mdi-send" />
-          发送留言
+          {{ $t('drawer.send') }}
         </madoka-btn>
         <madoka-btn class="today__count" type="3" style="height: 40px">
           <i class="mdi mdi-counter" />
-          今日留言{{ todayCount }}
+          {{ $t('drawer.todayCount', { count: todayCount }) }}
         </madoka-btn>
         <madoka-btn class="site-uptime" type="3" style="height: 40px">
           <i class="mdi mdi-timer-outline" />
-          已运行 {{ Uptime.text }}
+          {{ $t('drawer.uptime', { time: Uptime.text }) }}
         </madoka-btn>
       </div>
       <div style="display: flex; gap: 10px">
@@ -62,6 +62,9 @@
 import { useDrag } from '@vueuse/gesture'
 import { MadokaBtn } from '@madoka520/vue-ui'
 import dayjs from 'dayjs'
+// =========start========== i18n：运行时长的「天」单位词随语言切换
+import i18n from '@/i18n'
+// ========end========
 const peekPanelRef = useTemplateRef('peekPanelRef')
 
 const emits = defineEmits(['madokaScroll', 'ok', 'back', 'handleSent'])
@@ -100,14 +103,15 @@ const SITE_LAUNCH_TIME = dayjs('2025-05-27 22:49:00')
 
 const Uptime = (() => {
   const refresh = () => {
-    // 总时长按固定 86400s/天 换算，不涉及日历
+    // 总时长按固定 86400s/天 换算，不涉及日历；天数字的单位词走 i18n
     const total = Math.max(0, dayjs().diff(SITE_LAUNCH_TIME, 'second'))
     const days = Math.floor(total / 86400)
     const hours = Math.floor((total % 86400) / 3600)
     const mins = Math.floor((total % 3600) / 60)
     const secs = total % 60
     const pad = (n: number) => String(n).padStart(2, '0')
-    s.text = `${days}天 ${pad(hours)}:${pad(mins)}:${pad(secs)}`
+    const dayPart = i18n.global.t('common.days', { n: days })
+    s.text = `${dayPart} ${pad(hours)}:${pad(mins)}:${pad(secs)}`
   }
   const s = reactive({
     text: '',

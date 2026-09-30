@@ -1,0 +1,75 @@
+// =========start========== 站点 i18n 中文简体（默认语言，也是回退语言）
+export default {
+  common: {
+    send: '发送',
+    cancel: '取消',
+    days: '{n}天',
+  },
+  splash: {
+    skip: '点击任意处跳过',
+  },
+  nav: {
+    friendLinks: '友链',
+  },
+  drawer: {
+    send: '发送留言',
+    todayCount: '今日留言{count}',
+    uptime: '已运行 {time}',
+  },
+  msgDialog: {
+    title: '发送留言',
+    placeholder: '说点什么吧...',
+    sticker: '表情包',
+  },
+  stickers: {
+    madoka: '鹿目圆',
+    homura: '晓美焰',
+    daily: '圆焰日常',
+  },
+  settings: {
+    center: '设置中心',
+    theme: '主题外观',
+    account: '账号设置',
+    about: '关于系统',
+    language: '语言',
+    languageDesc: '切换界面显示语言，立即生效并记住选择',
+  },
+  profile: {
+    formerNames: '曾用名',
+    recentMessages: '最近发言',
+    empty: '暂无发言记录',
+  },
+  theme: {
+    kami: 'kami',
+    op: '「魔法少女小圆」OP【コネクト】',
+    birthday: '圆诞',
+    cached: '已缓存',
+  },
+  about: {
+    tagline:
+      '「要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话。」',
+    siteTitle: '关于本站',
+    siteDesc:
+      '一个为<圆焰圆>厨准备的小小角落 —— 《魔法少女小圆》鹿目圆 × 晓美焰主题粉丝社区。可以在这里留言、听歌、摸圆神，也可以什么都不做，只是安静地待在庭院里。',
+    featuresTitle: '功能一览',
+    features: {
+      board: '多来源留言板（本站 / madohomu.love / kami.im）',
+      player: '34 首原声与角色歌播放器，逐字桌面歌词',
+      live2d: 'Live2D 圆神看板：庭院里的神明，会回应你的每一次触碰',
+      theme: '主题系统：kami / コネクト OP / 圆诞生日主题',
+      water: '首屏液面水波（鼠标划过荡开涟漪）',
+      splash: '円環の理 开屏动画',
+    },
+    secretsTitle: '庭院的小秘密',
+    secrets: {
+      birthday: '每年 10 月 3 日是小圆的生日 —— 当天庭院会自己换上生日装扮',
+      shy: '连续摸圆神同一个部位，她会害羞哦',
+      night: '深夜来访，神明的问候也会不一样',
+    },
+    techTitle: '技术栈',
+    copyright:
+      '本站为非营利粉丝二次创作，原作相关权利归其权利方所有',
+    slogan: '圆与焰的庭院，永远盛开着希望之花 🌸',
+  },
+}
+// ========end========

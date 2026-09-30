@@ -7,47 +7,41 @@
         <span class="brand__zh">円焰之庭</span>
         <span class="brand__en">MadoHomu Sanctuary</span>
       </div>
-      <p class="tagline">
-        「要是别人说怀有希望是错误的事，不管几次我都一定会否定这句话。」
-      </p>
+      <p class="tagline">{{ $t('about.tagline') }}</p>
     </header>
 
     <!-- 关于本站 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-heart-outline" /> 关于本站</h3>
-      <p>
-        一个为&lt;圆焰圆&gt;厨准备的小小角落 —— 《魔法少女小圆》鹿目圆 ×
-        晓美焰主题粉丝社区。可以在这里留言、听歌、摸圆神，也可以什么都不做，
-        只是安静地待在庭院里。
-      </p>
+      <h3><i class="mdi mdi-heart-outline" /> {{ $t('about.siteTitle') }}</h3>
+      <p>{{ $t('about.siteDesc') }}</p>
     </section>
 
     <!-- 功能一览 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-star-four-points-outline" /> 功能一览</h3>
+      <h3><i class="mdi mdi-star-four-points-outline" /> {{ $t('about.featuresTitle') }}</h3>
       <ul class="feature-list">
-        <li><i class="mdi mdi-message-processing" /> 多来源留言板（本站 / madohomu.love / kami.im）</li>
-        <li><i class="mdi mdi-music-note-outline" /> 34 首原声与角色歌播放器，逐字桌面歌词</li>
-        <li><i class="mdi mdi-hand-heart-outline" /> Live2D 圆神看板：庭院里的神明，会回应你的每一次触碰</li>
-        <li><i class="mdi mdi-theme-light-dark" /> 主题系统：kami / コネクト OP / 圆诞生日主题</li>
-        <li><i class="mdi mdi-water" /> 首屏液面水波（鼠标划过荡开涟漪）</li>
-        <li><i class="mdi mdi-loading" /> 円環の理 开屏动画</li>
+        <li><i class="mdi mdi-message-processing" /> {{ $t('about.features.board') }}</li>
+        <li><i class="mdi mdi-music-note-outline" /> {{ $t('about.features.player') }}</li>
+        <li><i class="mdi mdi-hand-heart-outline" /> {{ $t('about.features.live2d') }}</li>
+        <li><i class="mdi mdi-theme-light-dark" /> {{ $t('about.features.theme') }}</li>
+        <li><i class="mdi mdi-water" /> {{ $t('about.features.water') }}</li>
+        <li><i class="mdi mdi-loading" /> {{ $t('about.features.splash') }}</li>
       </ul>
     </section>
 
     <!-- 小秘密 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-diamond-stone" /> 庭院的小秘密</h3>
+      <h3><i class="mdi mdi-diamond-stone" /> {{ $t('about.secretsTitle') }}</h3>
       <ul class="feature-list">
-        <li><i class="mdi mdi-cake-variant-outline" /> 每年 10 月 3 日是小圆的生日 —— 当天庭院会自己换上生日装扮</li>
-        <li><i class="mdi mdi-emoticon-blush-outline" /> 连续摸圆神同一个部位，她会害羞哦</li>
-        <li><i class="mdi mdi-weather-night" /> 深夜来访，神明的问候也会不一样</li>
+        <li><i class="mdi mdi-cake-variant-outline" /> {{ $t('about.secrets.birthday') }}</li>
+        <li><i class="mdi mdi-emoticon-blush-outline" /> {{ $t('about.secrets.shy') }}</li>
+        <li><i class="mdi mdi-weather-night" /> {{ $t('about.secrets.night') }}</li>
       </ul>
     </section>
 
     <!-- 技术栈 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-code-braces" /> 技术栈</h3>
+      <h3><i class="mdi mdi-code-braces" /> {{ $t('about.techTitle') }}</h3>
       <div class="chips">
         <span v-for="t in techList" :key="t" class="chip">{{ t }}</span>
       </div>
@@ -65,9 +59,9 @@
       </a>
       <p class="copyright">
         「魔法少女まどか☆マギカ」© Magica Quartet / Aniplex・Madoka Project / SHAFT<br />
-        本站为非营利粉丝二次创作，原作相关权利归其权利方所有
+        {{ $t('about.copyright') }}
       </p>
-      <p class="slogan">圆与焰的庭院，永远盛开着希望之花 🌸</p>
+      <p class="slogan">{{ $t('about.slogan') }}</p>
     </footer>
   </div>
 </template>

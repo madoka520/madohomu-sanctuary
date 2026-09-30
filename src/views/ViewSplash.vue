@@ -8,7 +8,7 @@
     <madoka-loading class="splash__anim" :size="Root.animSize" />
     <div class="splash__title">円環の理</div>
     <div class="splash__sub">MadoHomu Sanctuary</div>
-    <div class="splash__hint">点击任意处跳过</div>
+    <div class="splash__hint">{{ $t('splash.skip') }}</div>
   </div>
 </template>
 

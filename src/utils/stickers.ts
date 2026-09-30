@@ -9,9 +9,10 @@ const range = (prefix: string, from: number, to: number, ext = '.webp') =>
 
 export const STICKER_GROUPS: { key: StickerGroupKey; label: string; items: string[] }[] = [
   // 按内容分类：B_M=圆单人 / B_H=焰单人 / A=圆焰同框·带字日常（圆排最前）
-  { key: 'B_M', label: '鹿目圆', items: ['B_M_1.png', ...range('B_M', 2, 31)] },
-  { key: 'B_H', label: '晓美焰', items: range('B_H', 1, 174) },
-  { key: 'A', label: '圆焰日常', items: range('A', 1, 15) },
+  // label 为 i18n 键后缀，展示文案取 t(`stickers.${label}`)
+  { key: 'B_M', label: 'madoka', items: ['B_M_1.png', ...range('B_M', 2, 31)] },
+  { key: 'B_H', label: 'homura', items: range('B_H', 1, 174) },
+  { key: 'A', label: 'daily', items: range('A', 1, 15) },
 ]
 
 // 文件名（不带扩展名）→ 带扩展名文件 的索引，用于把标记还原成资源

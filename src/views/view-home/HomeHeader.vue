@@ -11,7 +11,7 @@
     </div>
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
-      <a class="friend-link show-with-hover" @click="openFriendLinks">友链</a>
+      <a class="friend-link show-with-hover" @click="openFriendLinks">{{ $t('nav.friendLinks') }}</a>
       <!-- =========start========== GitHub 仓库入口，与友链同排悬浮渐显 -->
       <a
         class="github-link show-with-hover"

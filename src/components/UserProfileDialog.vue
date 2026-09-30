@@ -48,7 +48,7 @@
       </div>
 
       <div class="profile__section" v-if="profile.previousNames?.length">
-        <div class="profile__section-title">曾用名</div>
+        <div class="profile__section-title">{{ $t('profile.formerNames') }}</div>
         <div class="profile__names">
           <span
             v-for="name in profile.previousNames"
@@ -61,7 +61,7 @@
       </div>
 
       <div class="profile__section" v-if="isLocalUser(user.origin)">
-        <div class="profile__section-title">最近发言</div>
+        <div class="profile__section-title">{{ $t('profile.recentMessages') }}</div>
         <div class="profile__messages" v-if="profile.messages?.length">
           <div
             v-for="msg in profile.messages"
@@ -92,7 +92,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="profile__empty">暂无发言记录</div>
+        <div v-else class="profile__empty">{{ $t('profile.empty') }}</div>
       </div>
     </div>
   </madoka-dialog>
