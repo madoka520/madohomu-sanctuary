@@ -9,20 +9,27 @@
     @click.capture="Root.lockActive"
   >
     <div class="header">
-      <madoka-btn
-        class="send__button"
-        type="3"
-        @click="emits('handleSent')"
-        style="height: 40px"
-      >
-        <i class="mdi mdi-send" />
-        发送留言
-      </madoka-btn>
-      <!-- Codex 新增开始 —— 本站运行时长 -->
-      <madoka-btn class="site-uptime" type="3" style="height: 40px">
-        <i class="mdi mdi-timer-outline" />
-        已运行 {{ Uptime.text }}
-      </madoka-btn>
+      <!-- Codex 新增开始 —— 左侧聚簇：发送留言 + 运行时长。
+        保持原先「左-中-右」三段 space-between 布局，今日留言仍居中不被挤占 -->
+      <div class="header__left">
+        <!-- Codex 新增结束 -->
+        <madoka-btn
+          class="send__button"
+          type="3"
+          @click="emits('handleSent')"
+          style="height: 40px"
+        >
+          <i class="mdi mdi-send" />
+          发送留言
+        </madoka-btn>
+        <!-- Codex 新增开始 —— 本站运行时长（独立标签） -->
+        <madoka-btn class="site-uptime" type="3" style="height: 40px">
+          <i class="mdi mdi-timer-outline" />
+          已运行 {{ Uptime.text }}
+        </madoka-btn>
+        <!-- Codex 新增结束 -->
+      <!-- Codex 新增开始 -->
+      </div>
       <!-- Codex 新增结束 -->
       <madoka-btn class="today__count" type="3" style="height: 40px">
         <i class="mdi mdi-counter" />
@@ -179,6 +186,14 @@ useDrag(
     padding-left: 15px;
     padding-right: 15px;
     position: relative;
+
+    // Codex 新增开始 —— 左侧聚簇（发送留言 + 运行时长），对齐右侧返回按钮组的间距
+    .header__left {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    // Codex 新增结束
 
     .send__button {
       display: none;
