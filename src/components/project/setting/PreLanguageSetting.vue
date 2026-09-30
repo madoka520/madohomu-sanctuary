@@ -7,7 +7,7 @@
         v-for="l in LOCALES"
         :key="l.value"
         class="language__item"
-        :class="{ 'is-active': current === l.value }"
+        :class="{ 'is-active': current === l.value, 'is-runes': l.value === 'runes' }"
         @click="setLocale(l.value)"
       >
         <i
@@ -47,6 +47,12 @@ const current = computed(() => i18n.global.locale.value)
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  // 魔女文项用自己的字形展示自己（拉丁文本 + runes 字体）
+  &__item.is-runes span {
+    font-family: 'MadokaRunes';
+    letter-spacing: 1px;
   }
 
   &__item {

@@ -8,8 +8,9 @@ export const LOCALES = [
   { value: 'zh-CN', label: '简体中文' },
   { value: 'ja-JP', label: '日本語' },
   { value: 'en-US', label: 'English' },
-  // 魔女文：witch runes 字体只有拉丁字形，因此复用英文文案
-  { value: 'runes', label: '魔女文' },
+  // 魔女文：witch runes 字体只有拉丁字形，因此复用英文文案；
+  // 标签按「各自语言显示自己」的惯例用拉丁文本，由语言页对该项套魔女文字体渲染成 runes
+  { value: 'runes', label: 'Madoka Runes' },
 ] as const
 
 export type LocaleValue = (typeof LOCALES)[number]['value']
