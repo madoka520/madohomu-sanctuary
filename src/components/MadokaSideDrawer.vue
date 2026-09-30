@@ -100,16 +100,14 @@ const SITE_LAUNCH_TIME = dayjs('2025-05-27 22:49:00')
 
 const Uptime = (() => {
   const refresh = () => {
+    // 总时长按固定 86400s/天 换算，不涉及日历
     const total = Math.max(0, dayjs().diff(SITE_LAUNCH_TIME, 'second'))
-    // 折算：1 年 = 365 天，1 月 = 30 天
-    const years = Math.floor(total / 31536000)
-    const months = Math.floor((total % 31536000) / 2592000)
-    const days = Math.floor((total % 2592000) / 86400)
+    const days = Math.floor(total / 86400)
     const hours = Math.floor((total % 86400) / 3600)
     const mins = Math.floor((total % 3600) / 60)
     const secs = total % 60
     const pad = (n: number) => String(n).padStart(2, '0')
-    s.text = `${years}/${pad(months)}/${pad(days)} ${pad(hours)}:${pad(mins)}:${pad(secs)}`
+    s.text = `${days}天 ${pad(hours)}:${pad(mins)}:${pad(secs)}`
   }
   const s = reactive({
     text: '',
