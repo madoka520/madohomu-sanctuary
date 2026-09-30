@@ -174,6 +174,11 @@ const LyricState = (() => {
       await loadLyrics(title)
       rafId = requestAnimationFrame(updateLyric)
     },
+    // =========start========== immediate：组件挂载时歌往往已在播（首屏/主题进场
+    // 触发过 playByName），不加 immediate 的话 watch 不触发、歌词栏空白，
+    // 直到切歌 title 变化才显示
+    { immediate: true },
+    // ========end========
   )
 
   onUnmounted(() => {
