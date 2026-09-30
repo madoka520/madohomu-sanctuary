@@ -24,14 +24,14 @@
       >
         <i class="mdi mdi-check-circle" />
       </div> -->
-      <!-- Codex 新增开始 —— 缓存完成的勾只在完成瞬间展示 2.5s，随后自动淡出 -->
+      <!-- =========start========== 缓存完成的勾只在完成瞬间展示 2.5s，随后自动淡出 -->
       <div
         v-if="item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Cached && cachedBadgeVisible[item.src!]"
         class="cached-badge"
       >
         <i class="mdi mdi-check-circle" />
       </div>
-      <!-- Codex 新增结束 -->
+      <!-- ========end======== -->
 
       <!-- [Ethan] 缓存未完成 → 进度条遮罩 -->
       <div
@@ -69,7 +69,7 @@ const handleClick = (index: number, item: (typeof setting.themeList)[number]) =>
   setting.theme = index
 }
 
-// Codex 新增开始 —— "已缓存"角标短暂展示逻辑：只在 Loading→Cached 的完成瞬间亮起，2.5s 后熄灭；
+// =========start========== "已缓存"角标短暂展示逻辑：只在 Loading→Cached 的完成瞬间亮起，2.5s 后熄灭；
 // 页面加载时本来就已缓存的视频（无 Loading 前态）不再打扰
 const cachedBadgeVisible = reactive<Record<string, boolean>>({})
 watch(
@@ -85,7 +85,7 @@ watch(
     }
   },
 )
-// Codex 新增结束
+// ========end========
 </script>
 
 <style scoped lang="less">
@@ -170,7 +170,7 @@ watch(
 }
 */
 
-/* Codex 新增开始 —— 新版主题卡片：无背景填充 + 直角细边框，选中态粉色光晕 */
+/* =========start========== 新版主题卡片：无背景填充 + 直角细边框，选中态粉色光晕 */
 @pink-primary: #ffb7c5;
 @pink-dark: #ff85a2;
 @rose-text: #8a5d6f;
@@ -257,7 +257,7 @@ watch(
   word-break: break-all;
   transition: color 0.25s ease;
 }
-/* Codex 新增结束 */
+/* ========end======== */
 
 // [Ethan] 已缓存标记
 .cached-badge {
@@ -274,7 +274,7 @@ watch(
   }
 }
 
-// Codex 新增开始 —— 角标弹入：完成瞬间的确认感
+// =========start========== 角标弹入：完成瞬间的确认感
 @keyframes badge-pop {
   from {
     opacity: 0;
@@ -285,7 +285,7 @@ watch(
     transform: scale(1);
   }
 }
-// Codex 新增结束
+// ========end========
 
 // [Ethan] 卡片遮罩层
 .card-overlay {

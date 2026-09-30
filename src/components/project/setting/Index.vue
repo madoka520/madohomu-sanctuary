@@ -94,9 +94,9 @@ defineExpose({
   height: clamp(110px, 47vh, 600px);
   // 原代码 - Codex 保留（整容器滚动，长内容会把侧边栏一起带走）
   // overflow: auto;
-  // Codex 新增开始 —— 滚动下沉：容器自身裁切，只让右侧内容区内部滚
+  // =========start========== 滚动下沉：容器自身裁切，只让右侧内容区内部滚
   overflow: hidden;
-  // Codex 新增结束
+  // ========end========
   font-family: 'PingFang SC', sans-serif;
   color: @text-main;
 
@@ -109,10 +109,10 @@ defineExpose({
     height: 100%;
     display: flex;
     flex-direction: column;
-    // Codex 新增开始 —— 内容区内部滚动，侧边栏保持固定
+    // =========start========== 内容区内部滚动，侧边栏保持固定
     overflow-y: auto;
     min-width: 0;
-    // Codex 新增结束
+    // ========end========
   }
 }
 

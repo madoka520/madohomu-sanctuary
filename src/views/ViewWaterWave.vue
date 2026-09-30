@@ -1,4 +1,4 @@
-<!-- Codex 新增文件：首屏液面水波 —— 参考站 funingna-wakawaka.github.io 同款 Three.js 液面（liquid1.min.js），
+<!-- 新增文件：首屏液面水波 —— 参考站 funingna-wakawaka.github.io 同款 Three.js 液面（liquid1.min.js），
      鼠标轨迹涟漪为库内置（监听 document.body），折射纹理为首屏背景图 -->
 <template>
   <canvas ref="canvasRef" class="water-canvas"></canvas>
@@ -10,7 +10,7 @@ import chairUrl from '@/assets/images/main_scene/chair.jpg'
 
 const canvasRef = useTemplateRef<HTMLCanvasElement>('canvasRef')
 
-// Codex 新增开始 —— 液面实例句柄（非响应式，避免代理 Three.js 对象）
+// =========start========== 液面实例句柄（非响应式，避免代理 Three.js 对象）
 let app: any = null
 
 onMounted(async () => {
@@ -39,7 +39,7 @@ onBeforeUnmount(() => {
   app?.dispose?.()
   app = null
 })
-// Codex 新增结束
+// ========end========
 </script>
 
 <style scoped lang="less">

@@ -115,9 +115,9 @@ const Root = (() => {
     }
     // 原代码 - Codex 保留（后端 sharp 负责压缩，前端不裁剪）
     // const newFile = await imageToWebp(file)
-    // Codex 新增开始 —— 直传后压缩由前端负责，传 maxSize=256 对齐后端原 sharp 256x256 cover 行为
+    // =========start========== 直传后压缩由前端负责，传 maxSize=256 对齐后端原 sharp 256x256 cover 行为
     const newFile = await imageToWebp(file, 0.8, 256)
-    // Codex 新增结束
+    // ========end========
 
     const hash = await fileToSHA1(newFile)
 

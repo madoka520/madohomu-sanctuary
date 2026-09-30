@@ -12,7 +12,7 @@
     <div class="right-entry">
       <madoka-player-controls playing class="show-with-hover" />
       <a class="friend-link show-with-hover" @click="openFriendLinks">友链</a>
-      <!-- Codex 新增开始 —— GitHub 仓库入口，与友链同排悬浮渐显 -->
+      <!-- =========start========== GitHub 仓库入口，与友链同排悬浮渐显 -->
       <a
         class="github-link show-with-hover"
         href="https://github.com/madoka520/madohomu-sanctuary"
@@ -22,7 +22,7 @@
       >
         <i class="mdi mdi-github" />
       </a>
-      <!-- Codex 新增结束 -->
+      <!-- ========end======== -->
       <div class="avatar-frame" @click="settingStore.open()">
         <madoka-avatar :width="46" />
       </div>
@@ -43,7 +43,7 @@ const openFriendLinks = () => {
   friendLinksRef.value?.open()
 }
 
-// Codex 新增开始 —— 修复：点击导航栏后焦点落在 nav 上，留言区手势滚动会拦截后续点击的默认焦点转移，
+// =========start========== 修复：点击导航栏后焦点落在 nav 上，留言区手势滚动会拦截后续点击的默认焦点转移，
 // 导致 :focus-within 玻璃态卡住不消失；参考 SideDrawer 的 peekPanelRef.blur() 方案手动失焦，
 // 用 pointerdown 捕获阶段监听（先于手势的 preventDefault 执行，保证可靠触发）
 const headerRef = useTemplateRef<HTMLElement>('headerRef')
@@ -57,7 +57,7 @@ onMounted(() => {
     true,
   )
 })
-// Codex 新增结束
+// ========end========
 </script>
 
 <style scoped lang="less">
@@ -75,9 +75,9 @@ onMounted(() => {
   padding-bottom: 10px;
   height: 60px;
   z-index: 2;
-  // Codex 新增开始 —— tabindex=-1 的 nav 点击后获得焦点，再按键时浏览器会在整个导航栏外沿画默认黑框，这里按掉
+  // =========start========== tabindex=-1 的 nav 点击后获得焦点，再按键时浏览器会在整个导航栏外沿画默认黑框，这里按掉
   outline: none;
-  // Codex 新增结束
+  // ========end========
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
@@ -154,7 +154,7 @@ onMounted(() => {
   }
 }
 
-/* Codex 新增开始 —— GitHub 图标：与友链同色系，hover 放大发光 */
+/* =========start========== GitHub 图标：与友链同色系，hover 放大发光 */
 .github-link {
   display: flex;
   align-items: center;
@@ -177,7 +177,7 @@ onMounted(() => {
     text-shadow: 0 0 10px rgba(255, 105, 180, 0.95);
   }
 }
-/* Codex 新增结束 */
+/* ========end======== */
 .right-entry {
   padding-right: 10px;
   display: flex;

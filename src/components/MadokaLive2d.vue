@@ -1,15 +1,15 @@
 <template>
-  <!-- Codex 新增开始 —— ref 供 Interact 模块计算点击区域 -->
+  <!-- =========start========== ref 供 Interact 模块计算点击区域 -->
   <div ref="boxRef" class="madoka-live2d" :class="{ is_transparency: Madoka.isTransparency }">
-  <!-- Codex 新增结束 -->
+  <!-- ========end======== -->
     <canvas :ref="Madoka.ref.set"></canvas>
-    <!-- Codex 新增开始 —— 圆神语录气泡：日文原句 + 中文翻译 -->
+    <!-- =========start========== 圆神语录气泡：日文原句 + 中文翻译 -->
     <div v-if="Chat.visible" :key="Chat.cn" class="god-bubble" :class="{ 'is-closing': Chat.closing }">
       <span class="bubble__spark">✦</span>
       <p class="bubble__jp">{{ Chat.jp }}</p>
       <p class="bubble__cn">{{ Chat.cn }}</p>
     </div>
-    <!-- Codex 新增结束 -->
+    <!-- ========end======== -->
   </div>
 </template>
 <script setup lang="ts">
@@ -17,7 +17,7 @@ import * as PIXI from "pixi.js"
 import { Live2DModel } from "pixi-live2d-display"
 import { getAssetUrl } from "@/utils/resource.ts"
 
-// Codex 新增开始 ===== 圆神语录与互动数据（模块外纯数据）=====
+// =========start========== ===== 圆神语录与互动数据（模块外纯数据）=====
 type Quote = { jp: string; cn: string }
 
 // 可交互部位
@@ -215,7 +215,7 @@ const activeFestival = (): Festival | null => {
   return FESTIVALS.find((f) => f.dates.some((d) => (d.length === 5 ? d === md : d === ymd))) ?? null
 }
 
-// Codex 新增开始 ===== 表情系统：11 个表情按参数语义分池，随部位/场景切换，超时回归默认神态
+// =========start========== ===== 表情系统：11 个表情按参数语义分池，随部位/场景切换，超时回归默认神态
 // （依据 exp3.json 参数分析：EyeSmile=1 弯眼笑 / EyeOpen=-2.5 眯眼 / BrowY 越正越挑眉）
 const EXPRESSION_POOLS = {
   // 微笑系（弯眼笑）：011 / 041 / 060
@@ -239,11 +239,11 @@ const ZONE_EXPRESSION: Record<Zone, keyof typeof EXPRESSION_POOLS> = {
   skirt: 'surprised',
   legs: 'smile',
 }
-// Codex 新增结束
+// ========end========
 
 // 模块间共享的模型句柄（非响应式，避免代理 PIXI 对象）
 const live2dState = { app: null as any, model: null as any }
-// Codex 新增结束
+// ========end========
 
 const Madoka = (() => {
   const init = async () => {
@@ -265,10 +265,10 @@ const Madoka = (() => {
     model.scale.set(0.2, 0.2)
     model.anchor.set(1.1, 0.192)
 
-    // Codex 新增开始 —— 交给 Interact 模块驱动动作/表情与部位判定
+    // =========start========== 交给 Interact 模块驱动动作/表情与部位判定
     live2dState.app = app
     live2dState.model = model
-    // Codex 新增结束
+    // ========end========
 
     // 原代码 - Codex 保留（model3.json 只定义了眨眼/口型参数组，没有 ArtMesh hit area，
     // 这个 hit 监听从未触发过；互动已改由 Interact 模块的全局点击检测实现）
@@ -284,7 +284,7 @@ const Madoka = (() => {
   //   const { x, y } = s.mouse
   //   s.isTransparency = x + s.width > window.innerWidth && y + s.height > window.innerHeight
   // }
-  // Codex 新增开始 —— 反转：常态半透明，鼠标悬停在角色上时恢复不透明
+  // =========start========== 反转：常态半透明，鼠标悬停在角色上时恢复不透明
   const handleMouseMove = () => {
     const { x, y } = s.mouse
     const el = s.ref.value
@@ -293,7 +293,7 @@ const Madoka = (() => {
     const hovering = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
     s.isTransparency = !hovering
   }
-  // Codex 新增结束
+  // ========end========
 
   const s = reactive({
     width: 600,
@@ -302,9 +302,9 @@ const Madoka = (() => {
     cssHeight: computed((): string => 'auto'),
     // 原代码 - Codex 保留
     // isTransparency: false,
-    // Codex 新增开始 —— 常态即半透明（悬停才恢复）
+    // =========start========== 常态即半透明（悬停才恢复）
     isTransparency: true,
-    // Codex 新增结束
+    // ========end========
     ref: {
       value: undefined as HTMLCanvasElement | undefined,
       set(v: any) {
@@ -320,7 +320,7 @@ const Madoka = (() => {
   return s
 })()
 
-// Codex 新增开始 ===== Chat 模块：圆神语录气泡的显隐与文案 =====
+// =========start========== ===== Chat 模块：圆神语录气泡的显隐与文案 =====
 const Chat = (() => {
   let hideTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -357,7 +357,7 @@ const Chat = (() => {
   return s
 })()
 
-// Codex 新增开始 ===== Interact 模块：点击摸摸 / 连击害羞 / 分时问候 / 闲置低语 =====
+// =========start========== ===== Interact 模块：点击摸摸 / 连击害羞 / 分时问候 / 闲置低语 =====
 const Interact = (() => {
   const boxRef = useTemplateRef<HTMLDivElement>("boxRef")
   // 模块私有：最近一次互动时间、连击窗口、同部位连续触摸计数、上一句台词
@@ -491,7 +491,7 @@ const Interact = (() => {
 
   return s
 })()
-// Codex 新增结束
+// ========end========
 
 </script>
 
@@ -516,7 +516,7 @@ const Interact = (() => {
     height: 100%;
   }
 
-  /* Codex 新增开始 —— 圆神语录气泡：粉色毛玻璃，从神明头顶绽放 */
+  /* =========start========== 圆神语录气泡：粉色毛玻璃，从神明头顶绽放 */
   @pink-primary: #ffb7c5;
   @pink-hot: #ff69b4;
   @rose-text: #a24e6d;
@@ -592,10 +592,10 @@ const Interact = (() => {
       animation: spark-twinkle 2.4s ease-in-out infinite;
     }
   }
-  /* Codex 新增结束 */
+  /* ========end======== */
 }
 
-/* Codex 新增开始 —— keyframes 必须在顶层：Less 不会让嵌套的 @keyframes 冒泡，
+/* =========start========== keyframes 必须在顶层：Less 不会让嵌套的 @keyframes 冒泡，
    Vue scoped 也只对顶层 keyframes 做作用域改名 */
 @keyframes bubble-in {
   from {
@@ -619,5 +619,5 @@ const Interact = (() => {
     transform: scale(1.15) rotate(20deg);
   }
 }
-/* Codex 新增结束 */
+/* ========end======== */
 </style>

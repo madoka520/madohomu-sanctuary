@@ -1,4 +1,4 @@
-<!-- Codex 新增文件：开屏动画 —— 圆环之理（动画组件来自用户 madoka-vue 库的 MadokaLoading，发布版暂缺故本地引入） -->
+<!-- 新增文件：开屏动画 —— 圆环之理（动画组件来自用户 madoka-vue 库的 MadokaLoading，发布版暂缺故本地引入） -->
 <template>
   <div v-if="Root.visible" class="splash" :class="{ 'is-closing': Root.closing }" @click="Root.skip">
     <!-- 梦幻层：星尘 + 漂移光斑 -->

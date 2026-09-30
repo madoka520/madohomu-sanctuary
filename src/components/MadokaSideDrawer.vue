@@ -95,7 +95,7 @@ const Root = (() => {
   })
   return s
 })()
-// Codex 新增开始 —— 本站运行时长（起点取仓库 Initial commit，正式上线日不同改这里即可）
+// =========start========== 本站运行时长（起点取仓库 Initial commit，正式上线日不同改这里即可）
 const SITE_LAUNCH_TIME = dayjs('2025-05-27 22:49:00')
 
 const Uptime = (() => {
@@ -115,7 +115,7 @@ const Uptime = (() => {
   return s
 })()
 useIntervalFn(Uptime.refresh, 1000, { immediateCallback: true })
-// Codex 新增结束
+// ========end========
 useDrag(
   (state) => {
     if (!state.dragging) return
@@ -174,13 +174,13 @@ useDrag(
     padding-right: 15px;
     position: relative;
 
-    // Codex 新增开始 —— 左侧聚簇（发送留言 + 运行时长），对齐右侧返回按钮组的间距
+    // =========start========== 左侧聚簇（发送留言 + 运行时长），对齐右侧返回按钮组的间距
     .header__left {
       display: flex;
       gap: 10px;
       flex-shrink: 0;
     }
-    // Codex 新增结束
+    // ========end========
 
     .send__button {
       display: none;
@@ -194,7 +194,7 @@ useDrag(
       border-right: none;
     }
 
-    // Codex 新增开始 —— 运行时长：与今日留言同类的信息标签，
+    // =========start========== 运行时长：与今日留言同类的信息标签，
     // 显隐节奏与样式（平贴形态）完全跟随 today__count
     .site-uptime {
       pointer-events: none;
@@ -203,7 +203,7 @@ useDrag(
       border-right: none;
       white-space: nowrap;
     }
-    // Codex 新增结束
+    // ========end========
 
     .return__button {
       display: none;
@@ -226,11 +226,11 @@ useDrag(
       display: none;
     }
 
-    // Codex 新增开始 —— 上浮时运行时长与今日留言一起隐藏（同为信息标签）
+    // =========start========== 上浮时运行时长与今日留言一起隐藏（同为信息标签）
     .site-uptime {
       display: none;
     }
-    // Codex 新增结束
+    // ========end========
 
     .return__button {
       display: inline-flex;

@@ -48,11 +48,11 @@ import messageApi from '@/api/MessageApi.ts'
 import { isEmpty } from 'lodash-unified'
 import type { Message, origin } from '@/types/Message.ts'
 import useCache from '@/hooks/useCache.ts'
-// Codex 新增开始 —— 表情包标记渲染
+// =========start========== 表情包标记渲染
 import { splitStickerText } from '@/utils/stickers.ts'
 
 const contentParts = splitStickerText
-// Codex 新增结束
+// ========end========
 
 const props = withDefaults(
   defineProps<{
@@ -114,9 +114,9 @@ const avatarSrc = computedAsync(
 const cardStyle = computed(() => {
   // 原代码 - Codex 保留（externalId 取模固定分配：同一个人永远是同一张底图）
   // const fixedNum = (props.message.externalId % 22) + 1
-  // Codex 新增开始 —— 随机底图：setup 时掷一次（放 computed 里会在列表刷新时闪烁跳变）
+  // =========start========== 随机底图：setup 时掷一次（放 computed 里会在列表刷新时闪烁跳变）
   const fixedNum = Math.floor(Math.random() * 22) + 1
-  // Codex 新增结束
+  // ========end========
   const bgUrl = getAssetUrl(`madokami/msg_bg/bg_${fixedNum}`)
   return {
     '--bg-image': `url(${bgUrl}.webp)`,
@@ -201,7 +201,7 @@ const Root = (() => {
                 undefined,
               )}
               <div>
-                {/* Codex 新增开始 —— 回复内容同样支持表情标记 */}
+                {/* =========start========== 回复内容同样支持表情标记 */}
                 {splitStickerText(reply.content).map((p, i) =>
                   p.type === 'text' ? (
                     p.value
@@ -209,7 +209,7 @@ const Root = (() => {
                     <img class="sticker-img" key={i} src={p.url} alt={`[${p.value}]`} loading="lazy" draggable={false} />
                   ),
                 )}
-                {/* Codex 新增结束 */}
+                {/* ========end======== */}
                 <div class="replies-container">
                   {!isEmpty(reply.replies) && buildReplies(reply.replies)}
                 </div>
@@ -355,7 +355,7 @@ const Root = (() => {
     white-space: pre-wrap;
     word-break: break-word;
 
-    // Codex 新增开始 —— 表情包：行内展示，限制尺寸避免撑坏排版
+    // =========start========== 表情包：行内展示，限制尺寸避免撑坏排版
     .sticker-img {
       display: inline-block;
       width: clamp(36px, 2.8vw, 48px);
@@ -365,7 +365,7 @@ const Root = (() => {
       vertical-align: middle;
       user-select: none;
     }
-    // Codex 新增结束
+    // ========end========
 
     .image-gallery {
       display: flex;

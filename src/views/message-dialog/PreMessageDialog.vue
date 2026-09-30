@@ -25,7 +25,7 @@
             #{{ Root.data.externalId }}
           </div>
         </header>
-        <!-- Codex 新增开始 —— 引用预览把表情标记还原成图（原插值会露出 [B_M_12] 原文） -->
+        <!-- =========start========== 引用预览把表情标记还原成图（原插值会露出 [B_M_12] 原文） -->
         <div class="reply-content">
           &#x200B;<template
             v-for="(part, i) in splitStickerText(Root.data.content)"
@@ -46,7 +46,7 @@
         -->
       </div>
       </div>
-      <!-- Codex 新增开始 —— 表情按钮：输入框右下角，聊天式（mdi-sticker-emoji 只有实心版，字体里没有 outline 变体） -->
+      <!-- =========start========== 表情按钮：输入框右下角，聊天式（mdi-sticker-emoji 只有实心版，字体里没有 outline 变体） -->
       <button
         ref="stickerToggleRef"
         class="sticker-toggle"
@@ -57,8 +57,8 @@
       >
         <i class="mdi mdi-sticker-emoji" />
       </button>
-      <!-- Codex 新增结束 -->
-      <!-- Codex 新增开始 —— 表情气泡弹窗：绝对定位锚在按钮上方，带指向尾巴，不占布局空间 -->
+      <!-- ========end======== -->
+      <!-- =========start========== 表情气泡弹窗：绝对定位锚在按钮上方，带指向尾巴，不占布局空间 -->
       <div v-if="Root.pickerOpened" ref="stickerPanelRef" class="sticker-panel">
         <div class="sticker-tabs">
           <button
@@ -84,7 +84,7 @@
           />
         </div>
       </div>
-      <!-- Codex 新增结束 -->
+      <!-- ========end======== -->
     </div>
   </madoka-dialog>
 </template>
@@ -92,9 +92,9 @@
 <script setup lang="ts">
 import { MadokaDialog } from '@madoka520/vue-ui'
 import MessageApi from '@/api/MessageApi.ts'
-// Codex 新增开始 —— 系统预设表情包
+// =========start========== 系统预设表情包
 import { STICKER_GROUPS, stickerUrl, splitStickerText, type StickerGroupKey } from '@/utils/stickers.ts'
-// Codex 新增结束
+// ========end========
 
 const inputRef = useTemplateRef('inputRef')
 const emits = defineEmits(['ok'])
@@ -133,12 +133,12 @@ const Root = (() => {
           return
         }
 
-        // Codex 新增开始 —— 表情包节点 → [A_1] 标记（存纯文本，展示端还原为图片）
+        // =========start========== 表情包节点 → [A_1] 标记（存纯文本，展示端还原为图片）
         if (el.tagName === 'IMG' && el.classList.contains('sticker')) {
           result += `[${el.dataset.s ?? ''}]`
           return
         }
-        // Codex 新增结束
+        // ========end========
 
         const before = result.length
         el.childNodes.forEach(walk)
@@ -172,7 +172,7 @@ const Root = (() => {
     s.opened = true
   }
 
-  // Codex 新增开始 ===== 表情包插入 =====
+  // =========start========== ===== 表情包插入 =====
   const activeItems = computed(() =>
     STICKER_GROUPS.find((g) => g.key === s.activeGroup)?.items ?? [],
   )
@@ -228,7 +228,7 @@ const Root = (() => {
     sel?.removeAllRanges()
     sel?.addRange(range)
   }
-  // Codex 新增结束
+  // ========end========
 
   const ok = async () => {
     const text = getInputText()
@@ -246,13 +246,13 @@ const Root = (() => {
     isReply: false,
     data: {} as IParam,
     avatarSrc: '',
-    // Codex 新增开始 —— 表情包选择器状态（默认展示第一组「鹿目圆」）
+    // =========start========== 表情包选择器状态（默认展示第一组「鹿目圆」）
     pickerOpened: false,
     activeGroup: 'B_M' as StickerGroupKey,
     activeItems,
     stickerTitle,
     insertSticker,
-    // Codex 新增结束
+    // ========end========
     open,
     ok,
     openReply,
@@ -265,7 +265,7 @@ defineExpose({
   openReply: Root.openReply,
 })
 
-// Codex 新增开始 —— 点击气泡外任意处关闭（按钮本身忽略，避免关了又开）
+// =========start========== 点击气泡外任意处关闭（按钮本身忽略，避免关了又开）
 const stickerToggleRef = useTemplateRef('stickerToggleRef')
 const stickerPanelRef = useTemplateRef('stickerPanelRef')
 onClickOutside(
@@ -282,11 +282,11 @@ watch(
     if (!opened) Root.pickerOpened = false
   },
 )
-// Codex 新增结束
+// ========end========
 </script>
 
 <style scoped lang="less">
-// Codex 新增开始 ===== 表情包选择器 =====
+// =========start========== ===== 表情包选择器 =====
 // 布局：面板在输入框上方，按钮在输入框右下角，三者同宽（clamp 一致）整体居中
 @pink-primary: #ffb7c5;
 @pink-dark: #ff85a2;
@@ -416,7 +416,7 @@ watch(
     transform: scale(0.86) translateY(8px);
   }
 }
-// Codex 新增结束
+// ========end========
 
 .madoka-input {
   // 基础边框与圆角
@@ -454,7 +454,7 @@ watch(
     pointer-events: none;
   }
 
-  // Codex 新增开始 —— 引用预览里的行内表情（固定小尺寸；插入输入框的表情尺寸在 JS 里内联为父容器 20%）
+  // =========start========== 引用预览里的行内表情（固定小尺寸；插入输入框的表情尺寸在 JS 里内联为父容器 20%）
   :deep(img.sticker) {
     display: inline-block;
     width: 32px;
@@ -464,7 +464,7 @@ watch(
     margin: 0 2px;
     vertical-align: middle;
   }
-  // Codex 新增结束
+  // ========end========
 
   .reply {
     display: inline-flex;

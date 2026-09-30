@@ -1,7 +1,7 @@
 <template>
-  <!-- Codex 新增开始 —— 开屏：圆环之理动画，退场后才露出主页面 -->
+  <!-- =========start========== 开屏：圆环之理动画，退场后才露出主页面 -->
   <view-splash />
-  <!-- Codex 新增结束 -->
+  <!-- ========end======== -->
   <view-home />
 </template>
 <script setup lang="ts">

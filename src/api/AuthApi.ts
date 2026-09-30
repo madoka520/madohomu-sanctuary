@@ -19,7 +19,7 @@ export default {
 
     const backData: UploadCallback = await DriverManager.getDriver(d.driver).upload(file, d)
     return backData*/
-    // Codex 新增开始 —— 前端直传：后端只签发凭证（POST /avatar/sign），文件由浏览器直传七牛
+    // =========start========== 前端直传：后端只签发凭证（POST /avatar/sign），文件由浏览器直传七牛
     const signed = await madokaPost("/avatar/sign", {}, { showSuccessMessage: false }) as unknown as (
       SignedPath & { message: string; updateTime: number }
     )
@@ -37,7 +37,7 @@ export default {
     }
 
     return { message: "上传成功!", updateTime: signed.updateTime }
-    // Codex 新增结束
+    // ========end========
   },
   updateUsername: (username) => madokaPut("/username", { username }),
   updatePassword: (password) => madokaPut("/password", { password }),

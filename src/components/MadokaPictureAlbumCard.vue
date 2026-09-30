@@ -198,13 +198,13 @@ defineExpose({
     // border: 10px solid #837e7a;
     // background: white;
     // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    // Codex 新增开始 —— 粉色细线画框：1px 粉线 + 内侧白高光 + 柔和粉投影，直角
+    // =========start========== 粉色细线画框：1px 粉线 + 内侧白高光 + 柔和粉投影，直角
     border: 1px solid rgba(255, 133, 162, 0.55);
     background: rgba(255, 252, 253, 0.92);
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.55),
       0 6px 18px rgba(255, 183, 197, 0.3);
-    // Codex 新增结束
+    // ========end========
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -248,13 +248,13 @@ defineExpose({
       // box-shadow:
       //   0 12px 24px rgba(0, 0, 0, 0.3),
       //   0 0 12px rgba(255, 200, 255, 0.4);
-      // Codex 新增开始 —— hover：粉线加深 + 柔和粉光晕
+      // =========start========== hover：粉线加深 + 柔和粉光晕
       border-color: rgba(255, 105, 180, 0.9);
       box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.65),
         0 8px 22px rgba(255, 183, 197, 0.45),
         0 0 14px rgba(255, 133, 162, 0.3);
-      // Codex 新增结束
+      // ========end========
     }
   }
 }
@@ -263,9 +263,9 @@ defineExpose({
 // .frame0 {
 //   border-radius: 10px;
 // }
-// Codex 新增开始 —— 默认形态：直角
+// =========start========== 默认形态：直角
 .frame0 {
   border-radius: 0;
 }
-// Codex 新增结束
+// ========end========
 </style>

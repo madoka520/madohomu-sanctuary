@@ -17,7 +17,7 @@ export const imageToWebp = (
       // 原代码 - Codex 保留
       // canvas.width = img.width
       // canvas.height = img.height
-      // Codex 新增开始 —— maxSize：直传模式下压缩由前端完成，居中 cover 裁剪到 maxSize（对齐后端原 sharp 256x256 行为）
+      // =========start========== maxSize：直传模式下压缩由前端完成，居中 cover 裁剪到 maxSize（对齐后端原 sharp 256x256 行为）
       let dx = 0
       let dy = 0
       let dw = img.width
@@ -34,7 +34,7 @@ export const imageToWebp = (
         canvas.width = img.width
         canvas.height = img.height
       }
-      // Codex 新增结束
+      // ========end========
 
       const ctx = canvas.getContext("2d")
       if (!ctx) {
@@ -44,9 +44,9 @@ export const imageToWebp = (
 
       // 原代码 - Codex 保留
       // ctx.drawImage(img, 0, 0)
-      // Codex 新增开始
+      // =========start==========
       ctx.drawImage(img, dx, dy, dw, dh)
-      // Codex 新增结束
+      // ========end========
 
       canvas.toBlob(
         blob => {

@@ -1,4 +1,4 @@
-// Codex 新增文件：系统预设表情包 —— 仅站方提供的静态资源，无用户上传通道（流量考量）
+// 新增文件：系统预设表情包 —— 仅站方提供的静态资源，无用户上传通道（流量考量）
 // 资源位于 CDN images/stickers/，共 219 张：A 15 / B_H 174 / B_M 31(B_M_1 为 png)
 import { getAssetUrl } from '@/utils/resource.ts'
 
