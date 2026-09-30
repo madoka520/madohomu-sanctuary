@@ -34,6 +34,7 @@ export default {
     language: '言語',
   },
   profile: {
+    fromUser: '{origin} からのユーザー',
     formerNames: '旧名',
     recentMessages: '最近の投稿',
     empty: '投稿記録はまだありません',

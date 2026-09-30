@@ -3,6 +3,7 @@
     v-model="Root.opened"
     :title="$t('msgDialog.title')"
     :ok-text="$t('common.send')"
+    :cancel-text="$t('common.cancel')"
     @ok="Root.ok"
   >
     <div v-if="Root.opened" class="input-wrap">

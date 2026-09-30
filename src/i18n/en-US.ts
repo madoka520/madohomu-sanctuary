@@ -34,6 +34,7 @@ export default {
     language: 'Language',
   },
   profile: {
+    fromUser: 'User from {origin}',
     formerNames: 'Former Names',
     recentMessages: 'Recent Messages',
     empty: 'No messages yet',

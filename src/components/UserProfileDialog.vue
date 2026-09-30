@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="profile__external" v-else>
-        来自 {{ user.origin }} 的用户
+        {{ $t('profile.fromUser', { origin: user.origin }) }}
       </div>
 
       <div class="profile__section" v-if="profile.previousNames?.length">

@@ -34,6 +34,7 @@ export default {
     language: '语言',
   },
   profile: {
+    fromUser: '来自 {origin} 的用户',
     formerNames: '曾用名',
     recentMessages: '最近发言',
     empty: '暂无发言记录',
