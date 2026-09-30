@@ -103,7 +103,6 @@ onUnmounted(() => {
 .madoka-img-container {
   position: relative;
   width: 250px;
-  cursor: pointer;
   overflow: hidden;
   display: flex;
 
@@ -169,7 +168,6 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     font-size: 30px;
-    cursor: pointer;
     pointer-events: auto;
     transition: all 0.3s ease;
 

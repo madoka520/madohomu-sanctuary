@@ -114,7 +114,6 @@ watch(
   border-radius: 12px;
   background: @bg-card;
   border: 2px solid transparent;
-  cursor: pointer;
   user-select: none;
   transition:
     background 0.25s ease,
@@ -193,7 +192,6 @@ watch(
   background: transparent; // 无背景填充，靠边框成形
   border: 1.5px solid rgba(255, 183, 197, 0.45);
   border-radius: 0; // 直角
-  cursor: pointer;
   user-select: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -319,7 +317,6 @@ watch(
 // [Ethan] 错误遮罩 — 可点击重试
 .card-overlay--error {
   pointer-events: auto;
-  cursor: pointer;
 
   .icon-retry {
     font-size: 28px;

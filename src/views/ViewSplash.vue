@@ -86,7 +86,6 @@ const Root = (() => {
     radial-gradient(45% 40% at 82% 18%, rgba(255, 196, 215, 0.4), transparent 60%),
     radial-gradient(75% 60% at 50% 112%, rgba(255, 214, 228, 0.5), transparent 65%),
     linear-gradient(180deg, #fff8fa 0%, #fff0f5 55%, #ffe9f1 100%);
-  cursor: pointer;
   user-select: none;
   transition: opacity 0.6s ease;
 

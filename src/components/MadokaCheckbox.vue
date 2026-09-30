@@ -31,7 +31,6 @@ const modelValue = defineModel({
   display: flex; // 建议改用 inline-flex，处理对齐更稳定
   align-items: center; // 垂直居中
   position: relative;
-  cursor: pointer;
   .checkbox-input {
     // 关键：让 input 铺满整个 label 区域，但不可见
     position: absolute;
@@ -40,7 +39,6 @@ const modelValue = defineModel({
     width: 100%;
     height: 100%;
     opacity: 0;
-    cursor: pointer;
     margin: 0;
     z-index: 2; // 确保在最上层响应点击
   }

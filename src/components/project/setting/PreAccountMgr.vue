@@ -218,7 +218,6 @@ const Root = (() => {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
 
   .avatar-wrapper {
-    cursor: pointer;
     transition: transform 0.2s ease;
 
     &:hover {

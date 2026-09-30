@@ -258,7 +258,6 @@ defineExpose({
         background: @madoka-primary;
         border: none;
         padding: 12px 30px;
-        cursor: pointer;
         border-radius: 25px;
         margin-right: 2px;
         transition: all 0.3s ease;

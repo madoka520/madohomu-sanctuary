@@ -101,7 +101,6 @@ const handleProgressInput = (e: Event) => {
     padding: 12px 20px;
     margin-bottom: 8px;
     border-radius: 10px;
-    cursor: pointer;
     transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     background: rgba(255, 255, 255, 0.5);
     will-change: transform;
@@ -238,7 +237,6 @@ const handleProgressInput = (e: Event) => {
     height: 12px;
     background: #ff69b4;
     border-radius: 50%;
-    cursor: pointer;
     box-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
     border: 2px solid white;
   }

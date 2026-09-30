@@ -185,7 +185,6 @@ const Root = (() => {
 .control-btn {
   font-size: 28px;
   line-height: 1;
-  cursor: pointer;
   user-select: none;
   color: pink;
 
@@ -207,7 +206,6 @@ const Root = (() => {
   z-index: 10;
   font-size: 32px;
   color: pink;
-  cursor: pointer;
   transition:
     transform 0.15s ease,
     opacity 0.15s ease;
