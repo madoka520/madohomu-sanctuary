@@ -212,17 +212,20 @@ const onSwiper = (swiper: any) => {
     opacity: 0;
     filter: blur(20px);
     transform: translateY(20px) scale(0.8);
-    letter-spacing: 12px;
+    letter-spacing: 15px;
   }
   40% {
     opacity: 0.5;
     filter: blur(8px);
   }
   100% {
+    /* =========start========== 定格字距 2px→5px：复刻 lang=ja 时
+       日文字体拉丁步进更宽的舒展观感（用户偏好），不再依赖 html lang 副作用 */
     opacity: 1;
     filter: blur(0);
     transform: translateY(0) scale(1);
-    letter-spacing: 2px;
+    letter-spacing: 5px;
+    /* ========end======== */
   }
 }
 </style>
