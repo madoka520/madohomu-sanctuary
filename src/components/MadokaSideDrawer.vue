@@ -208,8 +208,10 @@ useDrag(
       border-right: none;
     }
 
-    // Codex 新增开始 —— 运行时长：纯展示，样式跟随今日留言（无上/左/右边框的平贴形态）
+    // Codex 新增开始 —— 运行时长：显隐跟随发送留言（半藏时隐藏，上浮时显示在其右边），
+    // 样式为无上/左/右边框的平贴形态
     .site-uptime {
+      display: none;
       pointer-events: none;
       border-top: none;
       border-left: none;
@@ -235,12 +237,12 @@ useDrag(
     .send__button {
       display: inline-flex;
     }
-    // 原代码 - Codex 保留（悬停打开面板时隐藏今日留言，换成发送留言+返回）
-    // .today__count {
-    //   display: none;
-    // }
-    // Codex 新增开始 —— 打开面板时今日留言保留显示（用户要求不去掉访客标签）
     .today__count {
+      display: none;
+    }
+
+    // Codex 新增开始 —— 上浮时运行时长随发送留言一起显示（紧跟其右侧的独立标签）
+    .site-uptime {
       display: inline-flex;
     }
     // Codex 新增结束
