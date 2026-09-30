@@ -27,3 +27,11 @@
 .text-center {
   text-align: center;
 }
+/* =========start========== 修复：发布版库的 type-2 按钮（.submit-btn）在抽取时
+   丢了旧本地版的 18px 圆角与超椭圆角形，导致「登录/注册」「退出登录」变成直角矩形。
+   双类名提升优先级压过库的 .submit-btn[data-v-hash]（0,2,0） */
+div.submit-btn.madoka-btn-base {
+  border-radius: 18px;
+  corner-shape: superellipse(1.333);
+}
+/* ========end======== */
