@@ -9,10 +9,7 @@
     @click.capture="Root.lockActive"
   >
     <div class="header">
-      <!-- Codex 新增开始 —— 左侧聚簇：发送留言 + 运行时长。
-        保持原先「左-中-右」三段 space-between 布局，今日留言仍居中不被挤占 -->
       <div class="header__left">
-        <!-- Codex 新增结束 -->
         <madoka-btn
           class="send__button"
           type="3"
@@ -22,20 +19,15 @@
           <i class="mdi mdi-send" />
           发送留言
         </madoka-btn>
-        <!-- Codex 新增开始 —— 本站运行时长（独立标签） -->
-        <madoka-btn class="site-uptime" type="3" style="height: 40px">
-          <i class="mdi mdi-timer-outline" />
-          已运行 {{ Uptime.text }}
-        </madoka-btn>
-        <!-- Codex 新增结束 -->
-        <!-- Codex 新增开始 -->
         <madoka-btn class="today__count" type="3" style="height: 40px">
           <i class="mdi mdi-counter" />
           今日留言{{ todayCount }}
         </madoka-btn>
+        <madoka-btn class="site-uptime" type="3" style="height: 40px">
+          <i class="mdi mdi-timer-outline" />
+          已运行 {{ Uptime.text }}
+        </madoka-btn>
       </div>
-      <!-- Codex 新增结束 -->
-
       <div style="display: flex; gap: 10px">
         <madoka-btn
           type="3"
@@ -69,10 +61,7 @@
 <script setup lang="ts">
 import { useDrag } from '@vueuse/gesture'
 import { MadokaBtn } from '@madoka520/vue-ui'
-// Codex 新增开始 —— 本站运行时长
 import dayjs from 'dayjs'
-// Codex 新增结束
-
 const peekPanelRef = useTemplateRef('peekPanelRef')
 
 const emits = defineEmits(['madokaScroll', 'ok', 'back', 'handleSent'])
@@ -112,15 +101,12 @@ const SITE_LAUNCH_TIME = dayjs('2025-05-27 22:49:00')
 const Uptime = (() => {
   const refresh = () => {
     const total = Math.max(0, dayjs().diff(SITE_LAUNCH_TIME, 'second'))
-    const days = Math.floor(total / 86400)
+    const years = Math.floor(total / 31536000) // 按 365 天/年折算
+    const days = Math.floor((total % 31536000) / 86400)
     const hours = Math.floor((total % 86400) / 3600)
     const mins = Math.floor((total % 3600) / 60)
     const secs = total % 60
-    // 满 1 天后只显示到分钟，数字太长会把头部挤变形
-    s.text =
-      days > 0
-        ? `${days}天${hours}小时${mins}分`
-        : `${hours}小时${mins}分${secs}秒`
+    s.text = `${years}年${days}天${hours}小时${mins}分${secs}秒`
   }
   const s = reactive({
     text: '',
