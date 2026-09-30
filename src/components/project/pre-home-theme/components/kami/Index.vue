@@ -170,6 +170,12 @@ const onSwiper = (swiper: any) => {
       padding-left: 20%;
       user-select: none;
 
+      /* =========start========== 行距：日文排字式的上下舒朗（用户偏好） */
+      display: flex;
+      flex-direction: column;
+      gap: 1.1em;
+      /* ========end======== */
+
       .char {
         display: inline-block;
         font-size: clamp(16px, 2.2vw, 32px);
@@ -212,20 +218,17 @@ const onSwiper = (swiper: any) => {
     opacity: 0;
     filter: blur(20px);
     transform: translateY(20px) scale(0.8);
-    letter-spacing: 0.7em;
+    letter-spacing: 12px;
   }
   40% {
     opacity: 0.5;
     filter: blur(8px);
   }
   100% {
-    /* =========start========== 定格字距：0.35em（em 随 clamp 字号缩放），
-       复刻日文排字的舒展字距观感，不依赖 html lang 副作用 */
     opacity: 1;
     filter: blur(0);
     transform: translateY(0) scale(1);
-    letter-spacing: 0.35em;
-    /* ========end======== */
+    letter-spacing: 2px;
   }
 }
 </style>
