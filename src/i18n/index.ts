@@ -49,16 +49,15 @@ const applyRunesMode = (locale: LocaleValue) => {
   document.documentElement.classList.toggle('runes-mode', locale === 'runes')
 }
 
-/** 切换语言：更新实例 + 持久化 + 同步 <html lang> */
+/** 切换语言：更新实例 + 持久化。
+ * 注意：不要动 <html lang>——浏览器会按 lang 重选字体（如 ja 用日文字体），
+ * 拉丁字形宽度随之变化，首屏英文引言的字距会在切换语言后漂移 */
 export const setLocale = (locale: LocaleValue) => {
   i18n.global.locale.value = locale
   localStorage.setItem(STORAGE_KEY, locale)
-  document.documentElement.lang = locale === 'runes' ? 'en' : locale
   applyRunesMode(locale)
 }
 
-document.documentElement.lang =
-  i18n.global.locale.value === 'runes' ? 'en' : i18n.global.locale.value
 applyRunesMode(i18n.global.locale.value as LocaleValue)
 // ========end========
 
