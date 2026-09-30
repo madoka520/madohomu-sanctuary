@@ -33,6 +33,23 @@ export default {
     about: 'About',
     language: 'Language',
   },
+
+  account: {
+    username: 'Nickname',
+    password: 'Password',
+    email: 'Email',
+    logout: 'Log Out',
+    changeUsername: 'Change Nickname',
+    usernamePlaceholder: 'Enter a username',
+    changePassword: 'Change Password',
+    newPasswordPlaceholder: 'Enter new password',
+    confirmPasswordPlaceholder: 'Enter the password again',
+    passwordMismatch: 'Passwords do not match!',
+    notImplemented: 'Not implemented yet~ ✘﹏✘',
+    selectImage: 'Please select an image file',
+    fileTooLarge: 'File must be under 10MB!',
+    avatarSuccess: 'Avatar uploaded!',
+  },
   profile: {
     fromUser: 'User from {origin}',
     formerNames: 'Former Names',

@@ -8,22 +8,22 @@
     </div>
 
     <div class="card item" @click="Root.handleUpdateUsername">
-      <span class="label">昵称</span>
+      <span class="label">{{ $t('account.username') }}</span>
       <span class="value">{{ Root.model.username }}</span>
     </div>
 
     <div class="card item" @click="Root.handleUpdatePassword">
-      <span class="label">密码</span>
+      <span class="label">{{ $t('account.password') }}</span>
       <span class="value">••••••••</span>
     </div>
 
     <div class="card item" @click="Root.handleUpdateEmail">
-      <span class="label">邮箱</span>
+      <span class="label">{{ $t('account.email') }}</span>
       <span class="value">{{ Root.model.email }}</span>
     </div>
 
     <div class="action-area">
-      <madoka-btn class="logout" type="2" text="退出登录" @click="Root.logout" />
+      <madoka-btn class="logout" type="2" :text="$t('account.logout')" @click="Root.logout" />
     </div>
   </div>
 </template>
@@ -32,6 +32,9 @@
 import { reactive } from "vue"
 import { MadokaBtn } from "@madoka520/vue-ui"
 import useToken, { type UserInfo } from "@/hooks/useToken.ts"
+// =========start========== i18n：账号页文案
+import i18n from "@/i18n"
+// ========end========
 import AuthApi from "@/api/AuthApi.ts"
 import { message } from "@madoka520/vue-ui"
 import MadokaAvatar from "@/components/MadokaAvatar.vue"
@@ -54,9 +57,9 @@ const Root = (() => {
   const handleUpdateUsername = () => {
     const value = ref(s.model.username)
     useModal.confirm({
-      title: "修改昵称",
+      title: i18n.global.t('account.changeUsername'),
       //@ts-ignore
-      content: () => <MadokaInput placeholder="请输入用户名" v-model={value.value} />,
+      content: () => <MadokaInput :placeholder="i18n.global.t('account.usernamePlaceholder')" v-model={value.value} />,
       onOk: async () => {
         await AuthApi.updateUsername(value.value)
         s.model.username = value.value
@@ -69,13 +72,13 @@ const Root = (() => {
     const valueAgain = ref("")
     const equal = ref(true)
     useModal.confirm({
-      title: "修改密码",
+      title: i18n.global.t('account.changePassword'),
       //@ts-ignore
       content: () => (
         <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
-          <MadokaInput type="password" placeholder="请输入新密码" v-model={value.value} />
-          <MadokaInput type="password" placeholder="请再次输入新密码" v-model={valueAgain.value} />
-          {!equal.value && <div style="color: red;font-size: 13px">两次输入密码不一致!</div>}
+          <MadokaInput type="password" :placeholder="i18n.global.t('account.newPasswordPlaceholder')" v-model={value.value} />
+          <MadokaInput type="password" :placeholder="i18n.global.t('account.confirmPasswordPlaceholder')" v-model={valueAgain.value} />
+          {!equal.value && <div style="color: red;font-size: 13px">{i18n.global.t('account.passwordMismatch')}</div>}
         </div>
       ),
       onOk: async () => {
@@ -89,7 +92,7 @@ const Root = (() => {
   }
 
   const handleUpdateEmail = () => {
-    message.info("还没做此功能~ ✘﹏✘")
+    message.info(i18n.global.t('account.notImplemented'))
   }
   const handleUpload = () => {
     uploadRef.value?.click()
@@ -103,13 +106,13 @@ const Root = (() => {
     const { size } = file
 
     if (!file.type.startsWith("image/")) {
-      message.error("请选择图片文件")
+      message.error(i18n.global.t('account.selectImage'))
       input.value = ""
       return
     }
 
     if (size > 10 * 1024 * 1024) {
-      message.error("文件大小不能超过10MB！")
+      message.error(i18n.global.t('account.fileTooLarge'))
       input.value = ""
       return
     }
@@ -123,7 +126,7 @@ const Root = (() => {
 
     const res = await AuthApi.upload({ filename: `${useToken().userInfo.id}.webp`, size: newFile.size, hash }, newFile)
     useToken().userInfo.updateTime = res.updateTime
-    message.success("头像上传成功!")
+    message.success(i18n.global.t('account.avatarSuccess'))
   }
 
   const s = reactive({

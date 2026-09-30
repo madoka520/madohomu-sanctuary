@@ -33,6 +33,23 @@ export default {
     about: '关于系统',
     language: '语言',
   },
+
+  account: {
+    username: '昵称',
+    password: '密码',
+    email: '邮箱',
+    logout: '退出登录',
+    changeUsername: '修改昵称',
+    usernamePlaceholder: '请输入用户名',
+    changePassword: '修改密码',
+    newPasswordPlaceholder: '请输入新密码',
+    confirmPasswordPlaceholder: '请再次输入新密码',
+    passwordMismatch: '两次输入密码不一致!',
+    notImplemented: '还没做此功能~ ✘﹏✘',
+    selectImage: '请选择图片文件',
+    fileTooLarge: '文件大小不能超过10MB！',
+    avatarSuccess: '头像上传成功!',
+  },
   profile: {
     fromUser: '来自 {origin} 的用户',
     formerNames: '曾用名',

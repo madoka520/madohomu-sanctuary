@@ -33,6 +33,23 @@ export default {
     about: 'システムについて',
     language: '言語',
   },
+
+  account: {
+    username: 'ニックネーム',
+    password: 'パスワード',
+    email: 'メールアドレス',
+    logout: 'ログアウト',
+    changeUsername: 'ニックネームを変更',
+    usernamePlaceholder: 'ユーザー名を入力',
+    changePassword: 'パスワードを変更',
+    newPasswordPlaceholder: '新しいパスワードを入力',
+    confirmPasswordPlaceholder: 'もう一度パスワードを入力',
+    passwordMismatch: 'パスワードが一致しません！',
+    notImplemented: 'この機能はまだ未実装です~ ✘﹏✘',
+    selectImage: '画像ファイルを選択してください',
+    fileTooLarge: 'ファイルサイズは10MBまでです！',
+    avatarSuccess: 'アバターをアップロードしました！',
+  },
   profile: {
     fromUser: '{origin} からのユーザー',
     formerNames: '旧名',
