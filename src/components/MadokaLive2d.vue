@@ -456,7 +456,15 @@ const Interact = (() => {
       return
     }
     const h = new Date().getHours()
-    const key = h >= 5 && h < 11 ? "morning" : h < 17 ? "afternoon" : h < 23 ? "evening" : "night"
+    // 各段显式圈定范围，else 兜底 23~4 点为深夜（原先凌晨会先命中 h<17 被判成下午）
+    const key =
+      h >= 5 && h < 11
+        ? "morning"
+        : h >= 11 && h < 17
+          ? "afternoon"
+          : h >= 17 && h < 23
+            ? "evening"
+            : "night"
     const q = QUOTES.greeting[key]
     Chat.show(q.jp, q.cn)
   }
