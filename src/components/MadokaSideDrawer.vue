@@ -208,10 +208,9 @@ useDrag(
       border-right: none;
     }
 
-    // Codex 新增开始 —— 运行时长：显隐跟随发送留言（半藏时隐藏，上浮时显示在其右边），
-    // 样式为无上/左/右边框的平贴形态
+    // Codex 新增开始 —— 运行时长：与今日留言同类的信息标签，
+    // 显隐节奏与样式（平贴形态）完全跟随 today__count
     .site-uptime {
-      display: none;
       pointer-events: none;
       border-top: none;
       border-left: none;
@@ -241,9 +240,9 @@ useDrag(
       display: none;
     }
 
-    // Codex 新增开始 —— 上浮时运行时长随发送留言一起显示（紧跟其右侧的独立标签）
+    // Codex 新增开始 —— 上浮时运行时长与今日留言一起隐藏（同为信息标签）
     .site-uptime {
-      display: inline-flex;
+      display: none;
     }
     // Codex 新增结束
 
