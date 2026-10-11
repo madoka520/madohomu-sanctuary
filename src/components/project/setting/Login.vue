@@ -133,12 +133,16 @@ const Form = (() => {
 .form-actions {
   color: white;
   margin-top: 10px;
-  :deep(.madoka-btn) {
+  /* =========start========== 原 :deep(.madoka-btn) 从未命中（库按钮根类是 submit-btn，
+     之前 100% 宽全靠旧本地组件的块级布局），迁移后库基类 fit-content 使其缩窄。
+     改为命中库根类，让这几条样式真正生效 */
+  :deep(.submit-btn) {
     width: 100%; // 让按钮充满宽度
     height: 45px;
     font-size: 16px;
     letter-spacing: 2px;
   }
+  // ========end========
 }
 
 /* 密码框显示隐藏的动画 */
