@@ -1,5 +1,19 @@
 // =========start========== 站点 i18n 日本語
 export default {
+  server: {
+    loginSuccess: 'ログインしました！',
+    registerSuccess: '登録しました！',
+    uploadSuccess: 'アップロードしました！',
+    updateSuccess: '変更しました！',
+    usernameRequired: 'ユーザー名を入力してください！',
+    wrongCredentials: 'ユーザー名またはパスワードが違います！',
+    invalidUsername: 'ユーザー名が無効です！',
+    usernameExists: 'そのユーザー名は既に存在します！',
+    noFile: 'ファイルが未アップロードです',
+    imageOnly: '画像形式のみ対応しています',
+    invalidImage: '無効な画像ファイルです！',
+    serverError: 'サーバー内部エラーです！',
+  },
 
   login: {
     usernamePlaceholder: 'ニックネームを入力',

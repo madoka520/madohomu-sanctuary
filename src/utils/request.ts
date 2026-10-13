@@ -4,6 +4,31 @@ import i18n from '@/i18n'
 // ========end========
 import { message } from "@madoka520/vue-ui"
 import type { MyAxiosRequestConfig } from "@/types/IAxiosType.ts"
+
+// =========start========== 后端消息本地化：后端只返回中文文案，
+// 这里按「去掉尾部标点后的原文」映射到 i18n 键；未收录的消息原样透出
+const SERVER_MESSAGE_KEYS: Record<string, string> = {
+  登录成功: 'server.loginSuccess',
+  注册成功: 'server.registerSuccess',
+  上传成功: 'server.uploadSuccess',
+  修改成功: 'server.updateSuccess',
+  用户名不能为空: 'server.usernameRequired',
+  用户名或密码错误: 'server.wrongCredentials',
+  用户名非法: 'server.invalidUsername',
+  用户名已存在: 'server.usernameExists',
+  未上传文件: 'server.noFile',
+  仅支持图片格式: 'server.imageOnly',
+  非法图片文件: 'server.invalidImage',
+  服务器内部错误: 'server.serverError',
+}
+
+const localizeServerMessage = (msg?: string) => {
+  if (!msg) return undefined
+  const key = msg.replace(/[!！。~～\s]+$/g, '')
+  const i18nKey = SERVER_MESSAGE_KEYS[key]
+  return i18nKey ? i18n.global.t(i18nKey) : msg
+}
+// ========end========
 // import { useToken } from "@/hooks/useToken.ts";
 
 // const authenticated = computed(() => !!useToken().getToken());
@@ -32,7 +57,7 @@ service.interceptors.response.use(
       case "put":
       case "post": {
         if (res.status === 200 && res.config.showSuccessMessage) {
-          message.success(res.data.message ?? i18n.global.t('request.success'))
+          message.success(localizeServerMessage(res.data.message) ?? i18n.global.t('request.success'))
         }
       }
     }
@@ -46,10 +71,10 @@ service.interceptors.response.use(
 
     // 根据配置决定是否显示错误提示
     if (cfg?.showErrorMessage !== false && !["get", "GET"].includes(cfg.method!)) {
-      message.error(error ?? i18n.global.t('request.error'))
+      message.error(localizeServerMessage(error) ?? i18n.global.t('request.error'))
     }
 
-    return Promise.reject(msg ?? error ?? err)
+    return Promise.reject(localizeServerMessage(msg) ?? error ?? err)
   },
 )
 //参数类型

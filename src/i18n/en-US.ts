@@ -1,5 +1,19 @@
 // =========start========== 站点 i18n English (US)
 export default {
+  server: {
+    loginSuccess: 'Logged in!',
+    registerSuccess: 'Registered!',
+    uploadSuccess: 'Uploaded!',
+    updateSuccess: 'Updated!',
+    usernameRequired: 'Username is required!',
+    wrongCredentials: 'Wrong username or password!',
+    invalidUsername: 'Invalid username!',
+    usernameExists: 'Username already exists!',
+    noFile: 'No file uploaded',
+    imageOnly: 'Image formats only',
+    invalidImage: 'Invalid image file!',
+    serverError: 'Internal server error!',
+  },
 
   login: {
     usernamePlaceholder: 'Enter a nickname',

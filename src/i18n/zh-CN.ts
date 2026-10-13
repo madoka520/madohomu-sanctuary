@@ -1,5 +1,19 @@
 // =========start========== 站点 i18n 中文简体（默认语言，也是回退语言）
 export default {
+  server: {
+    loginSuccess: '登录成功!',
+    registerSuccess: '注册成功!',
+    uploadSuccess: '上传成功!',
+    updateSuccess: '修改成功!',
+    usernameRequired: '用户名不能为空!',
+    wrongCredentials: '用户名或密码错误!',
+    invalidUsername: '用户名非法!',
+    usernameExists: '用户名已存在!',
+    noFile: '未上传文件',
+    imageOnly: '仅支持图片格式',
+    invalidImage: '非法图片文件!',
+    serverError: '服务器内部错误!',
+  },
 
   login: {
     usernamePlaceholder: '请输入昵称',
