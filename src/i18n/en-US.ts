@@ -13,6 +13,9 @@ export default {
     imageOnly: 'Image formats only',
     invalidImage: 'Invalid image file!',
     serverError: 'Internal server error!',
+    messageEmpty: 'Message cannot be empty',
+    messageSent: 'Message sent!',
+    opSuccess: 'Done!',
   },
 
   login: {

@@ -20,6 +20,9 @@ const SERVER_MESSAGE_KEYS: Record<string, string> = {
   仅支持图片格式: 'server.imageOnly',
   非法图片文件: 'server.invalidImage',
   服务器内部错误: 'server.serverError',
+  留言不能为空: 'server.messageEmpty',
+  留言发送成功: 'server.messageSent',
+  操作成功: 'server.opSuccess',
 }
 
 const localizeServerMessage = (msg?: string) => {
@@ -74,7 +77,7 @@ service.interceptors.response.use(
       message.error(localizeServerMessage(error) ?? i18n.global.t('request.error'))
     }
 
-    return Promise.reject(localizeServerMessage(msg) ?? error ?? err)
+    return Promise.reject(localizeServerMessage(msg) ?? localizeServerMessage(error) ?? err)
   },
 )
 //参数类型

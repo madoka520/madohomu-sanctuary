@@ -13,6 +13,9 @@ export default {
     imageOnly: '画像形式のみ対応しています',
     invalidImage: '無効な画像ファイルです！',
     serverError: 'サーバー内部エラーです！',
+    messageEmpty: 'メッセージが空です',
+    messageSent: 'メッセージを送信しました！',
+    opSuccess: '成功しました!',
   },
 
   login: {

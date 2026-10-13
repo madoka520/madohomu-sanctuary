@@ -13,6 +13,9 @@ export default {
     imageOnly: '仅支持图片格式',
     invalidImage: '非法图片文件!',
     serverError: '服务器内部错误!',
+    messageEmpty: '留言不能为空',
+    messageSent: '留言发送成功!',
+    opSuccess: '操作成功!',
   },
 
   login: {
