@@ -310,8 +310,10 @@ const Root = (() => {
     .card__inner {
       width: 100%;
       height: 100%;
-      overflow-y: auto; // 只在垂直方向滚动
-      overflow-x: hidden;
+      /* =========start========== 滚动下沉：原先整卡（含 header/footer）一起滚，
+         长内容会把 footer 滚出视野。改为只有正文区滚动，头尾固定 */
+      overflow: hidden;
+      // ========end========
       padding: 14px; // 恢复原有的 padding
       display: flex;
       flex-direction: column;
@@ -354,6 +356,13 @@ const Root = (() => {
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-word;
+
+    // =========start========== 正文区作为卡内唯一滚动容器（见 card__inner 注释）
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    // ========end========
 
     // =========start========== 表情包：行内展示，限制尺寸避免撑坏排版
     .sticker-img {

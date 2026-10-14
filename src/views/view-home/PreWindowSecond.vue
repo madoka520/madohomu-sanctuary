@@ -228,7 +228,7 @@ const Scroll = (() => {
 
     // 1. 查找真正负责滚动的内部容器
     const target = e.target as HTMLElement
-    const scrollable = target.closest('.card__inner') as HTMLElement | null
+    const scrollable = target.closest('.card__content') as HTMLElement | null
 
     if (scrollable) {
       const { scrollTop, scrollHeight, clientHeight } = scrollable
