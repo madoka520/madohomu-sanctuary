@@ -1,6 +1,6 @@
 <template>
   <div class="profile-page">
-    <div class="card avatar-card gem-card gem-card--cut gem-noise">
+    <div class="card avatar-card gem-card gem-noise">
       <div class="avatar-wrapper">
         <madoka-avatar v-if="Root.model.id" :user-id="Root.model.id" @click="Root.handleUpload" :width="120" uploadadble />
         <input type="file" accept="image/jpeg,image/png,image/webp" @change="Root.onSelectAvatar" style="display: none" ref="uploadRef" />
@@ -405,7 +405,8 @@ const Root = (() => {
   }
   // ========end========
 
-  // =========start========== 悬浮时刻面光晕增强(基础 drop-shadow 来自全局 .gem-card--cut)
+  // =========start========== 悬浮时刻面光晕增强(斜切角已按用户要求移除,drop-shadow
+  // 依旧可用——直角轮廓下效果与 box-shadow 光晕等价)
   transition:
     filter 0.3s ease,
     transform 0.25s ease;

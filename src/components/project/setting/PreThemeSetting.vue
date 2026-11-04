@@ -3,7 +3,7 @@
     <div
       v-for="(item, index) in setting.themeList"
       :key="index"
-      class="theme-option gem-card gem-card--cut gem-noise"
+      class="theme-option gem-card gem-noise"
       :class="{
         'is-loading': item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Loading,
         'is-error': item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Error,
