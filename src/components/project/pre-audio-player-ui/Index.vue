@@ -84,10 +84,13 @@ const handleProgressInput = (e: Event) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 70vh;
+  // 原代码 - 保留(70vh 与弹窗 clamp(260px,50vh,500px) 高度不匹配,内容比壳高导致滚动错乱)
+  // height: 70vh;
+  // 原代码 - 保留(圆角由弹窗外框 radius 负责,内容层不再自带)
+  // border-radius: 24px;
+  // corner-shape: superellipse(1.333);
+  height: 100%;
   width: 100%;
-  border-radius: 24px;
-  corner-shape: superellipse(1.333);
   // padding-bottom: 10px;
   user-select: none;
 }
@@ -95,51 +98,61 @@ const handleProgressInput = (e: Event) => {
 .song-list-container {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 10px 10px 5px;
-  scrollbar-gutter: stable both-edges;
+  padding: 4px 8px 4px 2px;
+  scrollbar-gutter: stable;
+
   .song-item {
-    padding: 12px 20px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    background: rgba(255, 255, 255, 0.5);
+    // =========start========== 白色药丸卡改细线行:透明底 + 底部细粉线,与账号设置行同语言
+    padding: 12px 10px;
+    // 原代码 - 保留(白卡形态)
+    // margin-bottom: 8px;
+    // border-radius: 10px;
+    // background: rgba(255, 255, 255, 0.5);
+    // box-shadow: 0 2px 8px rgba(255, 183, 197, 0.3);
+    border-bottom: 1px solid rgba(255, 183, 197, 0.28);
+    background: transparent;
+    border-radius: 0;
+    transition: transform 0.3s ease, background 0.3s ease;
     will-change: transform;
 
     font-size: 14px;
 
     &:hover {
-      background: #ffe5eb;
-      transform: translateX(5px);
-      box-shadow: 0 2px 8px rgba(255, 183, 197, 0.3);
+      background: rgba(255, 183, 206, 0.1);
+      transform: translateX(4px);
     }
     .title {
-      color: #555;
+      color: #5f3a49;
       font-size: 14px;
       font-weight: bold;
     }
     .meta {
-      color: gray;
+      color: rgba(95, 58, 73, 0.55);
       font-size: 11px;
     }
     &--active {
-      background: linear-gradient(90deg, #ffdae2, #ffffff);
-      box-shadow: 0 4px 12px rgba(255, 183, 197, 0.4);
+      // 原代码 - 保留(白底渐变卡)
+      // background: linear-gradient(90deg, #ffdae2, #ffffff);
+      // box-shadow: 0 4px 12px rgba(255, 183, 197, 0.4);
+      background: linear-gradient(90deg, rgba(255, 133, 162, 0.15), transparent);
 
       .title {
-        color: pink;
+        color: #ff69b4;
         font-size: 14px;
         font-weight: bold;
+        text-shadow: 0 0 8px rgba(255, 105, 180, 0.35);
       }
       .meta {
-        color: pink;
+        color: rgba(255, 133, 162, 0.75);
         font-size: 11px;
       }
 
       &:hover {
-        background: linear-gradient(90deg, #ffcdd8, #ffffff);
-        transform: translateX(5px);
+        background: linear-gradient(90deg, rgba(255, 133, 162, 0.22), transparent);
+        transform: translateX(4px);
       }
     }
+    // ========end========
 
     .song-info {
       display: flex;
@@ -164,12 +177,17 @@ const handleProgressInput = (e: Event) => {
 }
 
 .player-controls {
-  margin: 0 10px 10px 10px;
-  padding: 15px 20px;
-  background: white;
-  border-radius: 22px;
-  corner-shape: superellipse(1.333);
-  box-shadow: 0 4px 12px rgba(255, 183, 197, 0.3);
+  // =========start========== 白色大圆角卡改平铺底栏:细线与歌单分隔,透明底融入弹窗
+  // 原代码 - 保留(白色超椭圆卡形态)
+  // margin: 0 10px 10px 10px;
+  // background: white;
+  // border-radius: 22px;
+  // corner-shape: superellipse(1.333);
+  // box-shadow: 0 4px 12px rgba(255, 183, 197, 0.3);
+  padding: 14px 8px 4px;
+  border-top: 1px solid rgba(255, 183, 197, 0.45);
+  background: transparent;
+  // ========end========
 
   .controls-content {
     display: flex;
@@ -184,6 +202,7 @@ const handleProgressInput = (e: Event) => {
     border: 3px solid #ffb7c5;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(255, 183, 197, 0.5);
+    flex-shrink: 0;
 
     img {
       width: 100%;
@@ -197,9 +216,11 @@ const handleProgressInput = (e: Event) => {
   }
 
   .controls-info {
-    font-size: 12px;
+    font-size: 13px;
+    color: #5f3a49;
+    flex-shrink: 0;
     .artist {
-      color: #888;
+      color: rgba(95, 58, 73, 0.55);
     }
   }
   .progress-section {
@@ -207,12 +228,13 @@ const handleProgressInput = (e: Event) => {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 
     .time-info {
       display: flex;
       justify-content: space-between;
       font-size: 10px;
-      color: #ffb7c5;
+      color: #ff85a2;
       font-family: monospace;
     }
   }
@@ -221,9 +243,10 @@ const handleProgressInput = (e: Event) => {
 /* 自定义进度条 */
 .madoka-slider {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 4px;
-  background: #ffdae2;
+  background: rgba(255, 183, 213, 0.45);
   border-radius: 2px;
   outline: none;
 
@@ -231,7 +254,19 @@ const handleProgressInput = (e: Event) => {
     display: none;
   }
 
-  &::-webkit-scrollbar-thumb {
+  // 原代码 - 保留(选择器写错:range 的滑块是 slider-thumb,scrollbar-thumb 从未生效过)
+  // &::-webkit-scrollbar-thumb {
+  //   -webkit-appearance: none;
+  //   width: 12px;
+  //   height: 12px;
+  //   background: #ff69b4;
+  //   border-radius: 50%;
+  //   box-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+  //   border: 2px solid white;
+  // }
+
+  // =========start========== 真正的滑块:粉芯白描边 + 柔光,hover 轻微放大
+  &::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 12px;
     height: 12px;
@@ -239,7 +274,13 @@ const handleProgressInput = (e: Event) => {
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
     border: 2px solid white;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
+
+  &:hover::-webkit-slider-thumb {
+    transform: scale(1.2);
+  }
+  // ========end========
 }
 
 @keyframes rotate-album {

@@ -13,7 +13,7 @@
       <!--    <span class="mdi mdi-playlist-play control-btn"></span>-->
       <madoka-dialog
         v-model="Dialog.preAudioPlayerUi.opened"
-        title=""
+        :radius="12"
         height="clamp(260px, 50vh, 500px)"
         width="clamp(320px, 40vw, 700px)"
         :footer="false"
