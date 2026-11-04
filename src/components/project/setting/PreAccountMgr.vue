@@ -7,6 +7,14 @@
       </div>
     </div>
 
+    <!-- =========start========== ◆ 宝石饰件分隔线:签名图形语言,线—菱—线 -->
+    <div class="gem-divider">
+      <span class="line"></span>
+      <span class="gem"></span>
+      <span class="line line--rev"></span>
+    </div>
+    <!-- ========end======== -->
+
     <!-- =========start========== 账号信息行改下划线样式:去掉卡片底,常驻细底线 + hover 强调线 -->
     <div class="item" @click="Root.handleUpdateUsername">
       <span class="label">{{ $t('account.username') }}</span>
@@ -271,14 +279,29 @@ const Root = (() => {
   font-size: 14px;
   // 常驻细底线:默认形态的「细边框成形」,直角无背景
   border-bottom: 1.5px solid rgba(255, 183, 213, 0.45);
+  // =========start========== hover 光扫:一道高光从左上掠到右下(60° 斜切配左上光源)
+  // 用 background 分层实现,不占用伪元素(::after 已是羽化强调线);hover 只改 background-color,
+  // 不能写 background 简写——会把这里的渐变层一起抹掉
+  background-image: linear-gradient(60deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%);
+  background-size: 220% 100%;
+  background-position: 130% 0;
+  background-repeat: no-repeat;
+  // ========end========
   // 原代码 - 保留
   // transition: background 0.25s ease;
   // 与强调线同一支慢曲线,底色和线一起落定
-  transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  // transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 
   .label {
     color: @text-color;
     font-weight: 600;
+    // =========start========== 美术字:宋体系衬线 + 3px 字距,标签从「控件文字」升格为「刻字」
+    font-family: 'Source Han Serif SC', 'Noto Serif SC', 'STZhongsong', 'SimSun', serif;
+    letter-spacing: 3px;
+    // ========end========
     margin-left: 10px;
     user-select: none;
   }
@@ -321,7 +344,11 @@ const Root = (() => {
   // ========end========
 
   &:hover {
-    background: rgba(255, 183, 206, 0.08);
+    // 原代码 - 保留
+    // background: rgba(255, 183, 206, 0.08);
+    // 只改色,保住光扫渐变层;位置从 130% 滑到 -30%,高光掠过整行
+    background-color: rgba(255, 183, 206, 0.08);
+    background-position: -30% 0;
 
     &::after {
       transform: scaleX(1);
@@ -348,7 +375,9 @@ const Root = (() => {
     }
 
     &:hover {
-      background: rgba(244, 63, 94, 0.06);
+      // 原代码 - 保留
+      // background: rgba(244, 63, 94, 0.06);
+      background-color: rgba(244, 63, 94, 0.06);
     }
   }
 }
@@ -358,14 +387,106 @@ const Root = (() => {
   padding: 36px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
 
+  // =========start========== 灵魂宝石卡:右上 18px 斜切角(刻面签名剪影,顺带回归直角默认形态)
+  // ⚠️ clip-path 会连同裁掉矩形 box-shadow,外阴影改走 filter:drop-shadow 才能跟随切角轮廓;
+  // 内侧顶部高光(inset)不受影响,保留——光源永远在左上
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
+
+  // 材质噪点:SVG feTurbulence 细颗粒叠层,杀掉平涂感(5% 透明度,不挡交互)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  // ========end========
+
   .avatar-wrapper {
+    // =========start========== isolation 让 z-index:-1 的光环留在本层之内,
+    // 不会被卡片底色盖住(魔法少女的光环,呼吸的)
+    position: relative;
+    isolation: isolate;
+    // ========end========
     transition: transform 0.2s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -14px;
+      z-index: -1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 143, 171, 0.28) 0%, transparent 68%);
+      animation: halo-breathe 3.2s ease-in-out infinite;
+    }
 
     &:hover {
       transform: scale(1.04);
     }
   }
 }
+
+// ✨ 光环呼吸:透明度与半径的缓慢律动,「页面活着」的氛围层
+@keyframes halo-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+// =========start========== ◆ 宝石饰件分隔线:渐隐细线夹一颗旋转 45° 的刻面菱
+.gem-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 14px 2px;
+  user-select: none;
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.45));
+
+    &--rev {
+      background: linear-gradient(90deg, rgba(255, 143, 171, 0.45), transparent);
+    }
+  }
+
+  .gem {
+    width: 7px;
+    height: 7px;
+    background: #ff8fab;
+    transform: rotate(45deg);
+    // 刻面高光永远朝左上(光源纪律);光晕缓慢明灭
+    box-shadow:
+      0 0 6px rgba(255, 105, 180, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    animation: gem-twinkle 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes gem-twinkle {
+  0%,
+  100% {
+    box-shadow:
+      0 0 4px rgba(255, 105, 180, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(255, 105, 180, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+}
+// ========end========
 
 // 原代码 - 保留(退出登录全宽按钮形态,已改为 .item.logout 危险行)
 // .action-area {
