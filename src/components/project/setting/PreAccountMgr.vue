@@ -281,21 +281,20 @@ const Root = (() => {
   font-size: 14px;
   // 常驻细底线:默认形态的「细边框成形」,直角无背景
   border-bottom: 1.5px solid rgba(255, 183, 213, 0.45);
-  // =========start========== hover 光扫:一道高光从左上掠到右下(60° 斜切配左上光源)
-  // 用 background 分层实现,不占用伪元素(::after 已是羽化强调线);hover 只改 background-color,
-  // 不能写 background 简写——会把这里的渐变层一起抹掉
+  /* 原代码 - 保留(hover 光扫,用户验收不好看,撤下——高光掠过与柔和羽化线的气质打架)
   background-image: linear-gradient(60deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%);
   background-size: 220% 100%;
   background-position: 130% 0;
   background-repeat: no-repeat;
-  // ========end========
+  */
   // 原代码 - 保留
   // transition: background 0.25s ease;
   // 与强调线同一支慢曲线,底色和线一起落定
   // transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transition:
-    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    background-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  // transition:
+  //   background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  //   background-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   .label {
     color: @text-color;
@@ -349,8 +348,8 @@ const Root = (() => {
     // 原代码 - 保留
     // background: rgba(255, 183, 206, 0.08);
     // 只改色,保住光扫渐变层;位置从 130% 滑到 -30%,高光掠过整行
+    // background-position: -30% 0;
     background-color: rgba(255, 183, 206, 0.08);
-    background-position: -30% 0;
 
     &::after {
       transform: scaleX(1);
