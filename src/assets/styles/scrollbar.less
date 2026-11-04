@@ -1,6 +1,10 @@
 // 全局滚动条 —— 粉色细条,替换 Windows 默认粗灰条
-// 提取自 UserProfileDialog 的私有实现(原 3px),统一全站:歌单/设置右栏/留言卡等所有内部滚动区
+// 提取自 UserProfileDialog 的私有实现,统一全站:歌单/设置右栏/留言卡等所有内部滚动区
 // 规则:轨道透明,拇指低透明度粉,hover 加深;不改变滚动行为只换皮肤
+//
+// ⚠️ 拇指必须「不透明 + 直角」:半透明/圆角的 ::-webkit-scrollbar-thumb 在滚动时
+// 抗锯齿边缘的失效区域清理不干净,会在旧位置留下粉色残影(2026-11-05 实测踩坑)。
+// 想要的「淡粉感」改用高明度实色(#ffd3de)而不是 rgba,视觉等价且无残影
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -11,11 +15,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 143, 171, 0.3);
-  border-radius: 3px;
+  background: #ffd3de;
+  border-radius: 0;
 
   &:hover {
-    background: rgba(255, 143, 171, 0.6);
+    background: #ff8fab;
   }
 }
 
@@ -25,7 +29,7 @@
 
 // Firefox:细滚动条 + 粉拇指
 // ⚠️ 必须用 @supports 隔离:Chromium 121+ 也支持了标准 scrollbar-width/color,
-// 而标准属性会覆盖 ::-webkit-scrollbar(实测把 5px 粉条顶成 10px 灰细条);
+// 而标准属性会覆盖 ::-webkit-scrollbar(实测把 5px 粉条顶成 10px 标准细条);
 // 「不认识 -webkit-scrollbar」的浏览器恰好只有 Firefox,正好做分流条件
 @supports not selector(::-webkit-scrollbar) {
   * {
