@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@madoka520/vue-ui':
-        specifier: ^1.1.31
-        version: 1.1.31(vue@3.5.27(typescript@5.7.3))
+        specifier: ^1.1.32
+        version: 1.1.32(vue@3.5.27(typescript@5.7.3))
       '@madoka520/vue-utils':
         specifier: ^0.1.0
         version: 0.1.0
@@ -472,8 +472,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@madoka520/vue-ui@1.1.31':
-    resolution: {integrity: sha512-UCUU89v9oWgfJvIyAySMLigXJc1AbtzQo24BOdn6apq9Mpv/EkowZFEbIAchUdS5/dNnaBdykke6E3Ho3sOMAA==, tarball: https://npm.pkg.github.com/download/@madoka520/vue-ui/1.1.31/9b5968bbf2f627d5efb45186ea3b6ca7f7add8ef}
+  '@madoka520/vue-ui@1.1.32':
+    resolution: {integrity: sha512-5ZHi+dFSuUGmRBzgLFTBv9sGzSEDtoVMNWYiT/ocw9ROa04WZpEMoXZFPAVKfcrpPzpO62RaTZcWg3HdtVb9Gw==, tarball: https://npm.pkg.github.com/download/@madoka520/vue-ui/1.1.32/644fdaa6327d156361ed654dee49a06b3ffa4d4e}
     peerDependencies:
       vue: ^3.5.0
 
@@ -2542,7 +2542,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@madoka520/vue-ui@1.1.31(vue@3.5.27(typescript@5.7.3))':
+  '@madoka520/vue-ui@1.1.32(vue@3.5.27(typescript@5.7.3))':
     dependencies:
       '@madoka520/vue-utils': 0.1.0
       '@vueuse/core': 11.3.0(vue@3.5.27(typescript@5.7.3))
