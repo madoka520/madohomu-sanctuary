@@ -91,6 +91,7 @@ export default {
     password: 'Password',
     email: 'Email',
     logout: 'Log Out',
+    logoutConfirm: 'Are you sure you want to log out?',
     changeUsername: 'Change Nickname',
     usernamePlaceholder: 'Enter a username',
     changePassword: 'Change Password',

@@ -7,6 +7,31 @@
       </div>
     </div>
 
+    <!-- =========start========== 账号信息行改下划线样式:去掉卡片底,常驻细底线 + hover 强调线 -->
+    <div class="item" @click="Root.handleUpdateUsername">
+      <span class="label">{{ $t('account.username') }}</span>
+      <span class="value">{{ Root.model.username }}</span>
+    </div>
+
+    <div class="item" @click="Root.handleUpdatePassword">
+      <span class="label">{{ $t('account.password') }}</span>
+      <span class="value">••••••••</span>
+    </div>
+
+    <div class="item" @click="Root.handleUpdateEmail">
+      <span class="label">{{ $t('account.email') }}</span>
+      <span class="value">{{ Root.model.email }}</span>
+    </div>
+    <!-- ========end======== -->
+
+    <!-- =========start========== 退出登录:列表末行的危险操作——与信息行同构但居中 + 玫红文字,
+         点击先弹确认框防误触,不再用全宽大按钮破坏列表语言 -->
+    <div class="item logout" @click="Root.logout">
+      <span class="label">{{ $t('account.logout') }}</span>
+    </div>
+    <!-- ========end======== -->
+
+    <!-- 原代码 - 保留(卡片式信息行 + action-area 全宽按钮形态)
     <div class="card item" @click="Root.handleUpdateUsername">
       <span class="label">{{ $t('account.username') }}</span>
       <span class="value">{{ Root.model.username }}</span>
@@ -25,12 +50,14 @@
     <div class="action-area">
       <madoka-btn class="logout" type="2" :text="$t('account.logout')" @click="Root.logout" />
     </div>
+    -->
   </div>
 </template>
 
 <script setup lang="tsx">
 import { reactive } from "vue"
-import { MadokaBtn } from "@madoka520/vue-ui"
+// 原代码 - 保留(退出登录改为列表行后不再用按钮组件)
+// import { MadokaBtn } from "@madoka520/vue-ui"
 import useToken, { type UserInfo } from "@/hooks/useToken.ts"
 // =========start========== i18n：账号页文案
 import i18n from "@/i18n"
@@ -47,7 +74,16 @@ const uploadRef = useTemplateRef("uploadRef")
 const tokenHook = useToken()
 const Root = (() => {
   const logout = () => {
-    tokenHook.logout()
+    // =========start========== 退出不可逆且整行可点,先确认再登出(文案走 i18n)
+    useModal.confirm({
+      title: i18n.global.t('account.logout'),
+      content: i18n.global.t('account.logoutConfirm'),
+      onOk: () => {
+        tokenHook.logout()
+      },
+    })
+    // 原代码 - 保留(直接登出)
+    // tokenHook.logout()
   }
 
   onMounted(() => {
@@ -192,29 +228,95 @@ const Root = (() => {
     background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
   }
 
-  &.item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    font-size: 14px;
+  // 原代码 - 保留(卡片式信息行样式,信息行已改为独立 .item 下划线行)
+  // &.item {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   position: relative;
+  //   overflow: hidden;
+  //   font-size: 14px;
+  //
+  //   .label {
+  //     color: @text-color;
+  //     font-weight: 600;
+  //     margin-left: 10px;
+  //     user-select: none;
+  //   }
+  //
+  //   .value {
+  //     color: @dark-pink;
+  //   }
+  //
+  //   .btn {
+  //   }
+  // }
+}
+
+// =========start========== 账号信息下划线行:透明底 + 常驻细粉底线,hover 时强调线从中扫开
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 14px 12px;
+  font-size: 14px;
+  // 常驻细底线:默认形态的「细边框成形」,直角无背景
+  border-bottom: 1.5px solid rgba(255, 183, 213, 0.45);
+  transition: background 0.25s ease;
+
+  .label {
+    color: @text-color;
+    font-weight: 600;
+    margin-left: 10px;
+    user-select: none;
+  }
+
+  .value {
+    color: @dark-pink;
+  }
+
+  // hover 强调线:中线向两端展开,用动效表达「可点」而非 cursor
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1.5px;
+    height: 1.5px;
+    background: @dark-pink;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover {
+    background: rgba(255, 183, 206, 0.08);
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  // 退出登录行:与信息行同构,但居中 + 玫红示意危险操作
+  &.logout {
+    justify-content: center;
 
     .label {
-      color: @text-color;
-      font-weight: 600;
-      margin-left: 10px;
-      user-select: none;
+      margin: 0;
+      color: #f43f5e;
     }
 
-    .value {
-      color: @dark-pink;
+    &::after {
+      background: #fb7185;
     }
 
-    .btn {
+    &:hover {
+      background: rgba(244, 63, 94, 0.06);
     }
   }
 }
+// ========end========
 
 .avatar-card {
   padding: 36px;
@@ -229,14 +331,15 @@ const Root = (() => {
   }
 }
 
-.action-area {
-  & > div {
-    border-radius: 22px;
-    color: white;
-    /* =========start========== 库基类 madoka-btn-base 的 width: fit-content
-       会让按钮缩成文字宽；块级场景下恢复旧的占满宽度行为 */
-    width: 100%;
-    /* ========end======== */
-  }
-}
+// 原代码 - 保留(退出登录全宽按钮形态,已改为 .item.logout 危险行)
+// .action-area {
+//   & > div {
+//     border-radius: 22px;
+//     color: white;
+//     /* =========start========== 库基类 madoka-btn-base 的 width: fit-content
+//        会让按钮缩成文字宽；块级场景下恢复旧的占满宽度行为 */
+//     width: 100%;
+//     /* ========end======== */
+//   }
+// }
 </style>

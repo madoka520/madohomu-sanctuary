@@ -91,6 +91,7 @@ export default {
     password: 'パスワード',
     email: 'メールアドレス',
     logout: 'ログアウト',
+    logoutConfirm: 'ログアウトしますか?',
     changeUsername: 'ニックネームを変更',
     usernamePlaceholder: 'ユーザー名を入力',
     changePassword: 'パスワードを変更',

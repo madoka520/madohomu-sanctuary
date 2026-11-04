@@ -91,6 +91,7 @@ export default {
     password: '密码',
     email: '邮箱',
     logout: '退出登录',
+    logoutConfirm: '确定要退出登录吗?',
     changeUsername: '修改昵称',
     usernamePlaceholder: '请输入用户名',
     changePassword: '修改密码',
