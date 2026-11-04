@@ -1,19 +1,47 @@
 <template>
   <div class="profile-page">
     <div class="card avatar-card">
-      <div class="avatar-wrapper">
+      <!-- =========start========== 魔法阵舞台:双环异速缓转的变身底座 + 绕头像错峰明灭的星光 -->
+      <div class="avatar-stage">
+        <svg class="magic-circle" viewBox="0 0 200 200" aria-hidden="true">
+          <g class="mc-ring mc-ring--outer">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 7" />
+            <circle cx="100" cy="100" r="84" fill="none" stroke="currentColor" stroke-width="0.5" />
+          </g>
+          <g class="mc-ring mc-ring--inner">
+            <circle cx="100" cy="100" r="66" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="24 12" />
+            <circle cx="100" cy="100" r="52" fill="none" stroke="currentColor" stroke-width="0.5" />
+            <!-- 四方位符文节点 -->
+            <circle cx="100" cy="34" r="2.2" fill="currentColor" />
+            <circle cx="166" cy="100" r="2.2" fill="currentColor" />
+            <circle cx="100" cy="166" r="2.2" fill="currentColor" />
+            <circle cx="34" cy="100" r="2.2" fill="currentColor" />
+          </g>
+        </svg>
         <madoka-avatar v-if="Root.model.id" :user-id="Root.model.id" @click="Root.handleUpload" :width="120" uploadadble />
         <input type="file" accept="image/jpeg,image/png,image/webp" @change="Root.onSelectAvatar" style="display: none" ref="uploadRef" />
+        <i class="mdi mdi-star-four-points sparkle sparkle--1"></i>
+        <i class="mdi mdi-star-four-points sparkle sparkle--2"></i>
+        <i class="mdi mdi-star-four-points sparkle sparkle--3"></i>
       </div>
+      <!-- ========end======== -->
     </div>
 
-    <!-- =========start========== ◆ 宝石饰件分隔线:签名图形语言,线—菱—线 -->
+    <!-- =========start========== ✦ 星光饰件分隔线:线—星—线 -->
+    <div class="magic-divider">
+      <span class="line"></span>
+      <span class="star"></span>
+      <span class="line line--rev"></span>
+    </div>
+    <!-- ========end======== -->
+
+    <!-- 原代码 - 保留(◆ 宝石饰件,专业刻面方案已被魔法少女方案替代)
     <div class="gem-divider">
       <span class="line"></span>
       <span class="gem"></span>
       <span class="line line--rev"></span>
     </div>
-    <!-- ========end======== -->
+    -->
 
     <!-- =========start========== 账号信息行改下划线样式:去掉卡片底,常驻细底线 + hover 强调线 -->
     <div class="item" @click="Root.handleUpdateUsername">
@@ -240,10 +268,11 @@ const Root = (() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    // 原代码 - 保留(此复合选择器 0,2,0 会压过独立 .avatar-card 的同名属性,
-    // 白渐变与 30px padding 与新美术语言冲突,让位给下方的独立块)
-    // padding: 30px;
-    // background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
+    padding: 30px;
+    // =========start========== 魔法少女方向回归:柔软的白→粉渐变圆角卡(原形态),
+    // 刻面方案的直角/玻璃底撤下
+    background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
+    // ========end========
   }
 
   // 原代码 - 保留(卡片式信息行样式,信息行已改为独立 .item 下划线行)
@@ -281,29 +310,24 @@ const Root = (() => {
   font-size: 14px;
   // 常驻细底线:默认形态的「细边框成形」,直角无背景
   border-bottom: 1.5px solid rgba(255, 183, 213, 0.45);
-  // =========start========== hover 光扫:一道高光从左上掠到右下(60° 斜切配左上光源)
-  // 用 background 分层实现,不占用伪元素(::after 已是羽化强调线);hover 只改 background-color,
-  // 不能写 background 简写——会把这里的渐变层一起抹掉
+  /* 原代码 - 保留(hover 光扫,科技感手法,随专业刻面方案撤下)
   background-image: linear-gradient(60deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%);
   background-size: 220% 100%;
   background-position: 130% 0;
   background-repeat: no-repeat;
-  // ========end========
+  */
   // 原代码 - 保留
   // transition: background 0.25s ease;
   // 与强调线同一支慢曲线,底色和线一起落定
-  // transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transition:
-    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    background-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   .label {
     color: @text-color;
     font-weight: 600;
-    // =========start========== 美术字:宋体系衬线 + 3px 字距,标签从「控件文字」升格为「刻字」
+    /* 原代码 - 保留(衬线「刻字」方案,冷硬路线,随专业刻面方案一同撤下)
     font-family: 'Source Han Serif SC', 'Noto Serif SC', 'STZhongsong', 'SimSun', serif;
     letter-spacing: 3px;
-    // ========end========
+    */
     margin-left: 10px;
     user-select: none;
   }
@@ -348,9 +372,7 @@ const Root = (() => {
   &:hover {
     // 原代码 - 保留
     // background: rgba(255, 183, 206, 0.08);
-    // 只改色,保住光扫渐变层;位置从 130% 滑到 -30%,高光掠过整行
     background-color: rgba(255, 183, 206, 0.08);
-    background-position: -30% 0;
 
     &::after {
       transform: scaleX(1);
@@ -387,38 +409,17 @@ const Root = (() => {
 
 .avatar-card {
   padding: 36px;
-  // 原代码 - 保留(白色渐变卡,与直角刻面/粉乳玻璃语言冲突)
-  // background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
-  // =========start========== 回归默认形态:直角 + 极淡粉乳玻璃底 + 1.5px 细粉边
-  // (与信息行底线/弹窗描边同一道律;全卡唯一圆形语言只留给头像本身)
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
+
+  /* 原代码 - 保留(专业刻面方案全套:直角细边玻璃底/斜切角/噪点/切角光晕,
+     用户定调魔法少女风后撤下——冷硬刻面与梦幻魔法少女气质相反)
   border-radius: 0;
   border: 1.5px solid rgba(255, 183, 197, 0.45);
   background: rgba(255, 240, 245, 0.28);
-  // ========end========
-
-  // =========start========== 头像白圈改粉律:仅本页作用域(:deep),全局 MadokaAvatar 不动
-  :deep(.avatar) {
-    border: 2.5px solid rgba(255, 143, 171, 0.6);
-    box-shadow: 0 0 14px rgba(255, 143, 171, 0.3);
-  }
-  // ========end========
-
-  // =========start========== 灵魂宝石卡:右上 18px 斜切角(刻面签名剪影,顺带回归直角默认形态)
-  // ⚠️ clip-path 会连同裁掉矩形 box-shadow,外阴影改走 filter:drop-shadow 才能跟随切角轮廓;
-  // 内侧顶部高光(inset)不受影响,保留——光源永远在左上
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
   filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
-
-  // 悬浮时刻面光晕增强(跟随切角轮廓);transform 交给基类 hover 的 -1px 上浮
-  transition:
-    filter 0.3s ease,
-    transform 0.25s ease;
-
-  &:hover {
-    filter: drop-shadow(0 12px 30px rgba(255, 183, 213, 0.5));
-  }
-
-  // 材质噪点:SVG feTurbulence 细颗粒叠层,杀掉平涂感(5% 透明度,不挡交互)
+  transition: filter 0.3s ease, transform 0.25s ease;
+  &:hover { filter: drop-shadow(0 12px 30px rgba(255, 183, 213, 0.5)); }
   &::before {
     content: '';
     position: absolute;
@@ -426,48 +427,162 @@ const Root = (() => {
     z-index: 2;
     pointer-events: none;
     opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,...feTurbulence 噪点...");
   }
-  // ========end========
+  */
 
-  .avatar-wrapper {
-    // =========start========== isolation 让 z-index:-1 的光环留在本层之内,
-    // 不会被卡片底色盖住(魔法少女的光环,呼吸的)
+  // 头像描边粉律:与魔法阵同色系(仅本页 :deep 作用域,全局 MadokaAvatar 不动)
+  :deep(.avatar) {
+    border: 2.5px solid rgba(255, 143, 171, 0.6);
+    box-shadow: 0 0 14px rgba(255, 143, 171, 0.3);
+  }
+
+  // =========start========== 魔法阵舞台:变身底座 + 星光
+  .avatar-stage {
     position: relative;
-    isolation: isolate;
-    // ========end========
     transition: transform 0.2s ease;
 
-    &::before {
-      content: '';
+    // 魔法阵:双环异速反向缓转,四符文节点,柔光发丝级线宽
+    .magic-circle {
       position: absolute;
-      inset: -14px;
-      z-index: -1;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 143, 171, 0.28) 0%, transparent 68%);
-      animation: halo-breathe 3.2s ease-in-out infinite;
+      left: 50%;
+      top: 50%;
+      width: 212px;
+      height: 212px;
+      transform: translate(-50%, -50%);
+      color: #ff8fab;
+      opacity: 0.55;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.3));
+    }
+
+    .mc-ring {
+      transform-origin: 100px 100px;
+
+      &--outer {
+        animation: mc-spin 48s linear infinite;
+      }
+
+      &--inner {
+        animation: mc-spin-rev 32s linear infinite;
+      }
+    }
+
+    // 星光:三颗四角星绕头像错峰明灭,魔法少女的闪烁节拍
+    .sparkle {
+      position: absolute;
+      color: #ffb7c5;
+      pointer-events: none;
+      text-shadow: 0 0 6px rgba(255, 105, 180, 0.6);
+      animation: sparkle-twinkle 2.2s ease-in-out infinite;
+
+      &--1 {
+        top: -8px;
+        right: -16px;
+        font-size: 16px;
+      }
+
+      &--2 {
+        bottom: 6px;
+        left: -20px;
+        font-size: 12px;
+        animation-delay: 0.7s;
+      }
+
+      &--3 {
+        top: 32%;
+        right: -28px;
+        font-size: 10px;
+        animation-delay: 1.3s;
+      }
     }
 
     &:hover {
       transform: scale(1.04);
     }
   }
+  // ========end========
 }
 
-// ✨ 光环呼吸:透明度与半径的缓慢律动,「页面活着」的氛围层
-@keyframes halo-breathe {
+// ✨ 魔法阵旋转:异速反向,慢到几乎察觉不到,但一直在转——「世界一直在运转」的感觉
+@keyframes mc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mc-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+// ✨ 星光明灭:缩小隐去 → 放大点亮再微转,变身场景里的那种星屑
+@keyframes sparkle-twinkle {
   0%,
   100% {
-    opacity: 0.7;
-    transform: scale(1);
+    opacity: 0.25;
+    transform: scale(0.8) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.06);
+    transform: scale(1.15) rotate(20deg);
   }
 }
 
-// =========start========== ◆ 宝石饰件分隔线:渐隐细线夹一颗旋转 45° 的刻面菱
+// =========start========== ✦ 星光饰件分隔线:渐隐细线夹一颗四角星(clip-path 星形)
+.magic-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 14px 2px;
+  user-select: none;
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.45));
+
+    &--rev {
+      background: linear-gradient(90deg, rgba(255, 143, 171, 0.45), transparent);
+    }
+  }
+
+  .star {
+    width: 12px;
+    height: 12px;
+    background: #ff9eb8;
+    // 四角星(魔法少女的星星,不是几何菱形)
+    clip-path: polygon(
+      50% 0%,
+      62% 38%,
+      100% 50%,
+      62% 62%,
+      50% 100%,
+      38% 62%,
+      0% 50%,
+      38% 38%
+    );
+    filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.55));
+    animation: star-twinkle 2.4s ease-in-out infinite;
+  }
+}
+
+// ✨ 星星明灭:光晕呼吸,和头像旁的星光同一族节拍
+@keyframes star-twinkle {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px rgba(255, 105, 180, 0.4));
+    transform: scale(0.92);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
+    transform: scale(1.08);
+  }
+}
+// ========end========
+
+/* 原代码 - 保留(◆ 宝石饰件 + 刻面明灭,专业刻面方案)
 .gem-divider {
   display: flex;
   align-items: center;
@@ -490,7 +605,6 @@ const Root = (() => {
     height: 7px;
     background: #ff8fab;
     transform: rotate(45deg);
-    // 刻面高光永远朝左上(光源纪律);光晕缓慢明灭
     box-shadow:
       0 0 6px rgba(255, 105, 180, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -511,7 +625,7 @@ const Root = (() => {
       inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 }
-// ========end========
+*/
 
 // 原代码 - 保留(退出登录全宽按钮形态,已改为 .item.logout 危险行)
 // .action-area {
