@@ -1,14 +1,20 @@
-// 全局滚动条 —— 标准属性原生渲染的粉色细条
-// 提取自 UserProfileDialog 的私有实现,统一全站:歌单/设置右栏/留言卡等所有内部滚动区
+// 全局滚动条 —— 一字不差复刻 UserProfileDialog 昨天之前的私有实现
+// (那条 3px 粉条从未出过残影,以它为准;经验证它有效的关键恰恰是「只有这三行」)
 //
-// ⚠️ 不要改回 ::-webkit-scrollbar 自定义绘制(2026-11-05 两次实测踩坑):
-// 1. 它把 Chromium 滚动条切到「自定义绘制」路径,与弹窗 backdrop-filter 毛玻璃
-//    叠加时,滚动后拇指会在旧位置留粉色残影——改实色/直角都治不好,是路径本身的 bug
-// 2. Chromium 121+ 支持标准 scrollbar-width/color 后,标准属性还会反向覆盖
-//    ::-webkit-scrollbar,两套规则互相打架
-// 标准属性走原生渲染(Chromium 121+/Firefox 全支持),残影从构造上不可能;
-// 代价是宽度由浏览器决定(约 10px),不再是 5px——可接受
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 143, 171, 0.45) transparent;
+// ⚠️ 不要再加东西(2026-11-05 三轮实测教训):
+// - 加 height(横向)/:hover/corner → 自定义绘制路径与弹窗 backdrop-filter 叠加出粉色残影
+// - 加标准 scrollbar-width/color → Chromium 121+ 会覆盖本规则,且带 scrollbar-color 的
+//   原生渲染同样被报残影
+// 复刻就要复刻全套:3px、只管纵向、无 hover、无 corner
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 143, 171, 0.25);
+  border-radius: 3px;
 }
