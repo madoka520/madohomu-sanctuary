@@ -240,8 +240,10 @@ const Root = (() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px;
-    background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
+    // 原代码 - 保留(此复合选择器 0,2,0 会压过独立 .avatar-card 的同名属性,
+    // 白渐变与 30px padding 与新美术语言冲突,让位给下方的独立块)
+    // padding: 30px;
+    // background: linear-gradient(135deg, #ffffff 0%, @soft-pink 100%);
   }
 
   // 原代码 - 保留(卡片式信息行样式,信息行已改为独立 .item 下划线行)
@@ -385,13 +387,36 @@ const Root = (() => {
 
 .avatar-card {
   padding: 36px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
+  // 原代码 - 保留(白色渐变卡,与直角刻面/粉乳玻璃语言冲突)
+  // background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
+  // =========start========== 回归默认形态:直角 + 极淡粉乳玻璃底 + 1.5px 细粉边
+  // (与信息行底线/弹窗描边同一道律;全卡唯一圆形语言只留给头像本身)
+  border-radius: 0;
+  border: 1.5px solid rgba(255, 183, 197, 0.45);
+  background: rgba(255, 240, 245, 0.28);
+  // ========end========
+
+  // =========start========== 头像白圈改粉律:仅本页作用域(:deep),全局 MadokaAvatar 不动
+  :deep(.avatar) {
+    border: 2.5px solid rgba(255, 143, 171, 0.6);
+    box-shadow: 0 0 14px rgba(255, 143, 171, 0.3);
+  }
+  // ========end========
 
   // =========start========== 灵魂宝石卡:右上 18px 斜切角(刻面签名剪影,顺带回归直角默认形态)
   // ⚠️ clip-path 会连同裁掉矩形 box-shadow,外阴影改走 filter:drop-shadow 才能跟随切角轮廓;
   // 内侧顶部高光(inset)不受影响,保留——光源永远在左上
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
   filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
+
+  // 悬浮时刻面光晕增强(跟随切角轮廓);transform 交给基类 hover 的 -1px 上浮
+  transition:
+    filter 0.3s ease,
+    transform 0.25s ease;
+
+  &:hover {
+    filter: drop-shadow(0 12px 30px rgba(255, 183, 213, 0.5));
+  }
 
   // 材质噪点:SVG feTurbulence 细颗粒叠层,杀掉平涂感(5% 透明度,不挡交互)
   &::before {
