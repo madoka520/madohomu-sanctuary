@@ -1,39 +1,14 @@
-// 全局滚动条 —— 粉色细条,替换 Windows 默认粗灰条
+// 全局滚动条 —— 标准属性原生渲染的粉色细条
 // 提取自 UserProfileDialog 的私有实现,统一全站:歌单/设置右栏/留言卡等所有内部滚动区
-// 规则:轨道透明,拇指低透明度粉,hover 加深;不改变滚动行为只换皮肤
 //
-// ⚠️ 拇指必须「不透明 + 直角」:半透明/圆角的 ::-webkit-scrollbar-thumb 在滚动时
-// 抗锯齿边缘的失效区域清理不干净,会在旧位置留下粉色残影(2026-11-05 实测踩坑)。
-// 想要的「淡粉感」改用高明度实色(#ffd3de)而不是 rgba,视觉等价且无残影
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #ffd3de;
-  border-radius: 0;
-
-  &:hover {
-    background: #ff8fab;
-  }
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-// Firefox:细滚动条 + 粉拇指
-// ⚠️ 必须用 @supports 隔离:Chromium 121+ 也支持了标准 scrollbar-width/color,
-// 而标准属性会覆盖 ::-webkit-scrollbar(实测把 5px 粉条顶成 10px 标准细条);
-// 「不认识 -webkit-scrollbar」的浏览器恰好只有 Firefox,正好做分流条件
-@supports not selector(::-webkit-scrollbar) {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 143, 171, 0.35) transparent;
-  }
+// ⚠️ 不要改回 ::-webkit-scrollbar 自定义绘制(2026-11-05 两次实测踩坑):
+// 1. 它把 Chromium 滚动条切到「自定义绘制」路径,与弹窗 backdrop-filter 毛玻璃
+//    叠加时,滚动后拇指会在旧位置留粉色残影——改实色/直角都治不好,是路径本身的 bug
+// 2. Chromium 121+ 支持标准 scrollbar-width/color 后,标准属性还会反向覆盖
+//    ::-webkit-scrollbar,两套规则互相打架
+// 标准属性走原生渲染(Chromium 121+/Firefox 全支持),残影从构造上不可能;
+// 代价是宽度由浏览器决定(约 10px),不再是 5px——可接受
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 143, 171, 0.45) transparent;
 }
