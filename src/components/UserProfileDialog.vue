@@ -371,16 +371,17 @@ defineExpose({ open })
     overflow-y: auto;
     padding-right: 4px;
 
-    &::-webkit-scrollbar {
-      width: 3px;
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 143, 171, 0.25);
-      border-radius: 3px;
-    }
+    // 原代码 - 保留(私有滚动条已抽为全局 scrollbar.less,统一由全局 5px 粉条接管)
+    // &::-webkit-scrollbar {
+    //   width: 3px;
+    // }
+    // &::-webkit-scrollbar-track {
+    //   background: transparent;
+    // }
+    // &::-webkit-scrollbar-thumb {
+    //   background: rgba(255, 143, 171, 0.25);
+    //   border-radius: 3px;
+    // }
   }
 
   &__msg {
