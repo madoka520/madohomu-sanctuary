@@ -62,10 +62,16 @@ onMounted(() => {
 
 <style scoped lang="less">
 /* 导航 */
-/* =========start========== 播放器/友链/GitHub 常显低透明度:原 opacity:0 只能靠悬浮到
-   导航栏才能发现,触屏设备完全不可达;改为常显 45%,悬浮导航时提亮到 100% */
+/* 原代码 - 保留(完全隐藏,悬浮导航栏才浮现)
 .show-with-hover {
-  opacity: 0.45;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+*/
+/* =========start========== 常显 45% 的改法用户不认可,回归原隐藏式:
+   播放器/友链/GitHub 非悬浮时完全消失,保持首屏干净 */
+.show-with-hover {
+  opacity: 0;
   transition: opacity 0.2s;
 }
 .nav {
