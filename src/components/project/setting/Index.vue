@@ -108,6 +108,13 @@ defineExpose({
   font-family: 'PingFang SC', sans-serif;
   color: @text-main;
 
+  // =========start========== 侧栏标题刻字:宝石语言的衬线 + 字距(全局 .gem-label 提供字体族)
+  :deep(.slider__title) {
+    font-family: 'Source Han Serif SC', 'Noto Serif SC', 'STZhongsong', 'SimSun', serif;
+    letter-spacing: 3px;
+  }
+  // ========end========
+
   // --- 右侧内容区 ---
   .main {
     flex: 1;

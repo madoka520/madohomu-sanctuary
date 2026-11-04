@@ -1,6 +1,6 @@
 <template>
   <div class="profile-page">
-    <div class="card avatar-card">
+    <div class="card avatar-card gem-card gem-card--cut gem-noise">
       <div class="avatar-wrapper">
         <madoka-avatar v-if="Root.model.id" :user-id="Root.model.id" @click="Root.handleUpload" :width="120" uploadadble />
         <input type="file" accept="image/jpeg,image/png,image/webp" @change="Root.onSelectAvatar" style="display: none" ref="uploadRef" />
@@ -388,12 +388,15 @@ const Root = (() => {
   padding: 36px;
   // 原代码 - 保留(白色渐变卡,与直角刻面/粉乳玻璃语言冲突)
   // background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 228, 239, 0.85));
-  // =========start========== 回归默认形态:直角 + 极淡粉乳玻璃底 + 1.5px 细粉边
-  // (与信息行底线/弹窗描边同一道律;全卡唯一圆形语言只留给头像本身)
+  /* 原代码 - 保留(签名样式的内联实现,已抽到全局 gem.less——模板挂
+     gem-card gem-card--cut gem-noise 即可,视觉逐字节一致)
   border-radius: 0;
   border: 1.5px solid rgba(255, 183, 197, 0.45);
   background: rgba(255, 240, 245, 0.28);
-  // ========end========
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
+  &::before { ...SVG feTurbulence 噪点 5%... }
+  */
 
   // =========start========== 头像白圈改粉律:仅本页作用域(:deep),全局 MadokaAvatar 不动
   :deep(.avatar) {
@@ -402,30 +405,13 @@ const Root = (() => {
   }
   // ========end========
 
-  // =========start========== 灵魂宝石卡:右上 18px 斜切角(刻面签名剪影,顺带回归直角默认形态)
-  // ⚠️ clip-path 会连同裁掉矩形 box-shadow,外阴影改走 filter:drop-shadow 才能跟随切角轮廓;
-  // 内侧顶部高光(inset)不受影响,保留——光源永远在左上
-  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
-  filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
-
-  // 悬浮时刻面光晕增强(跟随切角轮廓);transform 交给基类 hover 的 -1px 上浮
+  // =========start========== 悬浮时刻面光晕增强(基础 drop-shadow 来自全局 .gem-card--cut)
   transition:
     filter 0.3s ease,
     transform 0.25s ease;
 
   &:hover {
     filter: drop-shadow(0 12px 30px rgba(255, 183, 213, 0.5));
-  }
-
-  // 材质噪点:SVG feTurbulence 细颗粒叠层,杀掉平涂感(5% 透明度,不挡交互)
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   // ========end========
 
@@ -466,50 +452,51 @@ const Root = (() => {
   }
 }
 
-// =========start========== ◆ 宝石饰件分隔线:渐隐细线夹一颗旋转 45° 的刻面菱
-.gem-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 14px 2px;
-  user-select: none;
+// /* 原代码 - 保留(◆ 分隔线本地实现,已抽到全局 gem.less 的 .gem-divider,模板直接挂类)
+// // =========start========== ◆ 宝石饰件分隔线:渐隐细线夹一颗旋转 45° 的刻面菱
+// .gem-divider {
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   margin: 0 14px 2px;
+//   user-select: none;
 
-  .line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.45));
+//   .line {
+//     flex: 1;
+//     height: 1px;
+//     background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.45));
 
-    &--rev {
-      background: linear-gradient(90deg, rgba(255, 143, 171, 0.45), transparent);
-    }
-  }
+//     &--rev {
+//       background: linear-gradient(90deg, rgba(255, 143, 171, 0.45), transparent);
+//     }
+//   }
 
-  .gem {
-    width: 7px;
-    height: 7px;
-    background: #ff8fab;
-    transform: rotate(45deg);
-    // 刻面高光永远朝左上(光源纪律);光晕缓慢明灭
-    box-shadow:
-      0 0 6px rgba(255, 105, 180, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    animation: gem-twinkle 2.4s ease-in-out infinite;
-  }
-}
+//   .gem {
+//     width: 7px;
+//     height: 7px;
+//     background: #ff8fab;
+//     transform: rotate(45deg);
+//     // 刻面高光永远朝左上(光源纪律);光晕缓慢明灭
+//     box-shadow:
+//       0 0 6px rgba(255, 105, 180, 0.5),
+//       inset 0 1px 0 rgba(255, 255, 255, 0.7);
+//     animation: gem-twinkle 2.4s ease-in-out infinite;
+//   }
+// }
 
-@keyframes gem-twinkle {
-  0%,
-  100% {
-    box-shadow:
-      0 0 4px rgba(255, 105, 180, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  50% {
-    box-shadow:
-      0 0 10px rgba(255, 105, 180, 0.75),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  }
-}
+// @keyframes gem-twinkle {
+//   0%,
+//   100% {
+//     box-shadow:
+//       0 0 4px rgba(255, 105, 180, 0.4),
+//       inset 0 1px 0 rgba(255, 255, 255, 0.7);
+//   }
+//   50% {
+//     box-shadow:
+//       0 0 10px rgba(255, 105, 180, 0.75),
+//       inset 0 1px 0 rgba(255, 255, 255, 0.7);
+//   }
+// }
 // ========end========
 
 // 原代码 - 保留(退出登录全宽按钮形态,已改为 .item.logout 危险行)

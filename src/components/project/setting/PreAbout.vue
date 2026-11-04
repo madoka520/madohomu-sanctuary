@@ -8,17 +8,24 @@
         <span class="brand__en">MadoHomu Sanctuary</span>
       </div>
       <p class="tagline">{{ $t('about.tagline') }}</p>
+      <!-- =========start========== ◆ 宝石饰件分隔线(全局 gem.less) -->
+      <div class="gem-divider">
+        <span class="line"></span>
+        <span class="gem"></span>
+        <span class="line line--rev"></span>
+      </div>
+      <!-- ========end======== -->
     </header>
 
     <!-- 关于本站 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-heart-outline" /> {{ $t('about.siteTitle') }}</h3>
+      <h3 class="gem-label"><i class="mdi mdi-heart-outline" /> {{ $t('about.siteTitle') }}</h3>
       <p>{{ $t('about.siteDesc') }}</p>
     </section>
 
     <!-- 功能一览 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-star-four-points-outline" /> {{ $t('about.featuresTitle') }}</h3>
+      <h3 class="gem-label"><i class="mdi mdi-star-four-points-outline" /> {{ $t('about.featuresTitle') }}</h3>
       <ul class="feature-list">
         <li><i class="mdi mdi-message-processing" /> {{ $t('about.features.board') }}</li>
         <li><i class="mdi mdi-music-note-outline" /> {{ $t('about.features.player') }}</li>
@@ -31,7 +38,7 @@
 
     <!-- 小秘密 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-diamond-stone" /> {{ $t('about.secretsTitle') }}</h3>
+      <h3 class="gem-label"><i class="mdi mdi-diamond-stone" /> {{ $t('about.secretsTitle') }}</h3>
       <ul class="feature-list">
         <li><i class="mdi mdi-cake-variant-outline" /> {{ $t('about.secrets.birthday') }}</li>
         <li><i class="mdi mdi-emoticon-blush-outline" /> {{ $t('about.secrets.shy') }}</li>
@@ -41,7 +48,7 @@
 
     <!-- 技术栈 -->
     <section class="about__section">
-      <h3><i class="mdi mdi-code-braces" /> {{ $t('about.techTitle') }}</h3>
+      <h3 class="gem-label"><i class="mdi mdi-code-braces" /> {{ $t('about.techTitle') }}</h3>
       <div class="chips">
         <span v-for="t in techList" :key="t" class="chip">{{ t }}</span>
       </div>

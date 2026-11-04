@@ -5,7 +5,7 @@
       <button
         v-for="l in LOCALES"
         :key="l.value"
-        class="language__item"
+        class="language__item gem-card"
         :class="{ 'is-active': current === l.value, 'is-runes': l.value === 'runes' }"
         @click="setLocale(l.value)"
       >
@@ -66,8 +66,10 @@ const current = computed(() => i18n.global.locale.value)
     font-size: 14px;
     color: @rose-sub;
     text-align: left;
+    /* 原代码 - 保留(边框/透明底已由全局 .gem-card 提供——细边玻璃底同族)
     background: transparent;
     border: 1px solid rgba(255, 183, 197, 0.35);
+    */
     transition: all 0.25s ease;
 
     .mdi {

@@ -1,0 +1,92 @@
+// 宝石刻面语言 —— 全站签名样式(2026-11-05 账号设置页定稿后抽公共)
+// 这一族的语言:直角 + 1.5px 细粉边 + 极淡粉乳玻璃底;--cut 变体加右上斜切角;
+// .gem-noise 叠材质噪点;.gem-divider 是线—◆—线分隔线;.gem-label 是衬线刻字。
+// 用法:卡片挂 "gem-card gem-card--cut gem-noise"(按需组合),标题/标签挂 gem-label
+.gem-card {
+  border-radius: 0; // 直角,默认形态
+  border: 1.5px solid rgba(255, 183, 197, 0.45);
+  background: rgba(255, 240, 245, 0.28); // 极淡粉乳玻璃底
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    filter 0.3s ease;
+
+  // 右上斜切角:灵魂宝石刻面剪影
+  // ⚠️ clip-path 会裁掉矩形 box-shadow——挂了 --cut 的元素,投影一律走 filter:drop-shadow
+  &--cut {
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+    filter: drop-shadow(0 8px 24px rgba(255, 183, 213, 0.35));
+  }
+}
+
+// 材质噪点:SVG feTurbulence 细颗粒,5% 透明度杀平涂感;不挡交互
+.gem-noise {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+// ◆ 宝石饰件分隔线:渐隐细线夹一颗旋转 45° 的刻面菱,光晕缓慢明灭
+.gem-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 14px 2px;
+  user-select: none;
+
+  // 紧凑变体:嵌在其它布局缝隙里时不吃外边距(如歌单控制栏上沿)
+  &--tight {
+    margin: 0;
+  }
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 143, 171, 0.45));
+
+    &--rev {
+      background: linear-gradient(90deg, rgba(255, 143, 171, 0.45), transparent);
+    }
+  }
+
+  .gem {
+    width: 7px;
+    height: 7px;
+    background: #ff8fab;
+    transform: rotate(45deg);
+    // 刻面高光永远朝左上(光源纪律)
+    box-shadow:
+      0 0 6px rgba(255, 105, 180, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    animation: gem-twinkle 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes gem-twinkle {
+  0%,
+  100% {
+    box-shadow:
+      0 0 4px rgba(255, 105, 180, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(255, 105, 180, 0.75),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+}
+
+// 衬线刻字:标签/标题从「控件文字」升格为「刻字」
+.gem-label {
+  font-family: 'Source Han Serif SC', 'Noto Serif SC', 'STZhongsong', 'SimSun', serif;
+  letter-spacing: 3px;
+}

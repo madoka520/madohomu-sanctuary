@@ -3,6 +3,9 @@ import App from './App.vue'
 import "@/assets/styles/layout.less"
 // =========start========== 全局粉色细滚动条,替换系统默认粗灰条
 import "@/assets/styles/scrollbar.less"
+// =========start========== 宝石刻面语言签名样式(全站卡片/分隔线/刻字公共类)
+import "@/assets/styles/gem.less"
+// ========end========
 // ========end========
 import { createPinia } from "pinia";
 import "@mdi/font/css/materialdesignicons.css"

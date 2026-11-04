@@ -3,7 +3,7 @@
     <div
       v-for="(item, index) in setting.themeList"
       :key="index"
-      class="theme-option"
+      class="theme-option gem-card gem-card--cut gem-noise"
       :class="{
         'is-loading': item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Loading,
         'is-error': item.type === 'video' && videoPreload.cacheStatus[item.src!] === CacheStatus.Error,
@@ -189,16 +189,20 @@ watch(
   position: relative;
   width: 176px;
   padding: 10px 10px 12px;
+  /* 原代码 - 保留(直角细边透明底;签名样式已抽公共类,模板挂
+     gem-card gem-card--cut gem-noise——玻璃底/切角/噪点/投影全由全局提供)
   background: transparent; // 无背景填充，靠边框成形
   border: 1.5px solid rgba(255, 183, 197, 0.45);
   border-radius: 0; // 直角
+  */
   user-select: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+  // ⚠️ 挂了 --cut 后 box-shadow 会被 clip-path 裁掉,投影一律走 filter:drop-shadow
   &:hover {
     border-color: rgba(255, 133, 162, 0.75);
     transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(255, 183, 197, 0.35);
+    filter: drop-shadow(0 12px 26px rgba(255, 183, 197, 0.4));
 
     .theme-cover img {
       transform: scale(1.06);
@@ -210,12 +214,10 @@ watch(
     transform: translateY(-1px) scale(0.98);
   }
 
-  // 当前选中：粉色实线描边 + 光晕
+  // 当前选中：粉色实线描边 + 切角光晕
   &.is-active {
     border-color: @pink-dark;
-    box-shadow:
-      0 0 0 1px rgba(255, 133, 162, 0.3),
-      0 8px 24px rgba(255, 133, 162, 0.35);
+    filter: drop-shadow(0 8px 22px rgba(255, 133, 162, 0.45));
 
     .name {
       color: @pink-dark;

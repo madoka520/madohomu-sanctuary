@@ -19,6 +19,14 @@
       </div>
     </div>
 
+    <!-- =========start========== 控制栏上沿:◆ 宝石饰件分隔线(全局 gem.less),替代素色 border-top -->
+    <div class="gem-divider gem-divider--tight">
+      <span class="line"></span>
+      <span class="gem"></span>
+      <span class="line line--rev"></span>
+    </div>
+    <!-- ========end======== -->
+
     <div class="player-controls">
       <div class="controls-content">
         <div class="album-cover" :class="{ 'album-cover--playing': audioPlayer.playing }">
@@ -187,7 +195,8 @@ const handleProgressInput = (e: Event) => {
   // corner-shape: superellipse(1.333);
   // box-shadow: 0 4px 12px rgba(255, 183, 197, 0.3);
   padding: 14px 8px 4px;
-  border-top: 1px solid rgba(255, 183, 197, 0.45);
+  // 原代码 - 保留(素色顶线,已由上方 ◆ 宝石分隔线替代)
+  // border-top: 1px solid rgba(255, 183, 197, 0.45);
   background: transparent;
   // ========end========
 
