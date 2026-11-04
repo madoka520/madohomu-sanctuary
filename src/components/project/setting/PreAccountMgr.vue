@@ -263,7 +263,10 @@ const Root = (() => {
   font-size: 14px;
   // 常驻细底线:默认形态的「细边框成形」,直角无背景
   border-bottom: 1.5px solid rgba(255, 183, 213, 0.45);
-  transition: background 0.25s ease;
+  // 原代码 - 保留
+  // transition: background 0.25s ease;
+  // 与强调线同一支慢曲线,底色和线一起落定
+  transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   .label {
     color: @text-color;
@@ -276,19 +279,38 @@ const Root = (() => {
     color: @dark-pink;
   }
 
-  // hover 强调线:中线向两端展开,用动效表达「可点」而非 cursor
+  // 原代码 - 保留(实色满铺 + 0.3s 机械展开,偏硬)
+  // &::after {
+  //   content: '';
+  //   position: absolute;
+  //   left: 0;
+  //   right: 0;
+  //   bottom: -1.5px;
+  //   height: 1.5px;
+  //   background: @dark-pink;
+  //   transform: scaleX(0);
+  //   transform-origin: center;
+  //   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  // }
+
+  // =========start========== hover 强调线柔化:两端透明渐变羽化 + 透明度淡入,慢一点的重力曲线,
+  // 内缩 12px 与行内边距对齐不满铺——从「扫出」变成「晕开」
   &::after {
     content: '';
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 12px;
+    right: 12px;
     bottom: -1.5px;
     height: 1.5px;
-    background: @dark-pink;
-    transform: scaleX(0);
+    background: linear-gradient(90deg, transparent, rgba(255, 133, 178, 0.7), transparent);
+    opacity: 0;
+    transform: scaleX(0.5);
     transform-origin: center;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
+  // ========end========
 
   &:hover {
     background: rgba(255, 183, 206, 0.08);
@@ -307,8 +329,14 @@ const Root = (() => {
       color: #f43f5e;
     }
 
+    // 原代码 - 保留(实色玫红)
+    // &::after {
+    //   background: #fb7185;
+    // }
+
+    // 玫红版同步羽化淡入,过渡属性继承基础 ::after
     &::after {
-      background: #fb7185;
+      background: linear-gradient(90deg, transparent, rgba(251, 113, 133, 0.75), transparent);
     }
 
     &:hover {
