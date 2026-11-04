@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@madoka520/vue-ui':
-        specifier: ^1.1.4
-        version: 1.1.4(vue@3.5.27(typescript@5.7.3))
+        specifier: ^1.1.28
+        version: 1.1.28(vue@3.5.27(typescript@5.7.3))
       '@madoka520/vue-utils':
         specifier: ^0.1.0
         version: 0.1.0
@@ -37,7 +37,7 @@ importers:
         version: 1.11.21
       idb:
         specifier: ^8.0.3
-        version: 8.0.3
+        version: 8.0.4
       lodash:
         specifier: ^4.17.23
         version: 4.18.1
@@ -472,8 +472,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@madoka520/vue-ui@1.1.4':
-    resolution: {integrity: sha512-mS9Rvx6jEgV6DlrQnkGVcX4loo9n4HnVlh3IshyR7U3GzX0r0N27iN/5YWRohBLaO2bVCadCxcym5uY7FqFLZw==, tarball: https://npm.pkg.github.com/download/@madoka520/vue-ui/1.1.4/127645c96251db8194a784e4d34e3b062b83d7a4}
+  '@madoka520/vue-ui@1.1.28':
+    resolution: {integrity: sha512-tD/+EwYRUpfrdpLMydsQ1zUno/+uKh0jdqOlMfoxjTmkbQQ4v6xaLIlzUDmh3NAmE/fTf+s43k6aEThYtI5ZVQ==, tarball: https://npm.pkg.github.com/download/@madoka520/vue-ui/1.1.28/6b89f912fe65ac4362637819f69041d6ed3fca27}
     peerDependencies:
       vue: ^3.5.0
 
@@ -1467,8 +1467,8 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
-  idb@8.0.3:
-    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
+  idb@8.0.4:
+    resolution: {integrity: sha512-jd0ITCrN+Zah4J7R/Z2jnR3W7A4BXDAjmo62MwWuSjxCiueUAf7X5rbodEdidWzeknwXHmLpdZkoiiCppNi30Q==}
 
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
@@ -2542,7 +2542,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@madoka520/vue-ui@1.1.4(vue@3.5.27(typescript@5.7.3))':
+  '@madoka520/vue-ui@1.1.28(vue@3.5.27(typescript@5.7.3))':
     dependencies:
       '@madoka520/vue-utils': 0.1.0
       '@vueuse/core': 11.3.0(vue@3.5.27(typescript@5.7.3))
@@ -3538,7 +3538,7 @@ snapshots:
       safer-buffer: 2.1.2
     optional: true
 
-  idb@8.0.3: {}
+  idb@8.0.4: {}
 
   image-size@0.5.5:
     optional: true
