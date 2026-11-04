@@ -1,5 +1,5 @@
 <template>
-  <madoka-dialog :footer="false" v-model="settingStore.opened">
+  <madoka-dialog :footer="false" :radius="12" v-model="settingStore.opened">
     <login v-if="!tokenStore.token" />
 
     <div v-else class="content">

@@ -1,6 +1,7 @@
 <template>
   <madoka-dialog
     v-model="Root.opened"
+    :radius="12"
     :title="$t('msgDialog.title')"
     :ok-text="$t('common.send')"
     :cancel-text="$t('common.cancel')"
