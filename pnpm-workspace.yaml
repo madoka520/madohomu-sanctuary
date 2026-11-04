@@ -2,4 +2,6 @@ allowBuilds:
   esbuild: true
   vue-demi: true
 minimumReleaseAgeExclude:
-  - '@madoka520/vue-ui@1.1.28'
+  # 自己发自己装的私有组件库,豁免 48h 冷却期;注意 pnpm 的策略匹配对同名多版本条目只认第一条,
+  # 所以必须用不带版本号的包名整体豁免,不能按版本逐条列
+  - '@madoka520/vue-ui'
