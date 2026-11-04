@@ -80,6 +80,7 @@ const Root = (() => {
   const logout = () => {
     // =========start========== 退出不可逆且整行可点,先确认再登出(文案走 i18n)
     useModal.confirm({
+      radius: 12,
       title: i18n.global.t('account.logout'),
       content: i18n.global.t('account.logoutConfirm'),
       onOk: () => {
@@ -97,6 +98,8 @@ const Root = (() => {
   const handleUpdateUsername = () => {
     const value = ref(s.model.username)
     useModal.confirm({
+      // 12px 是库 CSS 里注释保留的历史圆角值(稍微圆润一点更适合粉色主题)
+      radius: 12,
       title: i18n.global.t('account.changeUsername'),
       //@ts-ignore
       content: () => <MadokaLineInput placeholder={i18n.global.t('account.usernamePlaceholder')} v-model={value.value} />,
@@ -112,6 +115,7 @@ const Root = (() => {
     const valueAgain = ref("")
     const equal = ref(true)
     useModal.confirm({
+      radius: 12,
       title: i18n.global.t('account.changePassword'),
       //@ts-ignore
       content: () => (
