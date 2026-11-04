@@ -299,7 +299,10 @@ watch(
 .input-wrap {
   position: relative;
   width: clamp(300px, 20vw, 600px);
-  margin: 0 auto;
+  // 原代码 - 保留
+  // margin: 0 auto;
+  // 上下留呼吸空间:Dialog 内容区(main)自身 padding 为 0 20px,新主题的标题/按钮分隔线会直接贴住输入框
+  margin: 14px auto;
 
   // 覆盖 .madoka-input 的固定宽度，跟随包裹层
   .madoka-input {
