@@ -66,9 +66,11 @@ import AuthApi from "@/api/AuthApi.ts"
 import { message } from "@madoka520/vue-ui"
 import MadokaAvatar from "@/components/MadokaAvatar.vue"
 import { useModal } from "@madoka520/vue-ui"
-// 原代码 - 保留(本地下划线输入框,登录页仍在用;弹窗内改用库的直角变体)
+// 原代码 - 保留(本地下划线输入框,登录页仍在用)
 // import MadokaInput from "@/components/MadokaInput.vue"
-import { MadokaInput } from "@madoka520/vue-ui"
+// 原代码 - 保留(库版输入框是边框盒形态,破坏弹窗的下划线语言,改回项目内直角下划线版)
+// import { MadokaInput } from "@madoka520/vue-ui"
+import MadokaLineInput from "@/components/MadokaLineInput.vue"
 import { fileToSHA1 } from "@/utils/shaUtils.ts"
 import { imageToWebp } from "@/utils/imageUtils.ts"
 
@@ -97,8 +99,7 @@ const Root = (() => {
     useModal.confirm({
       title: i18n.global.t('account.changeUsername'),
       //@ts-ignore
-      // radius=0 直角,与 Dialog 默认形态的细边框直角语言一致
-      content: () => <MadokaInput radius={0} width="100%" placeholder={i18n.global.t('account.usernamePlaceholder')} v-model={value.value} />,
+      content: () => <MadokaLineInput placeholder={i18n.global.t('account.usernamePlaceholder')} v-model={value.value} />,
       onOk: async () => {
         await AuthApi.updateUsername(value.value)
         s.model.username = value.value
@@ -115,8 +116,8 @@ const Root = (() => {
       //@ts-ignore
       content: () => (
         <div style="width: 100%;display: flex;gap: 10px;flex-direction: column">
-          <MadokaInput radius={0} width="100%" type="password" placeholder={i18n.global.t('account.newPasswordPlaceholder')} v-model={value.value} />
-          <MadokaInput radius={0} width="100%" type="password" placeholder={i18n.global.t('account.confirmPasswordPlaceholder')} v-model={valueAgain.value} />
+          <MadokaLineInput type="password" placeholder={i18n.global.t('account.newPasswordPlaceholder')} v-model={value.value} />
+          <MadokaLineInput type="password" placeholder={i18n.global.t('account.confirmPasswordPlaceholder')} v-model={valueAgain.value} />
           {!equal.value && <div style="color: red;font-size: 13px">{i18n.global.t('account.passwordMismatch')}</div>}
         </div>
       ),
