@@ -84,12 +84,14 @@ const handleProgressInput = (e: Event) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  // 原代码 - 保留(70vh 与弹窗 clamp(260px,50vh,500px) 高度不匹配,内容比壳高导致滚动错乱)
-  // height: 70vh;
+  // ⚠️ 70vh 是承重墙,不能改成 100%:弹窗 overlay 高度是 auto(max-height 86vh),main 也是
+  // height:auto + overflow:hidden——百分比高度解析不了会退回内容高度,列表不约束、
+  // 底栏被 overflow:hidden 裁掉且无法滚动(2026-11-05 实测踩坑)。必须给确定高度,
+  // 70vh + main 内边距 28px 恒小于 86vh 上限,各尺寸视口下都成立
+  height: 70vh;
   // 原代码 - 保留(圆角由弹窗外框 radius 负责,内容层不再自带)
   // border-radius: 24px;
   // corner-shape: superellipse(1.333);
-  height: 100%;
   width: 100%;
   // padding-bottom: 10px;
   user-select: none;
