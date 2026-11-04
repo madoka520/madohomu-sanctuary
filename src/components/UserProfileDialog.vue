@@ -4,6 +4,7 @@
     :title="$t('profile.title')"
     width="380px"
     height="auto"
+    :radius="12"
     :footer="false"
   >
     <div class="profile">

@@ -1,6 +1,34 @@
 <template>
   <div class="form-container flex-center">
     <div class="form-body">
+      <!-- =========start========== 输入框换 MadokaLineInput:与账号弹窗同一直角下划线语言
+           (旧 madoka-input 的 18px 圆角聚焦底衬是旧气质) -->
+      <div class="form-item">
+        <madoka-line-input
+          v-model="Form.model.username"
+          left-icon="mdi mdi-account-outline"
+          :placeholder="$t('login.usernamePlaceholder')"
+          @keyup.enter="Form.login"
+        />
+      </div>
+
+      <Transition name="slide-fade">
+        <div class="form-item" v-if="Form.model.usePassword">
+          <madoka-line-input
+            v-model="Form.model.password"
+            left-icon="mdi mdi-lock-outline"
+            :type="Form.showPassword ? 'text' : `password`"
+            :show-password="Form.showPassword"
+            :right-icon="`mdi-${Form.showPassword ? 'eye' : 'eye-off'}-outline`"
+            :placeholder="$t('login.passwordPlaceholder')"
+            @right-icon-click="Form.showOrHiddenPsd"
+            @keyup.enter="Form.login"
+          />
+        </div>
+      </Transition>
+      <!-- ========end======== -->
+
+      <!-- 原代码 - 保留(旧圆角底衬输入框)
       <div class="form-item">
         <madoka-input
           v-model="Form.model.username"
@@ -24,6 +52,7 @@
           />
         </div>
       </Transition>
+      -->
       <div class="form__error" :class="{ 'is-active': Form.error }">
         <span v-if="Form.error">
           <span class="mdi mdi-alert-circle-outline"></span>
@@ -44,7 +73,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import MadokaInput from '@/components/MadokaInput.vue'
+// 原代码 - 保留(旧圆角底衬输入框,已换 MadokaLineInput)
+// import MadokaInput from '@/components/MadokaInput.vue'
+import MadokaLineInput from '@/components/MadokaLineInput.vue'
 import { MadokaBtn } from '@madoka520/vue-ui'
 import useToken from '@/hooks/useToken.ts'
 import MadokaCheckbox from '@/components/MadokaCheckbox.vue'
@@ -155,6 +186,9 @@ const Form = (() => {
 .slide-fade-leave-to {
   transform: translateY(-10px);
   opacity: 0;
-  margin-bottom: -73px; // 抵消输入框的高度，防止下方元素瞬间跳动
+  /* 原代码 - 保留(旧输入框 36+30px 巨型内边距时代的高度) */
+  /* margin-bottom: -73px; // 抵消输入框的高度，防止下方元素瞬间跳动 */
+  // 抵消输入框外高(MadokaLineInput 约 45px + form-item 上下 padding 10px),防止下方元素瞬间跳动
+  margin-bottom: -55px;
 }
 </style>

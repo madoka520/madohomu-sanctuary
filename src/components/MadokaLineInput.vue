@@ -1,26 +1,44 @@
 <!-- MadokaLineInput - 直角下划线输入框:透明底 + 常驻细粉底线,聚焦时强调线两端羽化晕开 -->
 <!-- 与账号设置行的下划线语言同源;无圆角底衬,贴合 2026-09 默认形态(直角/透明底/细线) -->
+<!-- 可选左右图标(登录页账号/锁/眼睛):图标悬于线上方,聚焦时转粉微旋 -->
 <template>
   <div class="line-input">
+    <span v-if="leftIcon" class="icon">
+      <i :class="leftIcon"></i>
+    </span>
     <input
-      :type="type"
+      :type="resolvedType"
       v-model="modelValue"
       autocomplete="on"
       autocapitalize="off"
       spellcheck="false"
       :placeholder
     />
+    <span v-if="rightIcon" class="icon icon--action" @click="emits('rightIconClick')">
+      <i :class="rightIcon"></i>
+    </span>
   </div>
 </template>
 
 <script setup lang="ts">
-// 弹窗内的紧凑输入框,只保留最小 API:占位符与输入类型(text/password)
-defineProps<{
+// 最小 API:占位符、输入类型、可选图标;showPassword 用于 password 时切换明文
+const props = defineProps<{
   placeholder?: string
   type?: string
+  leftIcon?: string
+  rightIcon?: string
+  showPassword?: boolean
 }>()
+const emits = defineEmits(['rightIconClick'])
 const modelValue = defineModel({
   default: "",
+})
+// password + showPassword → 明文,其余原样
+const resolvedType = computed(() => {
+  if (props.type === "password" && props.showPassword) {
+    return "text"
+  }
+  return props.type || "text"
 })
 </script>
 
@@ -29,10 +47,13 @@ const modelValue = defineModel({
 
 .line-input {
   position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
 
   input {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     padding: 12px 10px;
     border: none;
     outline: none;
@@ -46,6 +67,21 @@ const modelValue = defineModel({
     &::placeholder {
       color: #9e9e9e;
       transition: color 0.3s ease;
+    }
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    font-size: 19px;
+    color: #bdbdbd;
+    padding: 0 6px;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    // 可点图标(密码可见切换):hover 转粉放大
+    &--action:hover {
+      color: @pink-dark;
+      transform: scale(1.15);
     }
   }
 
@@ -84,10 +120,15 @@ const modelValue = defineModel({
     transform: scaleX(0.6);
   }
 
-  // 容器级聚焦:占位符转粉 + 强调线全宽晕开
+  // 容器级聚焦:占位符转粉 + 图标转粉微旋 + 强调线全宽晕开
   &:focus-within {
     input::placeholder {
       color: rgba(255, 133, 178, 0.6);
+    }
+
+    .icon {
+      color: @pink-dark;
+      transform: scale(1.1) rotate(5deg);
     }
 
     &::after {
